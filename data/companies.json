@@ -7,7 +7,7 @@
     {
       "rank": 1,
       "company_name": "ClayCo Cosmetics",
-      "official_website": "https://clayco.in (named by a secondary source, Lapaas; not yet checked directly)",
+      "official_website": "https://clayco.in",
       "hq_and_geography": "Mumbai, India. Sells across India via own site, Amazon, Nykaa, Myntra, Tira, Zepto and Blinkit.",
       "industry_and_business_model": "D2C beauty and personal care (CPG). Product sales through own website and online marketplaces.",
       "product_summary": "Premium skincare (cleansers, serums, masks, moisturisers, sun care). Flagship line is Rituals of Japan. Expanding into body care and hair care.",
@@ -51,12 +51,13 @@
       "date_last_verified": "2026-10-09",
       "country": "India",
       "region": "South Asia",
-      "research_batch_id": "baseline-india-uae-2026-10-09"
+      "research_batch_id": "baseline-india-uae-2026-10-09",
+      "official_website_note": "named by a secondary source, Lapaas; not yet checked directly"
     },
     {
       "rank": 2,
       "company_name": "Keep Converting",
-      "official_website": "https://keepconverting.ai (from the company press release)",
+      "official_website": "https://keepconverting.ai",
       "hq_and_geography": "Dubai, UAE. Deployments reported in the US, Europe and the Gulf.",
       "industry_and_business_model": "E-commerce software (AI conversion optimisation), sold to online merchants.",
       "product_summary": "Builds and tests a personalised product page for each shopper. Integrates with Shopify, WooCommerce, Adobe Commerce, Zid and Salla.",
@@ -100,12 +101,13 @@
       "date_last_verified": "2026-10-09",
       "country": "UAE",
       "region": "Middle East",
-      "research_batch_id": "baseline-india-uae-2026-10-09"
+      "research_batch_id": "baseline-india-uae-2026-10-09",
+      "official_website_note": "from the company press release"
     },
     {
       "rank": 3,
       "company_name": "Sav",
-      "official_website": "https://sav.money (from company press materials)",
+      "official_website": "https://sav.money",
       "hq_and_geography": "Dubai, UAE. Subsidiaries in the UAE, Saudi Arabia and India (Zawya press release). Operates under a DFSA Category 4 licence.",
       "industry_and_business_model": "Consumer fintech and wealthtech. Revenue from interchange, wealth management fees, commerce commissions and subscriptions.",
       "product_summary": "AI-led money app that aggregates accounts, cards, savings and investments, with gold and silver investing and credit products in development.",
@@ -151,12 +153,13 @@
       "date_last_verified": "2026-10-09",
       "country": "UAE",
       "region": "Middle East",
-      "research_batch_id": "baseline-india-uae-2026-10-09"
+      "research_batch_id": "baseline-india-uae-2026-10-09",
+      "official_website_note": "from company press materials"
     },
     {
       "rank": 4,
       "company_name": "Supply6",
-      "official_website": "https://www.supplysix.com (as listed on Seedtable; not yet checked directly)",
+      "official_website": "https://www.supplysix.com",
       "hq_and_geography": "Bengaluru, India. Sells via Amazon, Blinkit and its own D2C site.",
       "industry_and_business_model": "D2C daily-nutrition brand (CPG, health and wellness supplements).",
       "product_summary": "Science-backed supplements across vitamins, hydration, fibre and gut health. Flagship is Supply6 360, a daily sachet with 63+ ingredients.",
@@ -198,7 +201,8 @@
       "date_last_verified": "2026-10-09",
       "country": "India",
       "region": "South Asia",
-      "research_batch_id": "baseline-india-uae-2026-10-09"
+      "research_batch_id": "baseline-india-uae-2026-10-09",
+      "official_website_note": "as listed on Seedtable; not yet checked directly"
     },
     {
       "rank": 5,
@@ -252,7 +256,7 @@
     {
       "rank": 6,
       "company_name": "OpenCFO",
-      "official_website": "https://www.opencfo.in/ (as linked in a secondary roundup; not opened)",
+      "official_website": "https://www.opencfo.in/",
       "hq_and_geography": "India, with a Hyderabad regional office planned for March 2026 and a planned US go-to-market presence.",
       "industry_and_business_model": "B2B fintech and enterprise SaaS for mid-market companies with cross-border operations.",
       "product_summary": "AI-native financial operating system covering accounts payable, accounts receivable and treasury. Corridors: US to India, UK, EU and Canada.",
@@ -292,12 +296,13 @@
       "date_last_verified": "2026-10-09",
       "country": "India",
       "region": "South Asia",
-      "research_batch_id": "baseline-india-uae-2026-10-09"
+      "research_batch_id": "baseline-india-uae-2026-10-09",
+      "official_website_note": "as linked in a secondary roundup; not opened"
     },
     {
       "rank": 7,
       "company_name": "Verdant Impact",
-      "official_website": "https://www.verdantimpact.com/ (as linked in a secondary roundup; not opened)",
+      "official_website": "https://www.verdantimpact.com/",
       "hq_and_geography": "India",
       "industry_and_business_model": "Agritech combining AI, IoT hardware and biotech for livestock and dairy.",
       "product_summary": "Pashu AI (computer vision and ML for disease detection and breeding) and Bharat Pashudhan (IoT herd management). Reported to serve 600K+ farmers.",
@@ -335,7 +340,8 @@
       "date_last_verified": "2026-10-09",
       "country": "India",
       "region": "South Asia",
-      "research_batch_id": "baseline-india-uae-2026-10-09"
+      "research_batch_id": "baseline-india-uae-2026-10-09",
+      "official_website_note": "as linked in a secondary roundup; not opened"
     },
     {
       "rank": 8,
