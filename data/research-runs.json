@@ -1,14 +1,26 @@
 {
   "schema_version": 1,
-  "current_run_id": "baseline-india-uae-2026-10-09",
+  "current_run_id": "SEA-01-2026-10-09",
   "meta": {
     "prepared_for": "Priyanshu",
-    "purpose": "LvlUp Ventures scout sourcing pipeline, India and UAE focus",
+    "purpose": "LvlUp Ventures scout sourcing pipeline, global programme: India and UAE baseline plus SEA-01 (Singapore, Indonesia, Malaysia)",
     "date_last_verified": "2026-10-09",
     "program_criteria_source": "lvlup_ventures_funding_programs.md (research snapshot dated 9 Oct 2026, from lvlup.vc pages). Only published criteria were treated as mandatory.",
-    "scoring_note": "No scoring rubric was supplied in the brief, so a default 100-point rubric was applied: program_fit 25, eligibility_evidence 20, commercial_traction 20, financing_need 15, timing 10, evidence_quality 10. The fit score is separate from the eligibility status. Re-score if you have an agreed rubric.",
+    "scoring_note": "100-point rubric: program_fit 25, eligibility_evidence 20, commercial_traction 20, financing_need 15, timing 10, evidence_quality 10. The fit score is separate from the eligibility status, and a high score never overrides Unknown or Fail. The baseline records were scored with the same weights. Re-score if you adopt a different agreed rubric.",
     "eligibility_key": "Pass = every applicable published criterion is supported by evidence. Fail = a published criterion is contradicted. Unknown = at least one published criterion cannot be confirmed. For the Seed Fund and E-Commerce Ecosystem Builders Fund, LvlUp publishes no hard thresholds, so Pass means the company matches the published description only.",
-    "all_financing_needs_are_inferred": true
+    "all_financing_needs_are_inferred": true,
+    "financing_need_key": "Confirmed = a source shows the company asked for or is raising financing of this type. Inferred = analyst reasoning from stage, model or use of funds. Unknown = no basis. All SEA-01 needs are Inferred.",
+    "program_criteria_audit": {
+      "audit_date": "2026-10-09",
+      "source": "lvlup.vc program pages scraped on 2026-10-09",
+      "findings": [
+        "CPG Fund (equity) now publishes at least $50K MRR, a physical good and a strong founding team. The earlier supplied snapshot said no minimum MRR was published. Baseline alternatives that name the CPG Fund were not re-scored.",
+        "Non-dilutive pages conflict on geography: page bodies say global revenue is considered, but the embedded application forms say U.S. or Canada-based brands. Non-dilutive eligibility for non-US companies is therefore kept at Unknown.",
+        "Tech Non-Dilutive range is $20K-$20M on the page but $100K-$50M in the embedded form. B2B SaaS page body says $40K-$1M+ MRR and an established U.S. entity while its checklist says $10K MRR and a U.S. entity or willingness to form one.",
+        "Seed Fund and E-Commerce Ecosystem Builders publish no hard thresholds; Pass for them means descriptive fit only.",
+        "LvlUp Labs page extraction returned nothing and was not re-verified."
+      ]
+    }
   },
   "considered_and_excluded": [
     {
@@ -30,6 +42,85 @@
     {
       "company": "ByteAsk",
       "reason": "Founded June 2026 and headquartered in San Francisco; just raised $1M pre-seed backed by Y Combinator."
+    },
+    {
+      "company": "Graas",
+      "country": "Singapore",
+      "reason": "US$17M Series B plus the Trustana acquisition (14 Aug 2026), well beyond LvlUp's published check sizes. Seen in a BackScoop e-commerce listing; not researched further.",
+      "run_id": "SEA-01-2026-10-09"
+    },
+    {
+      "company": "Pints AI",
+      "country": "Singapore",
+      "reason": "US$5.6M pre-Series A (Tin Men Capital and SBI Ven Capital). Enterprise AI for regulated financial institutions with no revenue evidence found and little sign of a financing need.",
+      "source_urls": [
+        "https://backscoop.com/startups/5-6m-for-pints-ai-to-help-more-financial-institutions-deploy-ai"
+      ],
+      "run_id": "SEA-01-2026-10-09"
+    },
+    {
+      "company": "Hangry",
+      "country": "Indonesia",
+      "reason": "US$10.5M Series A5 led by Alpha JWC (22 Oct 2025): older and larger than the target seed profile, and no operating metrics were verified in this run.",
+      "source_urls": [
+        "https://technode.global/2025/10/22/indonesias-hangry-secures-10-5m-in-series-a5-round-to-strengthen-growth-momentum/"
+      ],
+      "run_id": "SEA-01-2026-10-09"
+    },
+    {
+      "company": "Cube",
+      "country": "Thailand",
+      "reason": "Headquartered in Bangkok, so it belongs to SEA-02 scope. US$3.7M Series A reported 1 May 2026; deferred, not researched further.",
+      "source_urls": [
+        "https://backscoop.com/startups/3-7m-for-cube-to-expand-in-north-asia-latin-america"
+      ],
+      "run_id": "SEA-01-2026-10-09"
+    },
+    {
+      "company": "Konvy",
+      "country": "Thailand",
+      "reason": "Thai beauty platform with a US$22M Series B (May 2026): out of SEA-01 geography and beyond check sizes. Deferred to SEA-02 review.",
+      "run_id": "SEA-01-2026-10-09"
+    },
+    {
+      "company": "Etaily",
+      "country": "Philippines",
+      "reason": "Philippines-based commerce infrastructure (SMBC investment reported Dec 2025). Out of SEA-01 geography; deferred to SEA-02.",
+      "run_id": "SEA-01-2026-10-09"
+    },
+    {
+      "company": "Amity Robotics",
+      "country": "Thailand",
+      "reason": "Thailand-based robotics hardware. Out of SEA-01 geography; deferred to SEA-02.",
+      "run_id": "SEA-01-2026-10-09"
+    },
+    {
+      "company": "Return Helper",
+      "country": "Taiwan",
+      "reason": "Taipei-based (Dealroom, Yahoo Finance/PR Newswire), so outside the Singapore, Indonesia and Malaysia scope. US$4M Series A.",
+      "source_urls": [
+        "https://app.dealroom.co/news/note/return-helper-closes-4m-series-a-to-deepen-ai-driven-cross-border-logistics-in-japan",
+        "https://finance.yahoo.com/sectors/technology/articles/return-helper-closes-us-4-033000100.html"
+      ],
+      "run_id": "SEA-01-2026-10-09"
+    },
+    {
+      "company": "Lightsage",
+      "country": "United States",
+      "reason": "Described as San Francisco-based (API-Rex Inc.) with Singaporean founders, and a developer tool rather than commerce or consumer. Outside the geography and thesis.",
+      "run_id": "SEA-01-2026-10-09"
+    },
+    {
+      "company": "respond.io, Paywatch, dtcpay, OneByZero, IPID, Ropedia, PolicyStreet, Ajaib, Carsome",
+      "country": "Singapore / Indonesia / Malaysia",
+      "reason": "Headlines seen in regional feeds show late-stage or large rounds (about US$16M up to US$270M for those with disclosed figures) beyond LvlUp's published check sizes. Not verified individually in this run.",
+      "run_id": "SEA-01-2026-10-09"
+    },
+    {
+      "company": "Headline-only leads: Vibefam, Bundle, Acti, fileAI, SimpleAI, FORMAS.AI, ReN3, OnSite, Octen, Libeara, Muun AI, Nava, UangCermat, Pintarnya, One% Nutrition, Liquid8, Baskit, Plugo, Sirclo, Valiance Health, BrioHR, GreatAsic, nSWX",
+      "country": "Singapore / Indonesia / Malaysia",
+      "reason": "Names seen in funding feeds but not verified in SEA-01 (search rate limits and time). Not rejected on merit: candidates for a follow-up pass if SEA-01 is extended.",
+      "run_id": "SEA-01-2026-10-09"
     }
   ],
   "runs": [
@@ -42,6 +133,20 @@
       "excluded_candidate_count": 5,
       "source_dataset": "lvlup_sourcing_pipeline.json",
       "notes": "Initial baseline copied into the separated-data structure. Candidate and exclusion records are preserved from the source dataset."
+    },
+    {
+      "run_id": "SEA-01-2026-10-09",
+      "date": "2026-10-09",
+      "scope": "Singapore, Indonesia, Malaysia",
+      "batch_name": "SEA-01",
+      "status": "Completed (below target: fewer than 20 credible candidates found)",
+      "companies_added": 14,
+      "companies_updated": 8,
+      "active_candidate_count": 22,
+      "excluded_candidate_count": 16,
+      "exclusions_added": 11,
+      "source_dataset": "data/companies.json",
+      "notes": "Added 14 new candidates. Baseline records were kept unchanged except for additive country, region and research_batch_id fields. Discovery used regional funding coverage (BackScoop, TechNode, e27, KR-Asia, Dealroom, Fireround) via web search and page extraction; some pages were read only through search snippets or extracted answers, and cited-but-unopened links are labelled. Search rate limits ended further discovery, so several headline-only leads are listed in the exclusions as unverified. Thailand, Philippines, Vietnam and Taiwan names were deferred to SEA-02 or recorded as out of scope."
     }
   ]
 }
