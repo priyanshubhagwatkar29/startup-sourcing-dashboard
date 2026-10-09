@@ -71,8 +71,6 @@ let DATA = { meta: {}, companies: [], considered_and_excluded: [] };
 let companies = DATA.companies;
 let excluded = DATA.considered_and_excluded;
 let META = DATA.meta;
-const excluded = DATA.considered_and_excluded || [];
-const META = DATA.meta || {};
 const STATUS = ['New','Researching','Ready for outreach','Contacted','Watchlist','Passed'];
 const STORAGE_KEY = 'lvlup_scout_pipeline_v1';
 let sortDesc=true, currentCompany=null, currentView='overview';
