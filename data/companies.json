@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "dataset_id": "lvlup-sourcing-global",
-  "scope": "Global sourcing: India and UAE baseline (2026-10-09) plus SEA-01 Singapore, Indonesia, Malaysia (2026-10-09)",
+  "scope": "Global sourcing; current focus India (primary) and UAE (secondary). Batches: India/UAE baseline, SEA-01 (Singapore, Indonesia, Malaysia), INDIA-UAE-02.",
   "updated_at": "2026-10-09",
   "companies": [
     {
@@ -1058,6 +1058,341 @@
       "missing_information": "Revenue, per-station economics, founders, founding year.",
       "suggested_next_research_step": "Low priority. Revisit if revenue evidence appears.",
       "confidence_level": "Low",
+      "date_last_verified": "2026-10-09"
+    },
+    {
+      "rank": 23,
+      "company_name": "Nitro Commerce",
+      "official_website": "https://nitrocommerce.ai/",
+      "country": "India",
+      "region": "South Asia",
+      "research_batch_id": "INDIA-UAE-02-2026-10-09",
+      "hq_and_geography": "New Delhi, India (Entrackr).",
+      "industry_and_business_model": "AI growth and marketing platform for consumer brands across D2C, quick commerce, marketplaces and retail (B2B SaaS, e-commerce enablement).",
+      "product_summary": "Unifies shopper identity, intent, engagement and attribution into one growth layer through NitroX, Nitro Ads and Nitro Pulse.",
+      "founding_year": "Not stated in sources reviewed",
+      "funding_stage": "Series A",
+      "funding_history": [
+        "Jun 2024: Rs 15 Cr (about $1.8M) seed led by Cornerstone Venture Partners (Entrackr, Outlook Business).",
+        "8 Jan 2026: $5M full-equity Series A led by Cornerstone Ventures with India Accelerator & Finvolve, Equentis, Grand Anicut Angel Fund, Razorpay Ventures, Rukum Sitara Fund and Ankurit Capital (Entrackr)."
+      ],
+      "revenue_or_traction_evidence": "Company-reported (via Entrackr, Jan 2026): more than 2,500 brands, revenue growing 10x year on year, $5M ARR reached within 12 months, and a target of $10M ARR over the following six months (a target, not a result). Analyst inference: $5M ARR is roughly $415K per month.",
+      "likely_financing_need_inferred": "Inferred. Nine months after the Series A, the company was targeting a doubling of ARR and international expansion; a further round or follow-on is plausible, but no current raise is confirmed.",
+      "financing_need_status": "Inferred",
+      "best_fit_program": "E-Commerce Ecosystem Builders Fund",
+      "alternative_program": "Industry-Agnostic Seed Fund",
+      "program_fit_score": 78,
+      "score_breakdown": {
+        "program_fit": 23,
+        "eligibility_evidence": 15,
+        "commercial_traction": 18,
+        "financing_need": 8,
+        "timing": 7,
+        "evidence_quality": 7
+      },
+      "mandatory_eligibility_status": "Pass",
+      "eligibility_checks": {
+        "builds_technology_for_ecommerce_merchants": "Pass (growth platform for D2C and marketplace brands)",
+        "stage_pre_seed_to_series_a_plus": "Pass (Series A)",
+        "geography": "Pass (the fund backs founders across all geographies)",
+        "shopline_ecosystem_relevance": "Unknown (no SHOPLINE integration found)"
+      },
+      "eligibility_note": "Pass reflects the published description only. SHOPLINE relevance is a placement benefit, not a published threshold. LvlUp does not publish hard thresholds for this fund.",
+      "evidence_and_source_urls": [
+        "https://entrackr.com/snippets/nitro-commerce-raises-5-mn-in-series-a-led-by-cornerstone-ventures-10981056",
+        "https://entrackr.com/2024/06/cornerstone-ventures-leads-rs-15-cr-round-in-nitro-commerce",
+        "https://nitrocommerce.ai/"
+      ],
+      "most_recent_relevant_event": "$5M Series A announced 8 Jan 2026",
+      "missing_information": "Current ARR versus the $10M target, burn and runway, whether a new round is open, founder contact route.",
+      "suggested_next_research_step": "Check for any 2026 update on ARR, then approach the founders (Umair Mohammad, Shamail Tayyab, Pratik Anand per Entrackr) about the E-Commerce Ecosystem Builders Fund.",
+      "confidence_level": "Medium-High",
+      "date_last_verified": "2026-10-09"
+    },
+    {
+      "rank": 24,
+      "company_name": "ONYA",
+      "official_website": "https://onyadiamonds.com/",
+      "country": "India",
+      "region": "South Asia",
+      "research_batch_id": "INDIA-UAE-02-2026-10-09",
+      "hq_and_geography": "Bengaluru, India. Stores in Bengaluru, Pune (Amanora Gold Souk) and Hyderabad (Jubilee Hills).",
+      "industry_and_business_model": "Lab-grown diamond fine jewellery brand selling through company-owned stores, franchises and online (CPG, physical goods).",
+      "product_summary": "Lab-grown diamond jewellery with a proprietary ring setting (the ONYA Setting) and a Signature Collection.",
+      "founding_year": "2024 (Entrackr)",
+      "funding_stage": "Pre-Series A",
+      "funding_history": [
+        "Earlier: Rs 5.5 Cr seed round (Entrackr; date not stated).",
+        "24 Sep 2026: Rs 12.5 Cr pre-Series A from Divisa Family Office, Zeropearl VC, the MyGate founders, the UrbanVault founder and others (Entrackr)."
+      ],
+      "revenue_or_traction_evidence": "Company-reported (via Entrackr, Sep 2026): 'scaled to Rs 3.5 crore Monthly Recurring Revenue', with 8 flagship stores. Analyst inference: about $0.4M per month at current exchange rates, an estimate. For jewellery, 'MRR' likely means monthly sales rather than subscription revenue.",
+      "likely_financing_need_inferred": "Inferred. Stated use of funds is retail footprint, digital acquisition and product R&D. Jewellery retail is inventory-heavy, so working-capital needs are plausible, though the Sep 2026 round lowers near-term urgency.",
+      "financing_need_status": "Inferred",
+      "best_fit_program": "CPG Fund",
+      "alternative_program": "Industry-Agnostic Seed Fund",
+      "program_fit_score": 73,
+      "score_breakdown": {
+        "program_fit": 20,
+        "eligibility_evidence": 12,
+        "commercial_traction": 18,
+        "financing_need": 8,
+        "timing": 9,
+        "evidence_quality": 6
+      },
+      "mandatory_eligibility_status": "Unknown",
+      "eligibility_checks": {
+        "cpg_fund_mrr_at_least_50k": "Pass on estimate (Rs 3.5 Cr monthly, company-reported)",
+        "cpg_fund_sells_a_physical_good": "Pass (jewellery)",
+        "cpg_fund_strong_founding_team": "Unknown (subjective criterion, not assessed)",
+        "geography": "Unknown (India; CPG Fund page meta references the USA)",
+        "seed_fund_alternative": "Pass on description (pre-Series A, worldwide, sector-agnostic), relevant only to the alternative program"
+      },
+      "eligibility_note": "CPG Fund page body lists at least $50K MRR, a physical good and a strong founding team, and states no geography; its meta description says 'CPG startup funding in the USA' and the portfolio shown is US brands. Geography is therefore Unknown for non-US brands. The listed CPG categories (health and beauty, wellness, food, beverage, hardware, dual-use 'and more') do not name jewellery.",
+      "evidence_and_source_urls": [
+        "https://entrackr.com/snippets/lab-grown-diamond-jewellery-brand-onya-raises-rs-125-crore-in-pre-series-a-round-12571229",
+        "https://onyadiamonds.com/"
+      ],
+      "most_recent_relevant_event": "Rs 12.5 Cr pre-Series A announced 24 Sep 2026",
+      "missing_information": "Gross margin, store-level economics, franchise versus owned revenue split, inventory financing, seed-round date.",
+      "suggested_next_research_step": "Confirm with LvlUp whether the CPG Fund considers Indian brands; then ask the founders (Gaurav Choudhary, Himani Yadav) for monthly sales and margin data.",
+      "confidence_level": "Medium",
+      "date_last_verified": "2026-10-09"
+    },
+    {
+      "rank": 25,
+      "company_name": "EDT",
+      "official_website": "Not verified",
+      "official_website_note": "Instagram handle @edt.world seen in search results; official domain not confirmed in this run.",
+      "country": "India",
+      "region": "South Asia",
+      "research_batch_id": "INDIA-UAE-02-2026-10-09",
+      "hq_and_geography": "Mumbai, India (Inc42).",
+      "industry_and_business_model": "Premium consumer appliances and beauty devices sold D2C, on marketplaces and in offline retail (CPG hardware).",
+      "product_summary": "Kitchen appliances (LUMA air-fryer oven, FLOW kettle) and a new hair dryer line, SUKI, with a patent-pending heat-control algorithm.",
+      "founding_year": "2025 (Inc42, Entrepreneur India)",
+      "funding_stage": "Pre-Series A",
+      "funding_history": [
+        "Dec 2025: $1.4M round (Inc42).",
+        "30 Sep 2026: $2.4M (over Rs 23 Cr) pre-Series A led by Sauce.vc with Alteria Capital and angels (Inc42)."
+      ],
+      "revenue_or_traction_evidence": "Company-reported (Entrepreneur India): Amazon business scaled nearly 7x between Mar and Jul 2026; channels include D2C, Amazon, Flipkart, Blinkit, Croma and FoodStories. Absolute revenue not disclosed.",
+      "likely_financing_need_inferred": "Inferred, with a company-stated basis: Inc42 reports the round will build festive inventory. Alteria (a venture-debt provider) joined the round. Inventory and working-capital needs are therefore plausible and recurring.",
+      "financing_need_status": "Inferred",
+      "best_fit_program": "Industry-Agnostic Seed Fund",
+      "alternative_program": "CPG Fund",
+      "program_fit_score": 68,
+      "score_breakdown": {
+        "program_fit": 17,
+        "eligibility_evidence": 14,
+        "commercial_traction": 11,
+        "financing_need": 10,
+        "timing": 9,
+        "evidence_quality": 7
+      },
+      "mandatory_eligibility_status": "Pass",
+      "eligibility_checks": {
+        "technology_or_product_company": "Pass (consumer hardware with proprietary product IP claims)",
+        "stage_pre_seed_to_series_a": "Pass (pre-Series A)",
+        "geography": "Pass (the Seed Fund is worldwide)",
+        "cpg_fund_mrr_at_least_50k": "Unknown (revenue not disclosed), relevant only to the alternative program"
+      },
+      "eligibility_note": "Pass reflects the published description only (up to $250K, pre-seed to Series A, worldwide, sector-agnostic). LvlUp does not publish hard thresholds for the Seed Fund. CPG Fund alternative: hardware is a listed category, but MRR and geography are unconfirmed.",
+      "evidence_and_source_urls": [
+        "https://inc42.com/buzz/consumer-appliance-startup-edt-raises-2-4-mn-to-expand-product-portfolio/",
+        "https://india.entrepreneur.com/business-news/edt-raises-usd-2-4-mn-expands-into-beauty-tech-with-suki-hair-dryer"
+      ],
+      "most_recent_relevant_event": "$2.4M pre-Series A announced 30 Sep 2026",
+      "missing_information": "Monthly revenue, gross margin, return rates, official website, contract-manufacturing terms.",
+      "suggested_next_research_step": "Ask founders (Naiyya Saggi, Vyasateja Rao) for monthly sales after the festive season; that settles CPG Fund eligibility.",
+      "confidence_level": "Medium",
+      "date_last_verified": "2026-10-09"
+    },
+    {
+      "rank": 26,
+      "company_name": "BrainSightAI",
+      "official_website": "https://www.brainsightai.com/",
+      "country": "India",
+      "region": "South Asia",
+      "research_batch_id": "INDIA-UAE-02-2026-10-09",
+      "hq_and_geography": "Bengaluru, India.",
+      "industry_and_business_model": "AI connectomics software for neurosurgery and radiology (healthtech, software as a medical device).",
+      "product_summary": "VoxelBox products generate personalised brain network maps from functional and structural MRI for pre-surgical planning and research.",
+      "founding_year": "2019 (per Araya research compiled earlier; not re-verified in this run)",
+      "funding_stage": "Pre-Series A",
+      "funding_history": [
+        "8 Jan 2025: $5M pre-Series A led by IAN Alpha Fund with IvyCap Ventures, Silver Needle and existing investors (BioSpectrum)."
+      ],
+      "revenue_or_traction_evidence": "Third-party reported (BioSpectrum, Jan 2025): collaborates with over 40 hospitals in India, mainly neurosurgery and radiology. Revenue not disclosed. Later hospital counts and pricing in the earlier Araya research were not re-verified in this run.",
+      "likely_financing_need_inferred": "Inferred. About 21 months have passed since the pre-Series A, and the stated plans (Tier 2 expansion, FDA certification, international markets) are capital-intensive, so a Series A process is plausible. Not confirmed.",
+      "financing_need_status": "Inferred",
+      "best_fit_program": "Industry-Agnostic Seed Fund",
+      "alternative_program": "None identified",
+      "program_fit_score": 68,
+      "score_breakdown": {
+        "program_fit": 19,
+        "eligibility_evidence": 15,
+        "commercial_traction": 13,
+        "financing_need": 9,
+        "timing": 6,
+        "evidence_quality": 6
+      },
+      "mandatory_eligibility_status": "Pass",
+      "eligibility_checks": {
+        "technology_company": "Pass",
+        "stage_pre_seed_to_series_a": "Pass (pre-Series A)",
+        "geography": "Pass (the Seed Fund is worldwide)"
+      },
+      "eligibility_note": "Pass reflects the published description only (up to $250K, pre-seed to Series A, worldwide, sector-agnostic). LvlUp does not publish hard thresholds for the Seed Fund. Araya-sourced: this company is on the Araya Ventures India healthtech shortlist Priyanshu prepared. Inform Araya before sharing an LvlUp application link, to avoid a conflict over the same deal.",
+      "evidence_and_source_urls": [
+        "https://biospectrumindia.com/news/20/25522/brainsightai-raises-5-m-in-pre-series-a-funding-round-to-expand-presence-in-india-.html",
+        "https://www.brainsightai.com/"
+      ],
+      "most_recent_relevant_event": "$5M pre-Series A announced 8 Jan 2025 (no newer round found)",
+      "missing_information": "Current hospital count and revenue, whether a Series A is open, regulatory status updates since Jan 2025.",
+      "suggested_next_research_step": "Clear the overlap with Araya first, then confirm Series A timing with the founders.",
+      "confidence_level": "Medium",
+      "date_last_verified": "2026-10-09"
+    },
+    {
+      "rank": 27,
+      "company_name": "AÏZA (Amaani)",
+      "official_website": "https://www.aiza.co/",
+      "country": "UAE",
+      "region": "Middle East",
+      "research_batch_id": "INDIA-UAE-02-2026-10-09",
+      "hq_and_geography": "Dubai, UAE. Expanding across the GCC, starting with Saudi Arabia (Ulta Beauty, Jeddah and Riyadh), then Kuwait and Qatar.",
+      "industry_and_business_model": "Skincare and haircare brand inspired by Arab beauty rituals, sold online, on Ounass and through Ulta Beauty Middle East (CPG, beauty).",
+      "product_summary": "Hero products include the Sukkar Rush lip treatment, Scent Storm hair mist and Date Setter brow and lash serum.",
+      "founding_year": "2023 (Entrackr)",
+      "funding_stage": "Series A",
+      "funding_history": [
+        "28 Sep 2026: $5M Series A led by BECO Capital with Homegrown Ventures and Peak XV's Surge (Entrackr, Wamda)."
+      ],
+      "revenue_or_traction_evidence": "Company-reported (via Entrackr): net revenue grew more than 9x year on year in H1 2026 as the brand moved from online-first into retail. Absolute revenue not disclosed.",
+      "likely_financing_need_inferred": "Inferred. Retail rollout across the GCC requires inventory and channel working capital, but the Series A closed in Sep 2026, so urgency is moderate.",
+      "financing_need_status": "Inferred",
+      "best_fit_program": "CPG Fund",
+      "alternative_program": "Industry-Agnostic Seed Fund",
+      "program_fit_score": 66,
+      "score_breakdown": {
+        "program_fit": 20,
+        "eligibility_evidence": 10,
+        "commercial_traction": 13,
+        "financing_need": 7,
+        "timing": 9,
+        "evidence_quality": 7
+      },
+      "mandatory_eligibility_status": "Unknown",
+      "eligibility_checks": {
+        "cpg_fund_mrr_at_least_50k": "Unknown (absolute revenue not disclosed)",
+        "cpg_fund_sells_a_physical_good": "Pass (skincare and haircare)",
+        "cpg_fund_strong_founding_team": "Unknown (subjective criterion, not assessed)",
+        "geography": "Unknown (UAE; CPG Fund page meta references the USA)",
+        "seed_fund_alternative": "Pass on description (Series A, worldwide), relevant only to the alternative program"
+      },
+      "eligibility_note": "CPG Fund page body lists at least $50K MRR, a physical good and a strong founding team, and states no geography; its meta description says 'CPG startup funding in the USA' and the portfolio shown is US brands. Geography is therefore Unknown for non-US brands. Health and beauty is a listed CPG category.",
+      "evidence_and_source_urls": [
+        "https://entrackr.com/snippets/beauty-and-wellness-startup-amaani-raises-5-mn-led-by-beco-capital-12583526",
+        "https://www.wamda.com/2026/09/%C3%AFza-parent-amaani-raises-5-million-series-a-gcc-expansion",
+        "https://www.aiza.co/"
+      ],
+      "most_recent_relevant_event": "$5M Series A announced 28 Sep 2026",
+      "missing_information": "Monthly revenue (decides the CPG Fund $50K MRR test), margins, retail sell-through, founding-team detail.",
+      "suggested_next_research_step": "Ask for monthly revenue; if above $50K, confirm with LvlUp whether UAE brands qualify for the CPG Fund.",
+      "confidence_level": "Medium",
+      "date_last_verified": "2026-10-09"
+    },
+    {
+      "rank": 28,
+      "company_name": "Tax Star",
+      "official_website": "https://www.taxstar.app/",
+      "country": "UAE",
+      "region": "Middle East",
+      "research_batch_id": "INDIA-UAE-02-2026-10-09",
+      "hq_and_geography": "Dubai, UAE (Wamda describes it as UAE-based); expanding across the GCC.",
+      "industry_and_business_model": "AI corporate tax, e-invoicing and zakat compliance software for accountants and businesses (B2B SaaS, taxtech).",
+      "product_summary": "Automates UAE corporate tax workflows and e-invoicing; integrates with Xero, QuickBooks, Zoho, Odoo and Naqood.",
+      "founding_year": "2023 (Wamda)",
+      "funding_stage": "Seed",
+      "funding_history": [
+        "Aug 2026: $1.75M seed, primarily from angel investors (Wamda)."
+      ],
+      "revenue_or_traction_evidence": "Third-party reported (Wamda): pre-approved Accredited Service Provider for the UAE's upcoming e-invoicing system, and described as the only ASP listed on the Xero and QuickBooks app stores with native integration. Revenue and customer counts not disclosed.",
+      "likely_financing_need_inferred": "Inferred. The cap table is angel-led, and the UAE e-invoicing mandate creates a go-to-market window, so an institutional seed or Series A is plausible. Not confirmed.",
+      "financing_need_status": "Inferred",
+      "best_fit_program": "Industry-Agnostic Seed Fund",
+      "alternative_program": "None identified",
+      "program_fit_score": 66,
+      "score_breakdown": {
+        "program_fit": 19,
+        "eligibility_evidence": 15,
+        "commercial_traction": 9,
+        "financing_need": 9,
+        "timing": 8,
+        "evidence_quality": 6
+      },
+      "mandatory_eligibility_status": "Pass",
+      "eligibility_checks": {
+        "technology_company": "Pass",
+        "stage_pre_seed_to_series_a": "Pass (seed)",
+        "geography": "Pass (the Seed Fund is worldwide)"
+      },
+      "eligibility_note": "Pass reflects the published description only (up to $250K, pre-seed to Series A, worldwide, sector-agnostic). LvlUp does not publish hard thresholds for the Seed Fund.",
+      "evidence_and_source_urls": [
+        "https://www.wamda.com/2026/08/tax-star-closes-1-75-million-seed-round-expand-gcc",
+        "https://www.taxstar.app/"
+      ],
+      "most_recent_relevant_event": "$1.75M seed announced Aug 2026",
+      "missing_information": "Revenue, paying customers, pricing, exact round date.",
+      "suggested_next_research_step": "Ask founders (Rayhan Aleem, Haris Tasawar) for paying-customer count and ARR; this is closest to Priyanshu's AI fintech/SaaS lane.",
+      "confidence_level": "Medium",
+      "date_last_verified": "2026-10-09"
+    },
+    {
+      "rank": 29,
+      "company_name": "D-Nome",
+      "official_website": "Not verified",
+      "official_website_note": "No official domain was confirmed in this run.",
+      "country": "India",
+      "region": "South Asia",
+      "research_batch_id": "INDIA-UAE-02-2026-10-09",
+      "hq_and_geography": "Hyderabad, India (BioSpectrum).",
+      "industry_and_business_model": "Point-of-care molecular diagnostics (deeptech healthtech).",
+      "product_summary": "D-ISO NAAT platform for molecular TB screening without conventional PCR equipment.",
+      "founding_year": "2021 (per Araya research compiled earlier; not re-verified)",
+      "funding_stage": "Seed (per earlier compiled data; not re-verified)",
+      "funding_history": [
+        "Earlier Araya research (third-party databases, not re-verified): about $1.56M raised, last equity round Dec 2022.",
+        "8 Apr 2026: support from India Health Fund (a Tata Trusts initiative) to develop and validate D-ISO NAAT; amount and form not stated (BioSpectrum)."
+      ],
+      "revenue_or_traction_evidence": "Earlier Araya research cited revenue of Rs 1.22 Cr as of Mar 2024 from a third-party database; not re-verified in this run. No current revenue found.",
+      "likely_financing_need_inferred": "Inferred. Nearly four years since the last reported equity round, with validation and pilots ahead; an equity round is plausible but unconfirmed.",
+      "financing_need_status": "Inferred",
+      "best_fit_program": "Industry-Agnostic Seed Fund",
+      "alternative_program": "None identified",
+      "program_fit_score": 52,
+      "score_breakdown": {
+        "program_fit": 14,
+        "eligibility_evidence": 11,
+        "commercial_traction": 8,
+        "financing_need": 9,
+        "timing": 6,
+        "evidence_quality": 4
+      },
+      "mandatory_eligibility_status": "Unknown",
+      "eligibility_checks": {
+        "technology_company": "Pass",
+        "stage_pre_seed_to_series_a": "Unknown (stage relies on earlier, unverified database data)",
+        "geography": "Pass (the Seed Fund is worldwide)"
+      },
+      "eligibility_note": "Araya-sourced: this company is on the Araya Ventures India healthtech shortlist Priyanshu prepared. Inform Araya before sharing an LvlUp application link, to avoid a conflict over the same deal. Diagnostics carries regulatory and validation risk that the Seed Fund description does not address.",
+      "evidence_and_source_urls": [
+        "https://www.biospectrumindia.com/news/20/27635/india-health-fund-supports-d-nome-to-bolster-molecular-tb-screening-in-india.html"
+      ],
+      "most_recent_relevant_event": "India Health Fund support announced 8 Apr 2026",
+      "missing_information": "Official website, current revenue, cap table and stage, pilot results.",
+      "suggested_next_research_step": "Low priority for LvlUp. Verify stage and revenue via MCA filings before any outreach.",
+      "confidence_level": "Low-Medium",
       "date_last_verified": "2026-10-09"
     }
   ]

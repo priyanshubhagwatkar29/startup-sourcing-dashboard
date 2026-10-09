@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "current_run_id": "SEA-01-2026-10-09",
+  "current_run_id": "INDIA-UAE-02-2026-10-09",
   "meta": {
     "prepared_for": "Priyanshu",
-    "purpose": "LvlUp Ventures scout sourcing pipeline, global programme: India and UAE baseline plus SEA-01 (Singapore, Indonesia, Malaysia)",
+    "purpose": "LvlUp Ventures scout sourcing pipeline. Current focus: India (primary) and UAE (secondary). Earlier SEA-01 records are preserved as history.",
     "date_last_verified": "2026-10-09",
     "program_criteria_source": "lvlup_ventures_funding_programs.md (research snapshot dated 9 Oct 2026, from lvlup.vc pages). Only published criteria were treated as mandatory.",
     "scoring_note": "100-point rubric: program_fit 25, eligibility_evidence 20, commercial_traction 20, financing_need 15, timing 10, evidence_quality 10. The fit score is separate from the eligibility status, and a high score never overrides Unknown or Fail. The baseline records were scored with the same weights. Re-score if you adopt a different agreed rubric.",
@@ -18,7 +18,8 @@
         "Non-dilutive pages conflict on geography: page bodies say global revenue is considered, but the embedded application forms say U.S. or Canada-based brands. Non-dilutive eligibility for non-US companies is therefore kept at Unknown.",
         "Tech Non-Dilutive range is $20K-$20M on the page but $100K-$50M in the embedded form. B2B SaaS page body says $40K-$1M+ MRR and an established U.S. entity while its checklist says $10K MRR and a U.S. entity or willingness to form one.",
         "Seed Fund and E-Commerce Ecosystem Builders publish no hard thresholds; Pass for them means descriptive fit only.",
-        "LvlUp Labs page extraction returned nothing and was not re-verified."
+        "LvlUp Labs page extraction returned nothing and was not re-verified.",
+        "Rechecked 2026-10-09 for INDIA-UAE-02: Seed Fund page confirms $150K-$250K checks, pre-seed to Series A, worldwide, sector-agnostic. CPG Fund body unchanged (at least $50K MRR, physical good, strong founding team, $10K-$150K initial), but its meta description says 'in the USA'. CPG Non-Dilutive meta now says '$50K-$20M' and 'CPG brands in the USA'. For India and UAE companies, the Seed Fund and E-Commerce Ecosystem Builders are the only programs whose published text explicitly covers non-US founders."
       ]
     }
   },
@@ -121,6 +122,75 @@
       "country": "Singapore / Indonesia / Malaysia",
       "reason": "Names seen in funding feeds but not verified in SEA-01 (search rate limits and time). Not rejected on merit: candidates for a follow-up pass if SEA-01 is extended.",
       "run_id": "SEA-01-2026-10-09"
+    },
+    {
+      "company": "Protein Pantry",
+      "country": "India",
+      "reason": "Founded Nov 2025; Rs 9 Cr seed led by Sharrp Ventures (22 Sep 2026). No revenue disclosed and capital just raised, so below the traction bar for now. Revisit in 6 to 9 months.",
+      "source_urls": [
+        "https://ascendants.in/funding-feed/protein-pantry-raises-rs-9-crore-seed-funding-sharrp-ventures-frozen-food-manufacturing/"
+      ],
+      "run_id": "INDIA-UAE-02-2026-10-09"
+    },
+    {
+      "company": "UniqYou",
+      "country": "India",
+      "reason": "Founded 2026; Rs 15.8 Cr seed led by Arkam Ventures and Antler (14 Sep 2026). No revenue or channel data disclosed.",
+      "source_urls": [
+        "https://ascendants.in/funding-feed/uniqyou-raises-rs-15-8-cr-seed-round-at-rs-64-cr-valuation/"
+      ],
+      "run_id": "INDIA-UAE-02-2026-10-09"
+    },
+    {
+      "company": "Indian Walker",
+      "country": "India",
+      "reason": "Pre-seed (Sep 2026) at a Rs 20 Cr valuation. Only a Rs 100 Cr ARR target is reported, not current revenue.",
+      "source_urls": [
+        "https://ascendants.in/funding-feed/indian-walker-pre-seed-funding-rs-20-crore-valuation-pwm/"
+      ],
+      "run_id": "INDIA-UAE-02-2026-10-09"
+    },
+    {
+      "company": "Bangalore Watch Company",
+      "country": "India",
+      "reason": "$1.4M seed from customers (1 Oct 2026). One boutique and production capacity are reported, but no revenue. Watchlist for the CPG Fund if monthly sales exceed $50K.",
+      "source_urls": [
+        "https://entrackr.com/snippets/bangalore-watch-company-raises-14-mn-in-seed-round-from-customers-family-office-hnis-12611688"
+      ],
+      "run_id": "INDIA-UAE-02-2026-10-09"
+    },
+    {
+      "company": "Keploy",
+      "country": "India",
+      "reason": "Backed by Flipkart Ventures (YourStory; date not captured), but amount, stage and traction were not disclosed in the source reviewed.",
+      "source_urls": [
+        "https://yourstory.com/ai-story/flipkart-ventures-backs-alive-and-keploy-placing-fresh-bets-ai-led-startups"
+      ],
+      "run_id": "INDIA-UAE-02-2026-10-09"
+    },
+    {
+      "company": "Oro",
+      "country": "UAE",
+      "reason": "$3M strategic round (Aug 2026) for an AI DeFi execution app. Traction is user counts and incentive-campaign completions, with no revenue. Watchlist for the Web3 lane, not an LvlUp fit yet.",
+      "source_urls": [
+        "https://www.wamda.com/2026/08/oro-raises-3-million-scale-ai-powered-financial-execution-platform"
+      ],
+      "run_id": "INDIA-UAE-02-2026-10-09"
+    },
+    {
+      "company": "Cobi",
+      "country": "UAE",
+      "reason": "$1M pre-seed (Aug 2026). Enterprise engagements are described as exploratory, so commercial traction is not yet evidenced.",
+      "source_urls": [
+        "https://www.wamda.com/2026/08/cobi-secures-1-million-pre-seed-led-lunara-partners"
+      ],
+      "run_id": "INDIA-UAE-02-2026-10-09"
+    },
+    {
+      "company": "Araya shortlist not added: Elda Health, Pinky Promise, Synapsica, Prodoc AI, Augnito, Prediscan Medtech, ClaimBuddy, Vitraya, Veera Health",
+      "country": "India",
+      "reason": "Reviewed from Priyanshu's Araya India healthtech shortlist. Elda Health: no 2026 evidence found and last round Jul 2023 per earlier data. Pinky Promise: raised Jan 2026, timing weak. Synapsica and Veera Health: no raise since 2021, status unclear. Prodoc AI, Augnito and Prediscan: basic funding and traction facts unverified. ClaimBuddy and Vitraya: about $8M and $13M raised per earlier data, beyond LvlUp's seed entry point. AarogyaAI was excluded earlier as apparently defunct. Earlier figures come from the Araya research and were not re-verified in this run.",
+      "run_id": "INDIA-UAE-02-2026-10-09"
     }
   ],
   "runs": [
@@ -147,6 +217,27 @@
       "exclusions_added": 11,
       "source_dataset": "data/companies.json",
       "notes": "Added 14 new candidates. Baseline records were kept unchanged except for additive country, region and research_batch_id fields. Discovery used regional funding coverage (BackScoop, TechNode, e27, KR-Asia, Dealroom, Fireround) via web search and page extraction; some pages were read only through search snippets or extracted answers, and cited-but-unopened links are labelled. Search rate limits ended further discovery, so several headline-only leads are listed in the exclusions as unverified. Thailand, Philippines, Vietnam and Taiwan names were deferred to SEA-02 or recorded as out of scope."
+    },
+    {
+      "run_id": "INDIA-UAE-02-2026-10-09",
+      "date": "2026-10-09",
+      "scope": "India (primary), UAE (secondary)",
+      "batch_name": "INDIA-UAE-02",
+      "status": "Completed (quality-filtered; small by design)",
+      "companies_added": 7,
+      "companies_updated": 0,
+      "active_candidate_count": 29,
+      "excluded_candidate_count": 24,
+      "exclusions_added": 8,
+      "source_dataset": "data/companies.json",
+      "sourcing_references": [
+        "Entrackr weekly funding reports and D2C tracker (Sep-Oct 2026)",
+        "Inc42 weekly funding roundup (28 Sep-2 Oct 2026)",
+        "Wamda UAE news (Aug-Oct 2026)",
+        "Ascendants funding feed",
+        "Priyanshu's Araya Ventures India healthtech shortlist (prior chat)"
+      ],
+      "notes": "Seven candidates added (five India, two UAE). Deduplicated by normalised name, website domain and existing exclusion text. Two Araya-shortlist companies (BrainSightAI, D-Nome) are added with an explicit Araya-overlap note; the other Araya names are recorded as exclusions with reasons. Existing records, including the SEA-01 batch, were left unchanged. Very recent rounds with no revenue evidence were excluded rather than added."
     }
   ]
 }
