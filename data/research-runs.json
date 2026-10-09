@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "current_run_id": "baseline-india-uae-2026-10-09",
+  "meta": {
+    "prepared_for": "Priyanshu",
+    "purpose": "LvlUp Ventures scout sourcing pipeline, India and UAE focus",
+    "date_last_verified": "2026-10-09",
+    "program_criteria_source": "lvlup_ventures_funding_programs.md (research snapshot dated 9 Oct 2026, from lvlup.vc pages). Only published criteria were treated as mandatory.",
+    "scoring_note": "No scoring rubric was supplied in the brief, so a default 100-point rubric was applied: program_fit 25, eligibility_evidence 20, commercial_traction 20, financing_need 15, timing 10, evidence_quality 10. The fit score is separate from the eligibility status. Re-score if you have an agreed rubric.",
+    "eligibility_key": "Pass = every applicable published criterion is supported by evidence. Fail = a published criterion is contradicted. Unknown = at least one published criterion cannot be confirmed. For the Seed Fund and E-Commerce Ecosystem Builders Fund, LvlUp publishes no hard thresholds, so Pass means the company matches the published description only.",
+    "all_financing_needs_are_inferred": true
+  },
+  "considered_and_excluded": [
+    {
+      "company": "Yozo.ai",
+      "reason": "Only a headline seen ($1.7M pre-seed co-led by Access Bridge Ventures); no verified details."
+    },
+    {
+      "company": "Comfi",
+      "reason": "$65M pre-Series A in Apr 2026, well beyond LvlUp seed scale."
+    },
+    {
+      "company": "CoreworksAI",
+      "reason": "$5M seed in Mar 2026 at beta stage with no revenue evidence; low financing need."
+    },
+    {
+      "company": "Zintlr, Pepsales, Roopya",
+      "reason": "Rounds undated or older in the sources reviewed."
+    },
+    {
+      "company": "ByteAsk",
+      "reason": "Founded June 2026 and headquartered in San Francisco; just raised $1M pre-seed backed by Y Combinator."
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "baseline-india-uae-2026-10-09",
+      "date": "2026-10-09",
+      "scope": "India and UAE baseline",
+      "status": "Imported baseline",
+      "active_candidate_count": 8,
+      "excluded_candidate_count": 5,
+      "source_dataset": "lvlup_sourcing_pipeline.json",
+      "notes": "Initial baseline copied into the separated-data structure. Candidate and exclusion records are preserved from the source dataset."
+    }
+  ]
+}
