@@ -90,6 +90,22 @@ function companyWebsiteDisplay(c){const raw=String(c?.official_website??'').trim
 function shortHost(u){try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return u||'Source'}}
 function pillStatus(s){let k=String(s||'').toLowerCase();let cls=k==='pass'?'pass':k==='fail'?'fail':k==='unknown'?'unknown':'neutral';return `<span class="pill ${cls}">${esc(s||'Unknown')}</span>`}
 function sourceBadge(c){return `${(c.evidence_and_source_urls||[]).length} source${(c.evidence_and_source_urls||[]).length===1?'':'s'}`}
+function companyProfileLinks(c){
+ const name=String(c.company_name||'').trim();
+ const known={
+  'ClayCo Cosmetics':{label:'Inc42',url:'https://inc42.com/buzz/exclusive-d2c-brand-clayco-raises-%e2%82%b930-cr-from-twenty-nine-capital-partners/'},
+  'omnispay':{label:'CB Insights',url:'https://www.cbinsights.com/company/omnispay'}
+ };
+ const items=[];
+ if(known[name])items.push(known[name]);
+ const searchSources=[
+  {label:'Crunchbase',url:'https://www.google.com/search?q='+encodeURIComponent('site:crunchbase.com/organization/ "'+name+'"')},
+  {label:'Inc42',url:'https://www.google.com/search?q='+encodeURIComponent('site:inc42.com "'+name+'" startup')},
+  {label:'Tracxn',url:'https://www.google.com/search?q='+encodeURIComponent('site:tracxn.com/d/companies "'+name+'"')},
+  {label:'PitchBook',url:'https://www.google.com/search?q='+encodeURIComponent('site:pitchbook.com/profiles/company "'+name+'"')}
+ ];
+ return `<div class="source-list">${items.map(x=>`<a class="source-link" href="${safeUrl(x.url)}" target="_blank" rel="noopener">${esc(x.label)} profile ↗</a>`).join('')}${searchSources.map(x=>`<a class="source-link" href="${safeUrl(x.url)}" target="_blank" rel="noopener">Search ${esc(x.label)} ↗</a>`).join('')}</div><div class="muted-note">Search links open targeted results. Confirm the entity before relying on a profile, since similarly named companies can exist.</div>`;
+}
 function countryOf(c){if(c.country)return c.country;const t=(c.hq_and_geography||'').toLowerCase();if(t.includes('india'))return 'India';if(t.includes('uae')||t.includes('dubai'))return 'UAE';return 'Unspecified'}
 function regionOf(c){if(c.region)return c.region;const k=countryOf(c);return k==='India'?'South Asia':k==='UAE'?'Middle East':'Unspecified'}
 function batchOf(c){return c.research_batch_id||'Unlabelled'}
@@ -178,6 +194,7 @@ function openCompany(name){const c=companies.find(x=>x.company_name===name);if(!
  <div class="detail-section"><h3>Funding history</h3><ul class="history-list">${(c.funding_history||[]).map(x=>`<li>${esc(x)}</li>`).join('')||'<li>No funding history recorded.</li>'}</ul></div>
  <div class="detail-section"><h3>Missing information</h3><p class="detail-copy">${esc(c.missing_information||'No missing information recorded.')}</p></div>
  <div class="detail-section"><h3>Suggested next research step</h3><p class="detail-copy">${esc(c.suggested_next_research_step||'No next step recorded.')}</p></div>
+ <div class="detail-section"><h3>Company database profiles</h3><p class="detail-copy" style="margin-bottom:9px">Look up the company in startup and investor databases.</p>${companyProfileLinks(c)}</div>
  <div class="detail-section"><h3>Sources & evidence</h3><div class="source-list">${urls.map((u,i)=>`<a class="source-link" href="${safeUrl(u)}" target="_blank" rel="noopener">${i+1}. ${esc(shortHost(u))} ↗ <div class="muted-note" style="margin:2px 0 0">${esc(u)}</div></a>`).join('')||'<span class="small-text">No source URLs recorded.</span>'}</div></div>
  <div class="detail-section" style="border-top:1px solid var(--line);padding-top:18px"><h3>Your pipeline notes</h3><div class="form-row"><div class="field"><label for="candidateStatus">Lead status</label><select id="candidateStatus">${STATUS.map(s=>`<option ${st.status===s?'selected':''}>${s}</option>`).join('')}</select></div><div class="field"><label>Last verified in source file</label><input value="${esc(c.date_last_verified||META.date_last_verified||'Unknown')}" readonly></div></div><div class="field" style="margin-top:11px"><label for="candidateNotes">Analyst notes (saved in this browser)</label><textarea id="candidateNotes" placeholder="Record who to contact, questions to ask, or new evidence to verify…">${esc(st.notes||'')}</textarea></div><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px"><button class="btn" id="cancelNote">Close</button><button class="btn primary" id="saveCandidate">Save changes</button></div><div class="muted-note">Local notes/status do not modify the original JSON. Export CSV to preserve your changes outside this browser.</div></div>`;
  document.getElementById('modal').classList.add('open');document.body.style.overflow='hidden';
