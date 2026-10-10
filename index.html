@@ -94,17 +94,18 @@ function companyProfileLinks(c){
  const name=String(c.company_name||'').trim();
  const evidence=Array.isArray(c.evidence_and_source_urls)?c.evidence_and_source_urls:[];
  const dbHosts=[
-  {test:/crunchbase\\.com\\/organization\\//i,label:'Crunchbase profile'},
-  {test:/tracxn\\.com\\/d\\/companies\\//i,label:'Tracxn profile'},
-  {test:/pitchbook\\.com\\/profiles\\/company\\//i,label:'PitchBook profile'},
-  {test:/cbinsights\\.com\\/company\\//i,label:'CB Insights company page'},
-  {test:/briter\\.co\\/companies\\//i,label:'Briter company page'},
-  {test:/fireround\\.dev\\/companies\\//i,label:'FireRound company page'},
-  {test:/dealroom\\.co\\/companies\\//i,label:'Dealroom company page'}
+  {path:'crunchbase.com/organization/',label:'Crunchbase profile'},
+  {path:'tracxn.com/d/companies/',label:'Tracxn profile'},
+  {path:'pitchbook.com/profiles/company/',label:'PitchBook profile'},
+  {path:'cbinsights.com/company/',label:'CB Insights company page'},
+  {path:'briter.co/companies/',label:'Briter company page'},
+  {path:'fireround.dev/companies/',label:'FireRound company page'},
+  {path:'dealroom.co/companies/',label:'Dealroom company page'}
  ];
  const direct=[];
  evidence.forEach(u=>{
-  const match=dbHosts.find(x=>x.test.test(String(u)));
+  const lower=String(u).toLowerCase();
+  const match=dbHosts.find(x=>lower.includes(x.path));
   if(match&&!direct.some(x=>x.url===u))direct.push({url:u,label:match.label});
  });
  const searchSources=[
