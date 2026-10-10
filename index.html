@@ -92,19 +92,28 @@ function pillStatus(s){let k=String(s||'').toLowerCase();let cls=k==='pass'?'pas
 function sourceBadge(c){return `${(c.evidence_and_source_urls||[]).length} source${(c.evidence_and_source_urls||[]).length===1?'':'s'}`}
 function companyProfileLinks(c){
  const name=String(c.company_name||'').trim();
- const known={
-  'ClayCo Cosmetics':{label:'Inc42',url:'https://inc42.com/buzz/exclusive-d2c-brand-clayco-raises-%e2%82%b930-cr-from-twenty-nine-capital-partners/'},
-  'omnispay':{label:'CB Insights',url:'https://www.cbinsights.com/company/omnispay'}
- };
- const items=[];
- if(known[name])items.push(known[name]);
- const searchSources=[
-  {label:'Crunchbase',url:'https://www.google.com/search?q='+encodeURIComponent('site:crunchbase.com/organization/ "'+name+'"')},
-  {label:'Inc42',url:'https://www.google.com/search?q='+encodeURIComponent('site:inc42.com "'+name+'" startup')},
-  {label:'Tracxn',url:'https://www.google.com/search?q='+encodeURIComponent('site:tracxn.com/d/companies "'+name+'"')},
-  {label:'PitchBook',url:'https://www.google.com/search?q='+encodeURIComponent('site:pitchbook.com/profiles/company "'+name+'"')}
+ const evidence=Array.isArray(c.evidence_and_source_urls)?c.evidence_and_source_urls:[];
+ const dbHosts=[
+  {test:/crunchbase\\.com\\/organization\\//i,label:'Crunchbase profile'},
+  {test:/tracxn\\.com\\/d\\/companies\\//i,label:'Tracxn profile'},
+  {test:/pitchbook\\.com\\/profiles\\/company\\//i,label:'PitchBook profile'},
+  {test:/cbinsights\\.com\\/company\\//i,label:'CB Insights company page'},
+  {test:/briter\\.co\\/companies\\//i,label:'Briter company page'},
+  {test:/fireround\\.dev\\/companies\\//i,label:'FireRound company page'},
+  {test:/dealroom\\.co\\/companies\\//i,label:'Dealroom company page'}
  ];
- return `<div class="source-list">${items.map(x=>`<a class="source-link" href="${safeUrl(x.url)}" target="_blank" rel="noopener">${esc(x.label)} profile ↗</a>`).join('')}${searchSources.map(x=>`<a class="source-link" href="${safeUrl(x.url)}" target="_blank" rel="noopener">Search ${esc(x.label)} ↗</a>`).join('')}</div><div class="muted-note">Search links open targeted results. Confirm the entity before relying on a profile, since similarly named companies can exist.</div>`;
+ const direct=[];
+ evidence.forEach(u=>{
+  const match=dbHosts.find(x=>x.test.test(String(u)));
+  if(match&&!direct.some(x=>x.url===u))direct.push({url:u,label:match.label});
+ });
+ const searchSources=[
+  {label:'Crunchbase',site:'crunchbase.com/organization'},
+  {label:'Inc42',site:'inc42.com'},
+  {label:'Tracxn',site:'tracxn.com/d/companies'},
+  {label:'PitchBook',site:'pitchbook.com/profiles/company'}
+ ];
+ return `<div class="source-list">${direct.map(x=>`<a class="source-link" href="${safeUrl(x.url)}" target="_blank" rel="noopener">${esc(x.label)} ↗<div class="muted-note" style="margin:2px 0 0">${esc(x.url)}</div></a>`).join('')}${searchSources.map(x=>`<a class="source-link" href="${safeUrl('https://www.google.com/search?q='+encodeURIComponent('site:'+x.site+' "'+name+'"'))}" target="_blank" rel="noopener">Search ${esc(x.label)} for ${esc(name)} ↗</a>`).join('')}</div><div class="muted-note">Direct links are shown only when the source file already contains a matching company-database URL. Other links open targeted searches; verify the entity before relying on a result.</div>`;
 }
 function countryOf(c){if(c.country)return c.country;const t=(c.hq_and_geography||'').toLowerCase();if(t.includes('india'))return 'India';if(t.includes('uae')||t.includes('dubai'))return 'UAE';return 'Unspecified'}
 function regionOf(c){if(c.region)return c.region;const k=countryOf(c);return k==='India'?'South Asia':k==='UAE'?'Middle East':'Unspecified'}
