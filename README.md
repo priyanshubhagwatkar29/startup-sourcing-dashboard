@@ -23,3 +23,12 @@ Give every new record a unique `rank`, a `research_batch_id` equal to its run ID
 - `SEA-01-2026-10-09`: Singapore, Indonesia and Malaysia. 14 new records (ranks 9 to 22) and 11 new exclusion entries. Eligibility for the non-dilutive programs is kept at Unknown for non-US companies because LvlUp's pages conflict on geography; see `meta.program_criteria_audit` in `data/research-runs.json`.
 
 Notes on the dashboard: pipeline status and notes are stored in the browser's localStorage and do not sync between devices or users. Export CSV to keep them. No API keys or secrets belong in this repository.
+
+## Founder CRM (FRM)
+
+`frm.html` is a separate founder-relationship manager for early-stage founder lists, kept apart from the program-fit pipeline.
+
+- Data: `data/founders.json`, with one entry per founder and a `list_id` for each sourcing list (currently the global early-stage list and the India & UAE early-stage list, both from 11 October 2026).
+- Features: a pipeline board with drag-and-drop stages, a table view, scheduled follow-ups, a per-founder activity timeline, tags, warmth, a monthly LvlUp application goal, manually added founders, CSV export, and JSON backup and restore.
+- Storage: progress is saved in the browser's localStorage under `lvlup_frm_v1` and does not sync between devices. Use Export backup and Import backup to move it.
+- To add a new list, append founders to `data/founders.json` with a new `list_id`. Existing browser progress is keyed by `id`, so keep IDs stable.
