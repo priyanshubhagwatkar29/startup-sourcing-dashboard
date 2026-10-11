@@ -71,6 +71,17 @@ td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}tr:h
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:#17182c;color:#fff;padding:10px 16px;border-radius:10px;transition:.25s;z-index:99;font-size:13px}.toast.show{transform:translateX(-50%) translateY(0)}
 .notice{background:#fff8e8;border:1px solid #f4e4be;border-radius:12px;padding:10px 13px;font-size:12.5px;color:#6d5320;margin-bottom:14px}
 .hidden{display:none!important}
+.board-layout{display:grid;grid-template-columns:262px minmax(0,1fr);gap:12px;padding:14px;align-items:stretch}
+.board-left{align-self:start}
+.board-left .col{min-height:200px}
+.board-right{min-width:0;display:flex;flex-direction:column;gap:12px}
+.board-right .board{padding:0 0 4px}
+.inline-detail{position:sticky;top:14px;max-height:calc(100vh - 28px);overflow-y:auto;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--shadow)}
+.inline-head{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:14px 18px;display:flex;justify-content:space-between;gap:12px;z-index:2;border-radius:14px 14px 0 0}
+.inline-body{padding:14px 18px 22px;display:grid;gap:14px}
+.inline-empty{padding:46px 20px;text-align:center;color:var(--muted)}.inline-empty strong{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
+.card.selected{border-color:var(--purple);box-shadow:0 0 0 2px var(--purple2)}
+@media(max-width:1000px){.board-layout{display:flex;overflow-x:auto;align-items:flex-start}.board-left{flex:0 0 238px}.board-right{display:contents}.inline-detail{display:none}}
 @media(max-width:1100px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.filters{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:820px){.app{grid-template-columns:1fr}.sidebar{padding:14px;gap:12px}.side-note{display:none}.nav{grid-template-columns:repeat(3,1fr)}.main{padding:16px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.filters{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.kv{grid-template-columns:1fr}}
 </style>
@@ -115,7 +126,14 @@ td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}tr:h
    <div class="field"><label for="fConf">Confidence</label><select id="fConf"><option value="">All</option></select></div>
    <div class="field"><label for="fStar">Show</label><select id="fStar"><option value="">Everyone</option><option value="star">★ Starred only</option><option value="hot">Hot only</option><option value="nonear">Hide near-misses</option></select></div>
   </div>
-  <section class="section active" id="view-board"><div class="board" id="board"></div></section>
+  <section class="section active" id="view-board"><div class="board-layout" id="boardWrap">
+   <div class="board-left" id="boardLeft"></div>
+   <div class="board-right"><div class="board" id="board"></div>
+    <div class="inline-detail" id="inlineDetail" aria-live="polite">
+     <div class="inline-head hidden" id="iHead"><div><div class="eyebrow" id="iEyebrow"></div><div class="drawer-title" id="iTitle"></div></div><button class="close" id="iClose" aria-label="Close founder record">×</button></div>
+     <div class="inline-body" id="iBody"></div>
+    </div></div>
+  </div></section>
   <section class="section" id="view-table"><div class="table-wrap"><table><thead><tr>
     <th data-sort="name">Startup</th><th data-sort="country">Country</th><th data-sort="stage">Stage</th><th data-sort="warmth">Warmth</th><th data-sort="program">LvlUp program</th><th data-sort="confidence">Confidence</th><th data-sort="next">Next action</th><th data-sort="last">Last touch</th></tr></thead><tbody id="rows"></tbody></table></div>
     <div class="empty hidden" id="noRows">No founders match these filters.</div></section>
@@ -137,7 +155,7 @@ const CONTACTED=new Set(['Contacted','In conversation','Referred / applied to Lv
 const WARMTH=['Cold','Warm','Hot'];
 const ACT_TYPES=['Note','Email sent','LinkedIn / X message','Call','Meeting','Founder replied','Intro made','LvlUp application submitted','Research update'];
 const KEY='lvlup_frm_v1';
-let DATA={lists:[],founders:[]}, FOUNDERS=[], view='board', sortKey='name', sortDir=1, current=null;
+let DATA={lists:[],founders:[]}, FOUNDERS=[], view='board', sortKey='name', sortDir=1, current=null, selectedId=null;
 let ST={records:{},custom:[],goal:10};
 try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&typeof s==='object')ST=Object.assign(ST,s)}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){toast('Could not save in this browser')}}
@@ -202,9 +220,16 @@ function cardHtml(f){const s=stateOf(f),dc=dueClass(s.next_due);
  <div class="card-sub">${esc((f.founders||'').slice(0,60))}${(f.founders||'').length>60?'…':''}</div>
  <div class="card-meta"><span class="pill purple">${esc(shortProgram(f.lvlup_program))}</span>${warmPill(s.warmth)}<span class="pill">${esc(f.country||'Unverified')}</span>${f.near_miss?'<span class="pill red">Near-miss</span>':''}</div>
  ${s.next_action||s.next_due?`<div class="due ${dc}">→ ${esc(s.next_action||'Follow up')}${s.next_due?' · '+esc(fmtDate(s.next_due)):''}</div>`:''}</div>`}
+function colHtml(st,arr){const items=arr.filter(f=>stateOf(f).stage===st).sort((a,b)=>(stateOf(b).star-stateOf(a).star)||confRank(b.confidence)-confRank(a.confidence));
+  return `<div class="col" data-stage="${esc(st)}"><div class="col-head"><span>${esc(st)}</span><span class="n">${items.length}</span></div>${items.map(cardHtml).join('')||'<div class="small muted" style="padding:6px">Drop here</div>'}</div>`}
 function renderBoard(){const arr=filtered();
- $('board').innerHTML=STAGES.map(st=>{const items=arr.filter(f=>stateOf(f).stage===st).sort((a,b)=>(stateOf(b).star-stateOf(a).star)||confRank(b.confidence)-confRank(a.confidence));
-  return `<div class="col" data-stage="${esc(st)}"><div class="col-head"><span>${esc(st)}</span><span class="n">${items.length}</span></div>${items.map(cardHtml).join('')||'<div class="small muted" style="padding:6px">Drop here</div>'}</div>`}).join('')}
+ $('boardLeft').innerHTML=colHtml(STAGES[0],arr);
+ $('board').innerHTML=STAGES.slice(1).map(st=>colHtml(st,arr)).join('');
+ markSelected();if(!selectedId)inlinePlaceholder()}
+function markSelected(){document.querySelectorAll('#boardWrap .card').forEach(c=>c.classList.toggle('selected',c.dataset.id===selectedId))}
+function inlinePlaceholder(){$('iHead').classList.add('hidden');$('iBody').innerHTML='<div class="inline-empty"><strong>Select a founder</strong>Click any card to open its CRM record here: stage, next action, notes and the full activity timeline.</div>'}
+function closeInline(){selectedId=null;inlinePlaceholder();markSelected()}
+function useInline(){return view==='board'&&window.matchMedia('(min-width:1001px)').matches}
 function sortVal(f,k){const s=stateOf(f);return k==='stage'?STAGES.indexOf(s.stage):k==='warmth'?WARMTH.indexOf(s.warmth):k==='confidence'?confRank(f.confidence):k==='next'?(s.next_due||'9999'):k==='last'?lastTouch(s):k==='program'?shortProgram(f.lvlup_program):k==='country'?(f.country||''):String(f.name).toLowerCase()}
 function renderTable(){const arr=filtered().sort((a,b)=>{const x=sortVal(a,sortKey),y=sortVal(b,sortKey);return (x>y?1:x<y?-1:0)*sortDir});
  $('noRows').classList.toggle('hidden',arr.length>0);
@@ -223,11 +248,13 @@ function renderActivity(){const ids=new Set(filtered().map(f=>f.id));const items
  $('activityList').innerHTML=`<div class="panel-head"><div class="panel-title">Everything you've logged, newest first</div><div class="small muted">${items.length} entries</div></div>`+(items.slice(0,300).map(({f,l})=>`<div class="list-row"><div class="grow"><div class="small muted">${esc(fmtStamp(l.ts))} · <span class="pill">${esc(l.type)}</span></div><div><span class="name-link" data-open="${esc(f.id)}">${esc(f.name)}</span></div><div class="tl-text">${linkify(l.text)}</div></div></div>`).join('')||'<div class="empty">No activity yet. Open a founder and log your first note, email or call.</div>')}
 
 function openFounder(id){const f=FOUNDERS.find(x=>x.id===id);if(!f)return;current=f;const s=rec(id);
- $('dEyebrow').textContent=`${f.list_name} · ${f.country||'Unverified'}`;$('dTitle').innerHTML=`${s.star?'★ ':''}${esc(f.name)}`;
+ const inline=useInline();const T=inline?{eye:$('iEyebrow'),title:$('iTitle'),body:$('iBody')}:{eye:$('dEyebrow'),title:$('dTitle'),body:$('dBody')};
+ if(inline){$('dBody').innerHTML='';if(selectedId!==id)$('inlineDetail').scrollTop=0;selectedId=id;$('iHead').classList.remove('hidden');markSelected()}else{$('iBody').innerHTML='';$('iHead').classList.add('hidden')}
+ T.eye.textContent=`${f.list_name} · ${f.country||'Unverified'}`;T.title.innerHTML=`${s.star?'★ ':''}${esc(f.name)}`;
  const web=safeUrl(f.website);
  const kv=[['Website',web?`<a href="${esc(web)}" target="_blank" rel="noopener">${esc(host(web))} ↗</a>`:esc(f.website||'Not verified')],['What it does',esc(f.description)],['Founders',esc(f.founders)],['Founder profile',linkify(f.founder_profile)||'<span class="muted">Not found</span>'],['Public contact',linkify(f.public_contact)||'<span class="muted">None listed</span>'],['Location',esc(f.location)],['Incorporation',esc(f.incorporation||'Not stated')],['Stage signal',linkify(f.stage_signal)],['LvlUp fit',esc(f.lvlup_program)],['Confidence',confPill(f.confidence)],['Date found',esc(fmtDate(f.date_found))+(f.source_date?` · source dated ${esc(fmtDate(f.source_date))}`:'')]];
  if(f.research_notes)kv.push(['Research notes',linkify(f.research_notes)]);
- $('dBody').innerHTML=`
+ T.body.innerHTML=`
  <div class="box"><h3>Relationship</h3><div class="grid2">
   <div class="field"><label>Stage</label><select id="eStage">${STAGES.map(x=>`<option ${x===s.stage?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
   <div class="field"><label>Warmth</label><select id="eWarm">${WARMTH.map(x=>`<option ${x===s.warmth?'selected':''}>${x}</option>`).join('')}</select></div>
@@ -246,7 +273,8 @@ function openFounder(id){const f=FOUNDERS.find(x=>x.id===id);if(!f)return;curren
  ${f.personal_detail?`<div class="box" style="background:#faf8ff"><h3>Opener for a personal message</h3><div>${esc(f.personal_detail)}</div></div>`:''}
  <div class="box"><h3>Research profile</h3><div class="kv">${kv.map(([k,v])=>`<div class="k">${esc(k)}</div><div class="v">${v||'<span class="muted">—</span>'}</div>`).join('')}</div></div>
  <div class="box"><h3>Sources</h3>${(f.sources||[]).map(u=>safeUrl(u)?`<div><a href="${esc(safeUrl(u))}" target="_blank" rel="noopener">${esc(host(u))} ↗</a> <span class="small muted">${esc(u)}</span></div>`:'').join('')||'<span class="muted">No source links recorded.</span>'}</div>`;
- $('backdrop').classList.add('open');document.body.style.overflow='hidden';
+ if(inline){const p=$('inlineDetail');const r=p.getBoundingClientRect();if(r.top>window.innerHeight*0.6||r.bottom<0)p.scrollIntoView({behavior:'smooth',block:'start'})}
+ else{$('backdrop').classList.add('open');document.body.style.overflow='hidden'}
  $('eSave').onclick=()=>{const r=rec(id),old=r.stage;r.stage=$('eStage').value;r.warmth=$('eWarm').value;r.next_action=$('eNext').value.trim();r.next_due=$('eDue').value;r.contact_channel=$('eChan').value.trim();r.last_contact=$('eLast').value;
   if(old!==r.stage)r.log.push({ts:nowStamp(),type:'Note',text:`Stage changed: ${old} → ${r.stage}`});save();render();openFounder(id);toast('Saved')};
  $('eStar').onclick=()=>{const r=rec(id);r.star=!r.star;save();render();openFounder(id)};
@@ -260,7 +288,7 @@ function openFounder(id){const f=FOUNDERS.find(x=>x.id===id);if(!f)return;curren
   if(type==='LvlUp application submitted')r.stage='Referred / applied to LvlUp';
   save();render();openFounder(id);toast('Logged')};
  $('timeline').onclick=e=>{const i=e.target.dataset.dellog;if(i!==undefined&&confirmDelete()){const r=rec(id);r.log.splice(Number(i),1);save();render();openFounder(id)}};
- if(f.custom)$('eDelCustom').onclick=()=>{if(!confirmDelete())return;ST.custom=ST.custom.filter(c=>c.id!==id);delete ST.records[id];save();rebuild();closeD();init()};
+ if(f.custom)$('eDelCustom').onclick=()=>{if(!confirmDelete())return;ST.custom=ST.custom.filter(c=>c.id!==id);delete ST.records[id];save();rebuild();closeD();if(selectedId===id)selectedId=null;init()};
 }
 let delArm=0;function confirmDelete(){const n=Date.now();if(n-delArm<3000){delArm=0;return true}delArm=n;toast('Click again to confirm delete');return false}
 function timelineHtml(s){const L=(s.log||[]).map((l,i)=>({l,i})).sort((a,b)=>b.l.ts.localeCompare(a.l.ts));return L.map(({l,i})=>`<div class="tl"><div class="tl-head"><span class="pill">${esc(l.type)}</span><span>${esc(fmtStamp(l.ts))}</span><button class="del" data-dellog="${i}">delete</button></div><div class="tl-text">${linkify(l.text)}</div></div>`).join('')||'<div class="small muted">No activity yet.</div>'}
@@ -276,7 +304,7 @@ function addFounderForm(){current=null;$('dEyebrow').textContent='Added by me';$
  $('backdrop').classList.add('open');document.body.style.overflow='hidden';
  $('nSave').onclick=()=>{const g=k=>($('n_'+k).value||'').trim();if(!g('name')){toast('Name is required');return}
   const c={id:'c-'+Date.now().toString(36),name:g('name'),website:g('website')||'Not verified',founders:g('founders'),country:g('country')||'Unverified',location:g('location'),founder_profile:g('founder_profile'),public_contact:g('public_contact'),lvlup_program:g('lvlup_program')||'Unassigned',description:g('description'),stage_signal:g('stage_signal'),sources:g('source')?[g('source')]:[],date_found:today(),confidence:'Unrated',incorporation:'Not stated'};
-  ST.custom=[...(ST.custom||[]),c];rec(c.id);save();rebuild();init();openFounder(c.id);toast('Founder added')};
+  ST.custom=[...(ST.custom||[]),c];rec(c.id);save();rebuild();closeD();init();openFounder(c.id);toast('Founder added')};
 }
 function exportBackup(){const blob=new Blob([JSON.stringify({app:'lvlup-frm',version:1,exported_at:nowStamp(),state:ST},null,2)],{type:'application/json'});dl(blob,`lvlup_frm_backup_${today()}.json`);toast('Backup downloaded')}
 function importBackup(file){const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);const s=j.state||j;if(!s||typeof s.records!=='object')throw 0;ST=Object.assign({records:{},custom:[],goal:10},s);save();rebuild();init();toast('Backup restored')}catch(e){toast('That file is not an FRM backup')}};r.readAsText(file)}
@@ -289,19 +317,19 @@ function dl(blob,name){const u=URL.createObjectURL(blob),a=document.createElemen
 let bound=false;
 function bind(){if(bound)return;bound=true;
  const titles={board:['Pipeline board','Drag founders between stages, open a card to log outreach, set the next action and keep notes.'],table:['All founders','Sort, filter and update stage or warmth inline.'],followups:['Follow-ups','Every next action you have scheduled, with overdue items first.'],activity:['Activity log','A running record of every note, message, call and application.']};
- $('nav').onclick=e=>{const b=e.target.closest('button[data-view]');if(!b)return;view=b.dataset.view;document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='view-'+view));$('pageTitle').textContent=titles[view][0];$('pageSub').textContent=titles[view][1];render()};
+ $('nav').onclick=e=>{const b=e.target.closest('button[data-view]');if(!b)return;view=b.dataset.view;document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='view-'+view));$('pageTitle').textContent=titles[view][0];$('pageSub').textContent=titles[view][1];closeD();render();if(view==='board'&&selectedId)openFounder(selectedId)};
  ['q','fList','fCountry','fProgram','fConf','fStar'].forEach(id=>$(id).addEventListener(id==='q'?'input':'change',render));
  document.addEventListener('click',e=>{const o=e.target.closest('[data-open]');if(o){openFounder(o.dataset.open);return}const c=e.target.closest('.card');if(c&&!c.classList.contains('dragging')){openFounder(c.dataset.id);return}
   const d=e.target.closest('[data-done]');if(d){const r=rec(d.dataset.done);r.log.push({ts:nowStamp(),type:'Note',text:'Done: '+(r.next_action||'follow-up')});r.next_action='';r.next_due='';save();render();toast('Marked done')}
   const th=e.target.closest('th[data-sort]');if(th){const k=th.dataset.sort;sortDir=sortKey===k?-sortDir:1;sortKey=k;renderTable()}});
  document.addEventListener('change',e=>{const a=e.target.dataset.stageFor,b=e.target.dataset.warmFor;if(a){const r=rec(a),old=r.stage;r.stage=e.target.value;r.log.push({ts:nowStamp(),type:'Note',text:`Stage changed: ${old} → ${r.stage}`});save();renderStats();toast('Stage updated')}if(b){rec(b).warmth=e.target.value;save();toast('Warmth updated')}});
- const board=$('board');
+ const board=$('boardWrap');
  board.addEventListener('dragstart',e=>{const c=e.target.closest('.card');if(!c)return;e.dataTransfer.setData('text/plain',c.dataset.id);c.classList.add('dragging')});
  board.addEventListener('dragend',e=>{const c=e.target.closest('.card');if(c)setTimeout(()=>c.classList.remove('dragging'),0)});
  board.addEventListener('dragover',e=>{const col=e.target.closest('.col');if(col){e.preventDefault();board.querySelectorAll('.col').forEach(x=>x.classList.toggle('drag-over',x===col))}});
  board.addEventListener('dragleave',e=>{if(!e.relatedTarget||!board.contains(e.relatedTarget))board.querySelectorAll('.col').forEach(x=>x.classList.remove('drag-over'))});
- board.addEventListener('drop',e=>{const col=e.target.closest('.col');if(!col)return;e.preventDefault();const id=e.dataTransfer.getData('text/plain');const r=rec(id),old=r.stage;if(old!==col.dataset.stage){r.stage=col.dataset.stage;r.log.push({ts:nowStamp(),type:'Note',text:`Stage changed: ${old} → ${r.stage}`});save();toast('Moved to '+r.stage)}renderBoard();renderStats()});
- $('dClose').onclick=closeD;$('backdrop').onclick=e=>{if(e.target===$('backdrop'))closeD()};document.addEventListener('keydown',e=>{if(e.key==='Escape')closeD()});
+ board.addEventListener('drop',e=>{const col=e.target.closest('.col');if(!col)return;e.preventDefault();const id=e.dataTransfer.getData('text/plain');const r=rec(id),old=r.stage;if(old!==col.dataset.stage){r.stage=col.dataset.stage;r.log.push({ts:nowStamp(),type:'Note',text:`Stage changed: ${old} → ${r.stage}`});save();toast('Moved to '+r.stage)}renderBoard();renderStats();if(selectedId===id&&useInline())openFounder(id)});
+ $('dClose').onclick=closeD;$('iClose').onclick=closeInline;$('backdrop').onclick=e=>{if(e.target===$('backdrop'))closeD()};document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if($('backdrop').classList.contains('open'))closeD();else if(selectedId&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))closeInline()});
  $('addBtn').onclick=addFounderForm;$('exportBtn').onclick=exportBackup;$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=e=>{if(e.target.files[0])importBackup(e.target.files[0]);e.target.value=''};$('exportCsvBtn').onclick=exportCsv;
  $('goalInput').onchange=e=>{ST.goal=Math.max(1,Number(e.target.value)||10);save();renderStats()};
 }
