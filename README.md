@@ -1,37 +1,47 @@
 # LvlUp Startup Sourcing Dashboard
 
-The dashboard interface and research data are maintained separately. Add or update startup records in JSON without rewriting the UI.
+A private sourcing dashboard (`index.html`) and Founder Relationship Manager (`frm.html`), hosted as static pages on GitHub Pages.
 
-## Files
+**All research and CRM data lives in a private Supabase database, not in this repository.** The pages show a sign-in screen first and load data only after Supabase confirms the signed-in account is the authorised owner.
 
-- `index.html`: dashboard interface and rendering logic.
-- `data/companies.json`: active startup records, scores, eligibility checks, sources, and diligence gaps. Each record carries `country`, `region` and `research_batch_id` so the dashboard can filter by geography and batch.
-- `data/research-runs.json`: research metadata (including the program-criteria audit), exclusions (optionally with `run_id`, `country`, `source_urls`), and run history.
-  
-## Updating a sourcing batch
+## How it fits together
 
-1. Add or revise candidate records in the `companies` array in `data/companies.json`.
-2. Add a new record to the `runs` array in `data/research-runs.json`, update `current_run_id`, and retain older run entries.
-3. Move unsuitable companies to `considered_and_excluded` with a reason instead of silently deleting the trail.
-4. Commit the JSON changes. The deployed dashboard reads these files when it loads.
+| Piece | Where | Public? |
+|---|---|---|
+| Page code (`index.html`, `frm.html`, `assets/`) | This repository / GitHub Pages | Yes, contains no data |
+| Supabase project URL + publishable key (`assets/config.js`) | This repository | Yes, safe by design (see below) |
+| Companies, research runs, exclusions, founders, CRM progress, pipeline notes | Supabase Postgres tables | **No**, Row Level Security, owner only |
+| Sign-in and sessions | Supabase Auth (email + password) | n/a |
 
-Give every new record a unique `rank`, a `research_batch_id` equal to its run ID, and a `financing_need_status` of Confirmed, Inferred or Unknown. Keep inferred financing needs clearly labelled as inference, and leave eligibility as Unknown when a published criterion cannot be verified.
+- `assets/lvlup-cloud.js`: sign-in screen, persistent session, owner check, sign-out, password reset, and the save queue (autosave, retries, conflict handling).
+- `supabase/schema.sql`: tables, Row Level Security policies, and the owner allowlist. It is idempotent and contains no data or email address.
 
-## Research batches
+## Security model
 
-- `baseline-india-uae-2026-10-09`: India and UAE baseline from the supplied research snapshot. 8 active records and 5 exclusion entries, preserved unchanged apart from additive `country`, `region` and `research_batch_id` fields.
-- `SEA-01-2026-10-09`: Singapore, Indonesia and Malaysia. 14 new records (ranks 9 to 22) and 11 new exclusion entries. Eligibility for the non-dilutive programs is kept at Unknown for non-US companies because LvlUp's pages conflict on geography; see `meta.program_criteria_audit` in `data/research-runs.json`.
+- Every table has Row Level Security. Signed-out visitors (`anon`) have **no privileges at all**. Signed-in accounts can only read or write rows if their user ID is in `private.allowed_users`.
+- The allowlist is filled by `public.claim_owner()`. It records the **first** signed-in user whose confirmed email matches `private.app_owner.owner_email`. After that, no other account can claim access.
+- Public sign-ups are disabled in Supabase Auth. Accounts are created only from the Supabase dashboard.
+- Research tables are read-only from the browser. CRM and pipeline tables allow insert and update, with no delete policies: records are soft-deleted (`deleted_at`), so they stay recoverable.
+- The publishable key in `assets/config.js` only identifies the project; it grants nothing beyond what the policies allow. **Never commit a secret key, `service_role` key, database password or personal access token.**
 
-Notes on the dashboard: pipeline status and notes are stored in the browser's localStorage and do not sync between devices or users. Export CSV to keep them. No API keys or secrets belong in this repository.
+## Saving and sync
 
-## Founder CRM (FRM)
+- Edits save automatically. The status pill shows *Saving…*, *All changes saved*, or *Not saved yet · retrying* with a **Retry now** button. Failed saves are kept and retried; nothing is marked saved until Supabase confirms it.
+- `crm_records`, `crm_settings` and `company_pipeline` carry a `version` number. A save only applies if the row hasn't changed since the device last saw it. Otherwise the app reloads the latest row and re-applies only the fields you changed, so edits to different fields on two devices both survive.
+- Changes from your other devices arrive live (Supabase Realtime), and the app also refreshes when you return to the tab.
+- On first sign-in in a browser that still holds pre-cloud progress (`lvlup_frm_v1` or `lvlup_scout_pipeline_v1` in local storage), the page offers to upload it. The old GitHub token key (`lvlup_frm_github_token_v1`) is deleted automatically.
 
-`frm.html` is a separate founder-relationship manager for early-stage founder lists, kept apart from the program-fit pipeline.
+## Sessions
 
-- Data: `data/founders.json`, with one entry per founder and a `list_id` for each sourcing list (currently the global early-stage list and the India & UAE early-stage list, both from 11 October 2026).
-- Features: a pipeline board with drag-and-drop stages, a table view, scheduled follow-ups, a per-founder activity timeline with subdued type colours, contact links, warmth, a monthly LvlUp application goal, manually added founders, CSV export, and JSON backup and restore.
-- Research data: `data/founders.json` holds founder research records and list definitions. Keep UI changes in `frm.html` and research edits in JSON.
-- CRM progress: `data/crm-state.json` stores stages, warmth, next actions and due dates, last-contact dates, contact links, custom founders, activity logs, and goal settings. It is deliberately separate from the HTML and founder research file.
-- Cross-device sync: open Founder CRM and select **Connect sync**. Create a fine-grained GitHub personal access token restricted to this repository, with **Contents: Read and write**, then connect it in the CRM. The token is stored in that browser's local storage and is never committed. Repeat the connection on each device. CRM edits autosave locally and are pushed to the JSON file after a short pause; status appears next to the sync button.
-- **Public-data warning:** this repository is public, so anyone can read `data/crm-state.json` and the data synced to it. Do not store sensitive contact information, private notes, or other confidential details until the state file is moved to a private repository/backend. The token is not shared between devices.
-- To add a new research list, append founders to `data/founders.json` with a new `list_id`. Existing CRM progress is keyed by founder `id`, so keep IDs stable.
+You stay signed in on each device until you sign out. Supabase refreshes the session automatically. Private browsing, clearing site data, signing out, or a security event (such as a password change) will require signing in again. Each device signs in separately.
+
+## Updating research data
+
+Research records are no longer edited as JSON in this repository. Add or update rows in the `companies`, `research_runs`, `research_exclusions`, `founder_lists` and `founders` tables (each keeps the full original record in its `data` column), using the Supabase SQL editor or a trusted server-side tool. Keep IDs stable: CRM progress is keyed by founder `id`, and pipeline notes by company `id` (a slug of the company name).
+
+Give every new company a unique `rank`, a `research_batch_id` equal to its run ID, and a `financing_need_status` of Confirmed, Inferred or Unknown. Leave eligibility as Unknown when a published criterion cannot be verified.
+
+## Backups
+
+- **Founder CRM → Export backup** downloads your CRM progress as JSON. **Import backup** merges a backup without overwriting newer cloud edits.
+- **Export CSV** on either page exports the current view.

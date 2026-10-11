@@ -1,8 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="lvl-locked">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LvlUp Ventures | Scout Pipeline</title>
+<style>html.lvl-locked body>*:not(#lvlGate){display:none!important}</style>
 <style>
 :root{--ink:#17182c;--muted:#74778a;--paper:#f7f7fb;--panel:#fff;--line:#e7e7f0;--purple:#7141bd;--purple2:#efe8fb;--teal:#087e79;--tealbg:#e0f5f1;--amber:#a76510;--amberbg:#fff0d6;--red:#b23e54;--redbg:#ffe8eb;--shadow:0 14px 42px rgba(37,26,77,.07)}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.45}button,input,select,textarea{font:inherit}button{cursor:pointer}.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}.sidebar{background:#17172c;color:#fff;padding:25px 16px;display:flex;flex-direction:column;gap:26px}.brand{display:flex;gap:11px;align-items:center;padding:0 8px}.brand-mark{height:36px;width:36px;border-radius:12px;background:linear-gradient(145deg,#d5a0fb,#8051cb);display:grid;place-items:center;font-weight:900;color:#24143d;font-size:17px}.brand-name{font-size:14px;font-weight:800;letter-spacing:.02em}.brand-sub{font-size:10px;color:#acacc8;margin-top:2px}.nav-label{font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:#8585a8;padding:0 11px;margin-bottom:7px}.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;color:#bdbdd3;text-align:left;padding:11px 12px;border-radius:10px;display:flex;align-items:center;gap:10px;font-weight:650}.nav button:hover,.nav button.active{background:#2c2948;color:#fff}.nav button.active{box-shadow:inset 3px 0 #c59bf7}.nav .ico{width:19px;text-align:center;font-size:15px}.side-note{margin-top:auto;background:#22213d;border:1px solid #373451;border-radius:12px;padding:14px;color:#c9c8dc;font-size:11px}.side-note strong{color:#fff;display:block;margin-bottom:5px;font-size:12px}.main{min-width:0;padding:29px clamp(18px,3vw,42px) 48px}.topline{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:24px}.eyebrow{font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--purple);margin-bottom:8px}.headline{font-size:clamp(26px,3vw,35px);letter-spacing:-.045em;line-height:1.1;margin:0}.subtitle{color:var(--muted);margin-top:8px;max-width:800px}.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.btn{border:1px solid var(--line);border-radius:9px;padding:10px 13px;background:white;color:var(--ink);font-weight:750;font-size:12px;box-shadow:0 2px 4px #15152505}.btn.primary{background:var(--purple);border-color:var(--purple);color:white}.btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px #16142a12}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:23px 0}.stat{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:17px 18px;box-shadow:0 5px 20px #27205004}.stat-head{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;font-weight:700}.stat-icon{height:29px;width:29px;border-radius:9px;background:var(--purple2);color:var(--purple);display:grid;place-items:center;font-size:14px}.stat-value{font-size:29px;font-weight:820;letter-spacing:-.04em;margin:10px 0 2px}.stat-foot{color:var(--muted);font-size:11px}.section{display:none}.section.active{display:block}.notice{padding:12px 14px;border-radius:11px;background:#fff8e8;border:1px solid #f4e4be;color:#72521d;font-size:12px;margin:0 0 18px;display:flex;gap:10px;align-items:flex-start}.notice strong{color:#50350c}.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;box-shadow:0 5px 22px #27205004;overflow:hidden}.panel-head{padding:17px 19px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.panel-title{font-weight:800;font-size:15px;letter-spacing:-.02em}.panel-desc{font-size:11px;color:var(--muted);margin-top:3px}.panel-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.filters{padding:14px 17px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(190px,1.5fr) repeat(5,minmax(120px,1fr)) minmax(130px,.8fr);gap:9px}.field{display:flex;flex-direction:column;gap:5px;min-width:0}.field label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:800}.field input,.field select,.field textarea{width:100%;min-width:0;border:1px solid #dedeea;border-radius:8px;background:#fff;padding:10px 11px;color:var(--ink);outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#9a77d7;box-shadow:0 0 0 3px #8a64ca1c}.table-wrap{overflow:auto}.table{border-collapse:collapse;width:100%;min-width:940px}.table th{text-align:left;background:#fafafe;color:#79798e;text-transform:uppercase;letter-spacing:.1em;font-size:9px;font-weight:850;padding:12px 14px;border-bottom:1px solid var(--line);white-space:nowrap}.table td{padding:14px;border-bottom:1px solid #f0f0f6;vertical-align:middle}.table tbody tr{transition:background .15s}.table tbody tr:hover{background:#fbf9ff}.rank{font-weight:850;color:#8b879b;font-size:12px}.company-cell{display:flex;align-items:center;gap:10px;min-width:185px}.avatar{height:35px;width:35px;flex:0 0 35px;border-radius:10px;background:linear-gradient(145deg,#f0e8fd,#dfd2f7);display:grid;place-items:center;color:#5b3698;font-weight:900;font-size:13px}.co-name{font-weight:800;cursor:pointer;letter-spacing:-.01em}.co-name:hover{color:var(--purple);text-decoration:underline}.sub{font-size:10px;color:var(--muted);margin-top:3px;max-width:220px}.program{font-size:11px;max-width:180px;line-height:1.35;font-weight:700}.scorebox{display:flex;align-items:center;gap:8px}.score{font-size:13px;font-weight:850;min-width:24px}.scorebar{width:65px;height:5px;background:#eeeaf6;border-radius:99px;overflow:hidden}.scorebar span{height:100%;display:block;border-radius:99px;background:linear-gradient(90deg,#9670dc,#6d41bc)}.pill{display:inline-flex;align-items:center;gap:5px;border-radius:7px;padding:5px 8px;font-size:10px;font-weight:800;white-space:nowrap}.pill.pass{background:var(--tealbg);color:var(--teal)}.pill.unknown{background:var(--amberbg);color:var(--amber)}.pill.fail{background:var(--redbg);color:var(--red)}.pill.neutral{background:#f0eff6;color:#5f5d72}.pill.purple{background:var(--purple2);color:#6440a1}.select-status{border:1px solid var(--line);padding:6px 7px;border-radius:7px;background:#fff;font-size:10px;max-width:120px}.open-btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 9px;font-weight:800;font-size:10px}.open-btn:hover{border-color:#bea5e4;color:var(--purple)}.table-foot{padding:12px 17px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.empty{padding:45px 15px;text-align:center;color:var(--muted)}.empty strong{display:block;color:var(--ink);margin-bottom:5px}.grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;margin-top:18px}.simple-list{display:grid}.simple-row{padding:14px 17px;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid #f0f0f6}.simple-row:last-child{border-bottom:0}.simple-row .rank-bubble{width:29px;height:29px;border-radius:9px;background:var(--purple2);color:var(--purple);display:grid;place-items:center;font-weight:900;font-size:11px;flex:none}.simple-row .grow{min-width:0;flex:1}.simple-row-title{font-weight:800;cursor:pointer}.simple-row-title:hover{color:var(--purple)}.small-text{color:var(--muted);font-size:11px;margin-top:4px}.exclusion{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:18px}.exclusion:last-child{border-bottom:0}.exclusion strong{font-size:13px}.research-note{border:1px solid var(--line);border-radius:12px;padding:15px 16px;margin-bottom:12px;background:#fff}.research-note h3{font-size:13px;margin:0 0 6px}.research-note p{font-size:12px;color:var(--muted);margin:0}.method-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.method-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:17px}.method-card h3{margin:0 0 7px;font-size:13px}.method-card p{font-size:12px;color:var(--muted);margin:0}.barlist{display:grid;gap:10px;margin-top:13px}.barline{display:grid;grid-template-columns:155px minmax(50px,1fr) 36px;gap:10px;align-items:center;font-size:11px}.barline .bar{height:7px;background:#eeecf5;border-radius:20px;overflow:hidden}.barline .bar span{display:block;height:100%;background:linear-gradient(90deg,#b99aec,#7041bc);border-radius:20px}.exclude-header{padding:17px 20px;font-weight:800}.footer{color:#9694a8;font-size:10px;text-align:center;margin-top:22px}.modal-backdrop{position:fixed;inset:0;background:rgba(16,15,35,.52);z-index:20;display:none;align-items:stretch;justify-content:flex-end;backdrop-filter:blur(4px)}.modal-backdrop.open{display:flex}.drawer{height:100%;width:min(760px,100%);background:var(--paper);overflow:auto;box-shadow:-20px 0 60px #0d0b1c25;animation:slide .2s ease}.@keyframes slide{from{transform:translateX(30px);opacity:.7}to{transform:translateX(0);opacity:1}}.drawer-top{position:sticky;top:0;background:rgba(247,247,251,.96);backdrop-filter:blur(14px);z-index:2;border-bottom:1px solid var(--line);padding:18px 23px;display:flex;align-items:center;justify-content:space-between;gap:14px}.drawer-title{font-weight:850;font-size:21px;letter-spacing:-.04em}.close{border:1px solid var(--line);background:white;height:34px;width:34px;border-radius:9px;font-size:19px}.drawer-body{padding:21px 23px 42px}.hero-detail{padding:18px;border:1px solid var(--line);background:#fff;border-radius:13px}.hero-detail-top{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.hero-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.detail-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:17px}.detail-stat{background:#f8f6fc;border-radius:9px;padding:10px}.detail-stat span{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800;display:block}.detail-stat strong{font-size:14px;display:block;margin-top:4px}.detail-section{margin-top:20px}.detail-section h3{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.11em;color:#6f6983}.detail-copy{font-size:12px;color:#424257;margin:0}.kv-list{display:grid;gap:8px}.kv{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;font-size:11px;padding:8px 0;border-bottom:1px solid #ebebf3}.kv:last-child{border-bottom:0}.kv .key{color:var(--muted);font-weight:700}.history-list{padding-left:20px;margin:0;display:grid;gap:9px;font-size:12px;color:#414155}.elig-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.elig-item{border:1px solid var(--line);background:#fff;border-radius:9px;padding:11px}.elig-name{font-size:11px;font-weight:750;margin-bottom:7px}.drawer textarea{min-height:86px;resize:vertical}.drawer .form-row{display:grid;grid-template-columns:1fr 1fr;gap:11px}.source-list{display:grid;gap:7px}.source-link{font-size:11px;color:#6741a7;overflow-wrap:anywhere}.source-link:hover{text-decoration:underline}.muted-note{font-size:10px;color:var(--muted);margin-top:7px}.toast{position:fixed;bottom:20px;right:20px;background:#1d1b32;color:#fff;padding:11px 14px;border-radius:9px;font-size:12px;box-shadow:var(--shadow);z-index:50;display:none}.toast.show{display:block}.hidden{display:none!important}@media(max-width:1120px){.filters{grid-template-columns:repeat(3,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:1fr}}@media(max-width:760px){.app{grid-template-columns:1fr}.sidebar{padding:12px 14px;gap:12px}.brand{padding:0}.sidebar .nav-label,.side-note{display:none}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap;padding:9px 11px;font-size:11px}.nav .ico{display:none}.main{padding:19px 13px 35px}.topline{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.filters .search-field{grid-column:1/-1}.stats{gap:9px}.stat{padding:13px}.stat-value{font-size:25px}.method-grid{grid-template-columns:1fr}.drawer-top{padding:15px}.drawer-body{padding:15px}.detail-stats{grid-template-columns:repeat(3,minmax(0,1fr))}.elig-grid{grid-template-columns:1fr}.drawer .form-row{grid-template-columns:1fr}.kv{grid-template-columns:115px 1fr}.modal-backdrop{align-items:stretch}.drawer{width:100%}}@media(max-width:420px){.filters{grid-template-columns:1fr}.filters .search-field{grid-column:auto}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.detail-stats{grid-template-columns:1fr}.headline{font-size:27px}}
 </style>
@@ -21,7 +22,7 @@
  <div class="side-note" id="sideNote"><strong>Research snapshot</strong>Loading research metadata…<br><br>Financing needs are labelled Confirmed, Inferred or Unknown per record.</div>
 </aside>
 <main class="main">
- <header class="topline"><div><div class="eyebrow" id="pageEyebrow">Venture sourcing</div><h1 class="headline" id="pageTitle">Scout pipeline overview</h1><div class="subtitle" id="pageSubtitle">A decision-ready shortlist with evidence, program fit and diligence gaps. Research is not the same as verified eligibility.</div></div><div class="actions"><button class="btn" id="exportBtn">↓ Export pipeline CSV</button><button class="btn primary" id="goPipeline">Review candidates ↗</button></div></header>
+ <header class="topline"><div><div class="eyebrow" id="pageEyebrow">Venture sourcing</div><h1 class="headline" id="pageTitle">Scout pipeline overview</h1><div class="subtitle" id="pageSubtitle">A decision-ready shortlist with evidence, program fit and diligence gaps. Research is not the same as verified eligibility.</div></div><div class="actions"><span id="cloudStatus" class="lvl-status" role="status" aria-live="polite" style="align-self:center"></span><button class="btn" id="exportBtn">↓ Export pipeline CSV</button><button class="btn primary" id="goPipeline">Review candidates ↗</button><button class="btn" id="signOutBtn" hidden>Sign out</button></div></header>
  <div class="notice"><span>⚠</span><div><strong>Use as a sourcing shortlist, not an investment recommendation.</strong> Several facts come from secondary sources, some company websites are not yet verified, and financing needs are inferred. Published program criteria and all claims should be rechecked before outreach.</div></div>
  <div class="stats">
   <div class="stat"><div class="stat-head">CANDIDATES <span class="stat-icon">◉</span></div><div class="stat-value" id="statCandidates">8</div><div class="stat-foot">Companies in the current research file</div></div>
@@ -51,7 +52,7 @@
    <div class="table-foot"><span id="tableFootText">Showing 8 candidates</span><span>Scores use the supplied 100-point rubric · <button id="sortButton" class="open-btn">Sort: Highest score ↓</button></span></div>
   </div>
  </section>
- <section class="section" id="view-excluded"><div class="panel"><div class="panel-head"><div><div class="panel-title">Considered and excluded</div><div class="panel-desc">Candidates that were seen during research but not included in the active shortlist.</div></div><span class="pill neutral" id="excludedCount">5 entries</span></div><div id="excludedRows"></div><div class="table-foot">Exclusion rationale comes from data/research-runs.json.</div></div></section>
+ <section class="section" id="view-excluded"><div class="panel"><div class="panel-head"><div><div class="panel-title">Considered and excluded</div><div class="panel-desc">Candidates that were seen during research but not included in the active shortlist.</div></div><span class="pill neutral" id="excludedCount">5 entries</span></div><div id="excludedRows"></div><div class="table-foot">Exclusion rationale comes from your private research records.</div></div></section>
  <section class="section" id="view-methodology">
   <div class="panel" style="margin-bottom:16px"><div class="panel-head"><div><div class="panel-title">Scoring model</div><div class="panel-desc" id="scoringDesc">100-point rubric; see the scoring note from the research metadata.</div></div><span class="pill purple">100 points</span></div><div style="padding:18px 20px"><div id="methodBars" class="barlist"></div><p class="small-text" style="line-height:1.7;margin-top:18px">Fit score and mandatory eligibility status are separate. A high score does not override a failed or unknown mandatory criterion. The score breakdowns come from the research JSON files and should be recalibrated if you adopt a different agreed rubric.</p><p class="small-text" style="line-height:1.7;margin-top:10px" id="scoringNote"></p></div></div>
   <div class="method-grid">
@@ -64,11 +65,14 @@
    <div class="method-card" id="auditCard" style="display:none"><h3>Program criteria audit</h3><div id="auditBody" class="small-text"></div></div>
   </div>
  </section>
- <div class="footer" id="footerText">LVLUP / SCOUT · Local edits stay in this browser until exported.</div>
+ <div class="footer" id="footerText">LVLUP / SCOUT · Pipeline status and notes save automatically to your private cloud workspace.</div>
 </main>
 </div>
 <div class="modal-backdrop" id="modal"><aside class="drawer" role="dialog" aria-modal="true" aria-label="Company details"><div class="drawer-top"><div><div class="eyebrow" style="margin-bottom:4px">Candidate intelligence</div><div class="drawer-title" id="drawerTitle">Company</div></div><button class="close" id="closeDrawer" aria-label="Close details">×</button></div><div class="drawer-body" id="drawerBody"></div></aside></div>
 <div class="toast" id="toast"></div>
+<script src="./assets/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
+<script src="./assets/lvlup-cloud.js"></script>
 <script>
 // The UI stays in this file; startup records and research metadata live in separate JSON files.
 let DATA = { meta: {}, companies: [], considered_and_excluded: [] };
@@ -80,10 +84,9 @@ let CURRENT_RUN_ID = '';
 const STATUS = ['New','Researching','Ready for outreach','Contacted','Watchlist','Passed'];
 const STORAGE_KEY = 'lvlup_scout_pipeline_v1';
 let sortDesc=true, currentCompany=null, currentView='overview';
-let localState={};
-try { localState=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')||{}; } catch(e) { localState={}; }
+let localState={}; // in-memory working copy; the private cloud (company_pipeline table) is the source of truth
 function stateFor(c){ if(!localState[c.company_name]) localState[c.company_name]={status:'New',notes:'',priority:false}; return localState[c.company_name]; }
-function saveLocal(){ try {localStorage.setItem(STORAGE_KEY,JSON.stringify(localState));}catch(e){} }
+function saveLocal(){ queuePipelineChanges(); }
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 function safeUrl(u){try{const x=new URL(u);return ['http:','https:'].includes(x.protocol)?x.href:'#'}catch(e){return '#'}}
 function companyWebsiteUrl(c){const raw=String(c?.official_website??'').trim();const match=raw.match(/^(https?:\/\/\S+)/i);return match?safeUrl(match[1]):'#'}
@@ -207,11 +210,14 @@ function openCompany(name){const c=companies.find(x=>x.company_name===name);if(!
  <div class="detail-section"><h3>Suggested next research step</h3><p class="detail-copy">${esc(c.suggested_next_research_step||'No next step recorded.')}</p></div>
  <div class="detail-section"><h3>Company database profiles</h3><p class="detail-copy" style="margin-bottom:9px">Look up the company in startup and investor databases.</p>${companyProfileLinks(c)}</div>
  <div class="detail-section"><h3>Sources & evidence</h3><div class="source-list">${urls.map((u,i)=>`<a class="source-link" href="${safeUrl(u)}" target="_blank" rel="noopener">${i+1}. ${esc(shortHost(u))} ↗ <div class="muted-note" style="margin:2px 0 0">${esc(u)}</div></a>`).join('')||'<span class="small-text">No source URLs recorded.</span>'}</div></div>
- <div class="detail-section" style="border-top:1px solid var(--line);padding-top:18px"><h3>Your pipeline notes</h3><div class="form-row"><div class="field"><label for="candidateStatus">Lead status</label><select id="candidateStatus">${STATUS.map(s=>`<option ${st.status===s?'selected':''}>${s}</option>`).join('')}</select></div><div class="field"><label>Last verified in source file</label><input value="${esc(c.date_last_verified||META.date_last_verified||'Unknown')}" readonly></div></div><div class="field" style="margin-top:11px"><label for="candidateNotes">Analyst notes (saved in this browser)</label><textarea id="candidateNotes" placeholder="Record who to contact, questions to ask, or new evidence to verify…">${esc(st.notes||'')}</textarea></div><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px"><button class="btn" id="cancelNote">Close</button><button class="btn primary" id="saveCandidate">Save changes</button></div><div class="muted-note">Local notes/status do not modify the original JSON. Export CSV to preserve your changes outside this browser.</div></div>`;
+ <div class="detail-section" style="border-top:1px solid var(--line);padding-top:18px"><h3>Your pipeline notes</h3><div class="form-row"><div class="field"><label for="candidateStatus">Lead status</label><select id="candidateStatus">${STATUS.map(s=>`<option ${st.status===s?'selected':''}>${s}</option>`).join('')}</select></div><div class="field"><label>Last verified in source file</label><input value="${esc(c.date_last_verified||META.date_last_verified||'Unknown')}" readonly></div></div><div class="field" style="margin-top:11px"><label for="candidateNotes">Analyst notes (saves automatically)</label><textarea id="candidateNotes" placeholder="Record who to contact, questions to ask, or new evidence to verify…">${esc(st.notes||'')}</textarea></div><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px"><button class="btn" id="cancelNote">Close</button><button class="btn primary" id="saveCandidate">Done</button></div><div class="muted-note">Status and notes save automatically to your private cloud workspace and appear on your other devices. They never change the research record.</div></div>`;
  document.getElementById('modal').classList.add('open');document.body.style.overflow='hidden';
  document.getElementById('priorityToggle').addEventListener('click',()=>{st.priority=!st.priority;saveLocal();openCompany(c.company_name);renderTable();toast(st.priority?'Added to shortlist':'Removed from shortlist')});
- document.getElementById('saveCandidate').addEventListener('click',()=>{st.status=document.getElementById('candidateStatus').value;st.notes=document.getElementById('candidateNotes').value;saveLocal();renderTable();renderOverview();closeModal();toast('Candidate updates saved in this browser')});
+ document.getElementById('saveCandidate').addEventListener('click',()=>{st.status=document.getElementById('candidateStatus').value;st.notes=document.getElementById('candidateNotes').value;saveLocal();renderTable();renderOverview();closeModal();toast('Candidate updates saved')});
  document.getElementById('cancelNote').addEventListener('click',closeModal);
+ const autoSaveCandidate=()=>{st.status=document.getElementById('candidateStatus').value;st.notes=document.getElementById('candidateNotes').value;saveLocal()};
+ document.getElementById('candidateStatus').addEventListener('change',()=>{autoSaveCandidate();renderTable();renderOverview()});
+ document.getElementById('candidateNotes').addEventListener('input',autoSaveCandidate);
 }
 function closeModal(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';currentCompany=null}
 function showView(view){currentView=view;document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById('view-'+view).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===view));const titles={overview:['Scout pipeline overview','A decision-ready shortlist with evidence, program fit and diligence gaps. Research is not the same as verified eligibility.'],pipeline:['Startup pipeline','Search, filter, rank and review researched candidates. Update local pipeline status as diligence progresses.'],excluded:['Considered & excluded','Keep a record of companies that came up in research but did not make the active shortlist.'],methodology:['Scoring & methodology','Understand how scores and eligibility statuses were defined in the source research file.']};document.getElementById('pageTitle').textContent=titles[view][0];document.getElementById('pageSubtitle').textContent=titles[view][1];if(view==='pipeline')renderTable();}
@@ -219,38 +225,87 @@ function csvCell(v){let s=String(v??'');if(/[",\n]/.test(s))s='"'+s.replace(/"/g
 function exportCsv(filtered=true){const arr=filtered?filteredCompanies():companies;const headers=['rank','company_name','official_website','country','region','research_batch_id','scope_flag','hq_and_geography','industry_and_business_model','product_summary','founding_year','funding_stage','funding_history','revenue_or_traction_evidence','likely_financing_need_inferred','financing_need_status','best_fit_program','alternative_program','program_fit_score','score_breakdown','mandatory_eligibility_status','eligibility_checks','eligibility_note','confidence_level','most_recent_relevant_event','missing_information','suggested_next_research_step','evidence_and_source_urls','date_last_verified','local_pipeline_status','local_priority','local_analyst_notes'];const rows=arr.map(c=>{let st=stateFor(c);return headers.map(h=>{let v=h==='local_pipeline_status'?st.status:h==='local_priority'?st.priority:h==='local_analyst_notes'?st.notes:c[h];if(v&&typeof v==='object')v=JSON.stringify(v);return csvCell(v)})});const csv=[headers.join(','),...rows.map(r=>r.join(','))].join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`lvlup_sourcing_pipeline_${new Date().toISOString().slice(0,10)}.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast(`Exported ${arr.length} ${arr.length===1?'candidate':'candidates'} to CSV`)}
 let toastTimer;function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2300)}
 function bindEvents(){document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));['search','programFilter','eligFilter','geoFilter','regionFilter','batchFilter','minScore'].forEach(id=>document.getElementById(id).addEventListener(id==='search'?'input':'change',renderTable));document.getElementById('clearFilters').addEventListener('click',()=>{document.getElementById('search').value='';document.getElementById('programFilter').value='';document.getElementById('eligFilter').value='';document.getElementById('geoFilter').value='';document.getElementById('regionFilter').value='';document.getElementById('batchFilter').value='';document.getElementById('minScore').value=0;renderTable()});document.getElementById('sortButton').addEventListener('click',()=>{sortDesc=!sortDesc;document.getElementById('sortButton').textContent=sortDesc?'Sort: Highest score ↓':'Sort: Lowest score ↑';renderTable()});document.getElementById('exportBtn').addEventListener('click',()=>exportCsv(false));document.getElementById('exportFiltered').addEventListener('click',()=>exportCsv(true));document.getElementById('goPipeline').addEventListener('click',()=>showView('pipeline'));document.getElementById('topViewAll').addEventListener('click',()=>showView('pipeline'));document.getElementById('programFilterBtn').addEventListener('click',()=>showView('pipeline'));document.getElementById('closeDrawer').addEventListener('click',closeModal);document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});}
-loadDataAndInit();
+// ---------- private cloud storage (Supabase) ----------
+// Research records are read from RLS-protected tables after sign-in; pipeline status, notes and
+// shortlist flags save to the company_pipeline table. Nothing private is fetched before the
+// sign-in gate in assets/lvlup-cloud.js confirms this is the authorised owner.
+let SB=null, PSNAP={};
+const NAME_TO_ID=new Map(), ID_TO_NAME=new Map(), PIPE_META=new Map();
+function pipeRow(st){st=st||{};return{status:String(st.status||'New'),notes:String(st.notes||''),priority:!!st.priority}}
+const PIPE_CFG={table:'company_pipeline',keyCol:'company_id',meta:PIPE_META,
+  fullRow:id=>pipeRow(localState[ID_TO_NAME.get(id)]),
+  onRemote:(row,keys)=>{applyPipeRow(row,keys);pipeRender(row.company_id)}};
+function queuePipelineChanges(){
+  if(!SB)return;
+  Object.keys(localState).forEach(name=>{const id=NAME_TO_ID.get(name);if(!id)return;
+    const a=pipeRow(PSNAP[name]),b=pipeRow(localState[name]),patch={};
+    Object.keys(b).forEach(k=>{if(a[k]!==b[k])patch[k]=b[k]});
+    if(Object.keys(patch).length)LvlupCloud.outbox.add(LvlupCloud.versionedOp(PIPE_CFG,id,patch))});
+  PSNAP=JSON.parse(JSON.stringify(localState));
+}
+function pendingPipeKeys(id){const k=new Set();LvlupCloud.outbox.queue.forEach(o=>{if(o.key==='company_pipeline:'+id&&o.patch)Object.keys(o.patch).forEach(x=>k.add(x))});return k}
+function applyPipeRow(row,keepKeys){const name=ID_TO_NAME.get(row.company_id);if(!name)return;const keep=new Set([...(keepKeys||[]),...pendingPipeKeys(row.company_id)]);
+  const v=pipeRow(row);[localState,PSNAP].forEach(S=>{const st=S[name]||(S[name]={status:'New',notes:'',priority:false});Object.keys(v).forEach(k=>{if(!keep.has(k))st[k]=v[k]})})}
+function onPipeChange(row){if(!row||!row.company_id)return;const m=PIPE_META.get(row.company_id);if(m&&row.version<=m.version)return;PIPE_META.set(row.company_id,{version:row.version,deleted:false});applyPipeRow(row);pipeRender(row.company_id)}
+let pipeTimer=null,pipeIds=new Set();
+function pipeRender(id){if(id)pipeIds.add(id);clearTimeout(pipeTimer);pipeTimer=setTimeout(()=>{const ids=pipeIds;pipeIds=new Set();renderTable();renderOverview();
+  const ae=document.activeElement,typing=ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName)&&document.getElementById('drawerBody').contains(ae);
+  if(currentCompany&&ids.has(NAME_TO_ID.get(currentCompany.company_name))&&!typing)openCompany(currentCompany.company_name)},150)}
+let pipeRefreshing=false,pipeLast=0;
+async function refreshPipeline(force){if(!SB||pipeRefreshing||(!force&&Date.now()-pipeLast<5000))return;pipeRefreshing=true;
+  try{(await LvlupCloud.fetchAll('company_pipeline')).forEach(onPipeChange)}catch(e){console.warn('Pipeline refresh failed',e)}finally{pipeRefreshing=false;pipeLast=Date.now()}}
+function subscribePipeline(){let joined=false;
+  SB.channel('pipeline-sync').on('postgres_changes',{event:'*',schema:'public',table:'company_pipeline'},p=>onPipeChange(p.new))
+    .subscribe(status=>{if(status==='SUBSCRIBED'){if(joined)refreshPipeline(true);joined=true}});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshPipeline()});
+  window.addEventListener('online',()=>refreshPipeline(true));
+}
+// One-time move of status/notes saved in this browser before the switch to cloud storage.
+function checkLegacyPipeline(){
+  let L=null;try{L=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')}catch(e){}
+  if(!L||typeof L!=='object')return;
+  const plan=[];const blank=JSON.stringify(pipeRow({}));
+  Object.entries(L).forEach(([name,st])=>{const id=NAME_TO_ID.get(name);if(!id||PIPE_META.has(id))return;const v=pipeRow(st);if(JSON.stringify(v)!==blank)plan.push([name,v])});
+  if(!plan.length){try{localStorage.removeItem(STORAGE_KEY)}catch(e){}return}
+  const b=document.createElement('div');b.className='lvl-banner';
+  b.innerHTML=`<div class="grow"><b>This browser has pipeline status or notes for ${plan.length} compan${plan.length===1?'y':'ies'} that are not in your cloud workspace yet.</b> They were saved here before the switch to private cloud storage.</div><button class="primary">Upload to cloud</button><button>Not now</button><button>Discard local copy</button>`;
+  const main=document.querySelector('.main');main.insertBefore(b,main.children[1]||null);
+  const [up,later,discard]=b.querySelectorAll('button');
+  up.onclick=()=>{plan.forEach(([name,v])=>Object.assign(stateFor(companies.find(c=>c.company_name===name)),v));saveLocal();renderTable();renderOverview();b.innerHTML='<div class="grow">Uploading…</div>';
+    const ob=LvlupCloud.outbox,f=s=>{if(s.kind==='saved'){ob.listeners=ob.listeners.filter(x=>x!==f);try{localStorage.removeItem(STORAGE_KEY)}catch(e){}b.remove();toast('Local pipeline notes uploaded')}};ob.listeners.push(f)};
+  later.onclick=()=>b.remove();
+  let armed=0;discard.onclick=()=>{if(Date.now()-armed>3000){armed=Date.now();toast('Click again to discard the local copy');return}try{localStorage.removeItem(STORAGE_KEY)}catch(e){}b.remove();toast('Local copy discarded')};
+}
 
-async function loadDataAndInit() {
-  try {
-    const [companiesResponse, runsResponse] = await Promise.all([
-      fetch("./data/companies.json", { cache: "no-store" }),
-      fetch("./data/research-runs.json", { cache: "no-store" })
-    ]);
-    if (!companiesResponse.ok) throw new Error("Could not load data/companies.json (" + companiesResponse.status + ")");
-    if (!runsResponse.ok) throw new Error("Could not load data/research-runs.json (" + runsResponse.status + ")");
-    const companyPayload = await companiesResponse.json();
-    const runPayload = await runsResponse.json();
-    if (!Array.isArray(companyPayload.companies)) throw new Error("data/companies.json must contain a companies array.");
-    DATA = {
-      meta: runPayload.meta || {},
-      companies: companyPayload.companies,
-      considered_and_excluded: runPayload.considered_and_excluded || []
-    };
-    companies = DATA.companies;
-    excluded = DATA.considered_and_excluded;
-    META = DATA.meta;
-    RUNS = Array.isArray(runPayload.runs) ? runPayload.runs : [];
-    CURRENT_RUN_ID = runPayload.current_run_id || '';
-    init();
-  } catch (error) {
-    console.error("LvlUp dashboard data load failed:", error);
-    const panel = document.createElement("div");
-    panel.style.cssText = "position:fixed;z-index:99999;left:16px;right:16px;bottom:16px;padding:16px 18px;border-radius:12px;background:#fff0f0;color:#8a1c2b;border:1px solid #f0b9c0;font:14px/1.5 system-ui,sans-serif;box-shadow:0 8px 32px #17182c20";
-    const detail = String(error.message || error).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
-    panel.innerHTML = "<strong>Dashboard data could not be loaded.</strong><br>Check that <code>data/companies.json</code> and <code>data/research-runs.json</code> exist in the deployed site. " + detail;
-    document.body.appendChild(panel);
-  }
+LvlupCloud.start({appName:'your sourcing dashboard',signOutButton:'signOutBtn',onReady:loadDataAndInit});
+
+async function loadDataAndInit(ctx) {
+  SB = ctx.sb;
+  const [companyRows, runRows, exclusionRows, metaRows, pipelineRows] = await Promise.all([
+    LvlupCloud.fetchAll('companies', q => q.order('rank')),
+    LvlupCloud.fetchAll('research_runs', q => q.order('sort_order')),
+    LvlupCloud.fetchAll('research_exclusions', q => q.order('sort_order')),
+    LvlupCloud.fetchAll('research_meta'),
+    LvlupCloud.fetchAll('company_pipeline')
+  ]);
+  const metaMap = Object.fromEntries(metaRows.map(r => [r.key, r.value]));
+  DATA = {
+    meta: metaMap.meta || {},
+    companies: companyRows.map(r => r.data),
+    considered_and_excluded: exclusionRows.map(r => r.data)
+  };
+  companyRows.forEach(r => { NAME_TO_ID.set(r.company_name, r.id); ID_TO_NAME.set(r.id, r.company_name); });
+  companies = DATA.companies;
+  excluded = DATA.considered_and_excluded;
+  META = DATA.meta;
+  RUNS = runRows.map(r => r.data);
+  CURRENT_RUN_ID = metaMap.current_run_id || '';
+  pipelineRows.forEach(r => { PIPE_META.set(r.company_id, { version: r.version, deleted: false }); const name = ID_TO_NAME.get(r.company_id); if (name) localState[name] = pipeRow(r); });
+  PSNAP = JSON.parse(JSON.stringify(localState));
+  init();
+  LvlupCloud.mountStatus('cloudStatus');
+  subscribePipeline();
+  checkLegacyPipeline();
 }
 </script>
 </body></html>
