@@ -6,6 +6,7 @@
   "records": {},
   "deleted_records": {},
   "custom": [],
-  "deleted_custom_ids": [],
-  "goal": 10
+  "deleted_custom_ids": {},
+  "goal": 10,
+  "goal_updated_at": null
 }
