@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "dataset_id": "lvlup-founder-crm-state",
+  "updated_at": "2026-10-11T15:36:36.610Z",
+  "note": "Founder CRM progress (relationship stage, warmth, follow-ups, contact links, custom founders, activity logs and monthly goal). PUBLIC FILE: anyone can read this JSON while this repository is public. Do not store confidential or sensitive personal information here. Browser edits require a GitHub fine-grained personal access token configured in the CRM; the token is stored in that browser only and is never written to this file or committed source.",
+  "records": {},
+  "deleted_records": {},
+  "custom": [],
+  "deleted_custom_ids": [],
+  "goal": 10
+}
