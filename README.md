@@ -29,6 +29,9 @@ Notes on the dashboard: pipeline status and notes are stored in the browser's lo
 `frm.html` is a separate founder-relationship manager for early-stage founder lists, kept apart from the program-fit pipeline.
 
 - Data: `data/founders.json`, with one entry per founder and a `list_id` for each sourcing list (currently the global early-stage list and the India & UAE early-stage list, both from 11 October 2026).
-- Features: a pipeline board with drag-and-drop stages, a table view, scheduled follow-ups, a per-founder activity timeline, tags, warmth, a monthly LvlUp application goal, manually added founders, CSV export, and JSON backup and restore.
-- Storage: progress is saved in the browser's localStorage under `lvlup_frm_v1` and does not sync between devices. Use Export backup and Import backup to move it.
-- To add a new list, append founders to `data/founders.json` with a new `list_id`. Existing browser progress is keyed by `id`, so keep IDs stable.
+- Features: a pipeline board with drag-and-drop stages, a table view, scheduled follow-ups, a per-founder activity timeline with subdued type colours, contact links, warmth, a monthly LvlUp application goal, manually added founders, CSV export, and JSON backup and restore.
+- Research data: `data/founders.json` holds founder research records and list definitions. Keep UI changes in `frm.html` and research edits in JSON.
+- CRM progress: `data/crm-state.json` stores stages, warmth, next actions and due dates, last-contact dates, contact links, custom founders, activity logs, and goal settings. It is deliberately separate from the HTML and founder research file.
+- Cross-device sync: open Founder CRM and select **Connect sync**. Create a fine-grained GitHub personal access token restricted to this repository, with **Contents: Read and write**, then connect it in the CRM. The token is stored in that browser's local storage and is never committed. Repeat the connection on each device. CRM edits autosave locally and are pushed to the JSON file after a short pause; status appears next to the sync button.
+- **Public-data warning:** this repository is public, so anyone can read `data/crm-state.json` and the data synced to it. Do not store sensitive contact information, private notes, or other confidential details until the state file is moved to a private repository/backend. The token is not shared between devices.
+- To add a new research list, append founders to `data/founders.json` with a new `list_id`. Existing CRM progress is keyed by founder `id`, so keep IDs stable.
