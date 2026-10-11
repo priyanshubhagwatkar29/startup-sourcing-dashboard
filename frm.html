@@ -71,6 +71,8 @@ td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}tr:h
 .contact-links{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.contact-link{display:inline-flex;gap:5px;align-items:center;padding:5px 9px;border:1px solid var(--line);border-radius:8px;background:#faf9fc;font-size:12px;font-weight:700;text-decoration:none}.contact-link:hover{border-color:#b9a4dd;background:#f6f1fc}.autosave-status{font-size:11px;color:var(--muted);margin-top:7px}
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:#17182c;color:#fff;padding:10px 16px;border-radius:10px;transition:.25s;z-index:99;font-size:13px}.toast.show{transform:translateX(-50%) translateY(0)}
 .notice{background:#fff8e8;border:1px solid #f4e4be;border-radius:12px;padding:10px 13px;font-size:12.5px;color:#6d5320;margin-bottom:14px}
+.sync-state{font-size:11px;color:var(--muted);align-self:center;max-width:190px}.sync-state.ok{color:var(--teal)}.sync-state.warn{color:var(--amber)}.sync-state.bad{color:var(--red)}
+.sync-shade{position:fixed;inset:0;background:rgba(23,24,44,.42);z-index:80;display:none;align-items:flex-start;justify-content:center;padding:6vh 14px 24px;overflow-y:auto}.sync-shade.open{display:flex}.sync-dialog{width:min(560px,100%);background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:0 20px 70px rgba(0,0,0,.22);padding:20px}.sync-dialog h2{font-size:19px;margin:0 0 8px}.sync-dialog p{font-size:12.5px;color:var(--muted);margin:7px 0}.sync-dialog .field{margin-top:13px}.sync-dialog input{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 11px}.sync-dialog .sync-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:15px}.sync-warning{background:#fff8e8;border:1px solid #f4e4be;border-radius:10px;padding:10px 12px;color:#6d5320;font-size:12px;margin-top:12px}
 .hidden{display:none!important}
 .board-layout{display:grid;grid-template-columns:262px minmax(0,1fr);gap:12px;padding:14px;align-items:stretch}
 .board-left{align-self:start}
@@ -98,12 +100,14 @@ td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}tr:h
   <button data-view="activity">✎ Activity log</button>
  </nav></div>
  <div><div class="nav-label">Other</div><nav class="nav"><a href="./index.html">↩ Program-fit pipeline</a></nav></div>
- <div class="side-note"><strong>Where your progress is saved</strong>Stages, notes, tasks and logs are saved in this browser only. They do not sync across devices. Use <b>Export backup</b> regularly and <b>Import</b> to restore or move devices.</div>
+ <div class="side-note"><strong>CRM data storage</strong>Founder research and CRM progress live in separate JSON files. Connect GitHub sync to publish edits and load the same progress on other devices. This repository is public, so synced CRM data is public too.</div>
 </aside>
 <main class="main">
  <header class="topline">
   <div><div class="eyebrow" id="eyebrow">Founder sourcing</div><h1 id="pageTitle">Pipeline board</h1><div class="subtitle" id="pageSub">Drag founders between stages, open a card to log outreach, set the next action and keep notes.</div></div>
   <div class="actions">
+   <button class="btn" id="syncSettingsBtn">☁ Connect sync</button>
+   <span id="syncStatus" class="sync-state warn">GitHub sync not connected</span>
    <button class="btn" id="addBtn">＋ Add founder</button>
    <button class="btn" id="exportCsvBtn">↓ CSV</button>
    <button class="btn" id="exportBtn">↓ Export backup</button>
@@ -149,17 +153,33 @@ td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}tr:h
  <div class="drawer-body" id="dBody"></div>
 </aside></div>
 <div class="toast" id="toast"></div>
+<div class="sync-shade" id="syncShade">
+ <section class="sync-dialog" role="dialog" aria-modal="true" aria-labelledby="syncTitle">
+  <div style="display:flex;justify-content:space-between;gap:12px;align-items:start"><div><h2 id="syncTitle">Connect GitHub sync</h2><p>CRM progress will be saved in <code>data/crm-state.json</code> in this repository.</p></div><button class="close" id="syncClose" aria-label="Close sync settings">×</button></div>
+  <div class="sync-warning"><strong>This repository is public.</strong> Anyone can read the synced JSON, including founder relationship stages, notes, contact details and activity logs. Do not sync confidential or sensitive personal information until you move the JSON to private storage.</div>
+  <p>Create a <b>fine-grained personal access token</b> for this repository only. Grant <b>Contents: Read and write</b> permission. Never paste the token into a GitHub file or share it.</p>
+  <p><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Create a fine-grained token on GitHub ↗</a></p>
+  <div class="field"><label for="githubTokenInput">GitHub token</label><input id="githubTokenInput" type="password" autocomplete="off" placeholder="github_pat_…" spellcheck="false"></div>
+  <p>The token is stored in this browser's local storage, not in the repository. You must connect each device separately. The browser sends it directly to GitHub to update the JSON file.</p>
+  <div id="syncModalStatus" class="autosave-status">Your current browser data is kept locally until sync is connected.</div>
+  <div class="sync-actions"><button class="btn" id="syncDisconnectBtn">Disconnect</button><button class="btn" id="syncCancelBtn">Cancel</button><button class="btn primary" id="syncConnectBtn">Connect and sync</button></div>
+ </section>
+</div>
 
 <script>
 const STAGES=['Sourced','Researching','Ready to contact','Contacted','In conversation','Referred / applied to LvlUp','Watchlist','Passed'];
 const CONTACTED=new Set(['Contacted','In conversation','Referred / applied to LvlUp']);
 const WARMTH=['Cold','Warm','Hot'];
 const ACT_TYPES=['Note','Email sent','LinkedIn / X message','Call','Meeting','Founder replied','Intro made','LvlUp application submitted','Research update'];
-const KEY='lvlup_frm_v1';
+const KEY='lvlup_frm_v1', TOKEN_KEY='lvlup_frm_github_token_v1';
+const GH_API='https://api.github.com/repos/priyanshubhagwatkar29/startup-sourcing-dashboard/contents/data/crm-state.json';
 let DATA={lists:[],founders:[]}, FOUNDERS=[], view='board', sortKey='name', sortDir=1, current=null, selectedId=null;
-let ST={records:{},custom:[],goal:10};
+let ST={schema_version:1,records:{},deleted_records:{},custom:[],deleted_custom_ids:{},goal:10,goal_updated_at:null};
+let stateFileSha=null, syncTimer=null, syncBusy=false, syncAgain=false, suppressSync=false, lastSavedSnapshot=null, remoteStateLoaded=false;
 try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&typeof s==='object')ST=Object.assign(ST,s)}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){toast('Could not save in this browser')}}
+ST.records=ST.records||{};ST.deleted_records=ST.deleted_records||{};ST.custom=Array.isArray(ST.custom)?ST.custom:[];ST.deleted_custom_ids=normaliseTombstones(ST.deleted_custom_ids);
+lastSavedSnapshot=cloneObj(ST);
+function save(){const before=lastSavedSnapshot||cloneObj(ST);stampChangedData(before,ST);ST.updated_at=nowStamp();try{localStorage.setItem(KEY,JSON.stringify(ST));lastSavedSnapshot=cloneObj(ST)}catch(e){toast('Could not save in this browser')}if(!suppressSync)scheduleGitHubSync()}
 const $=id=>document.getElementById(id);
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function safeUrl(u){try{const x=new URL(u);return['http:','https:'].includes(x.protocol)?x.href:null}catch(e){return null}}
@@ -169,6 +189,73 @@ function contactUrl(kind,value){const raw=String(value||'').trim();if(!raw)retur
 function timelineTypeClass(type){const t=String(type||'').toLowerCase();if(t.includes('email'))return'type-email';if(t.includes('linkedin')||t.includes(' x ')||t.includes('message'))return'type-social';if(t.includes('call'))return'type-call';if(t.includes('meeting'))return'type-meeting';if(t.includes('repl'))return'type-reply';if(t.includes('intro'))return'type-intro';if(t.includes('application'))return'type-application';if(t.includes('research'))return'type-research';return'type-note'}
 function renderContactLinks(s){const c=s.contacts||{},links=[];if(c.whatsapp){const url=contactUrl('whatsapp',c.whatsapp);links.push(url?`<a class="contact-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>`:`<span class="contact-link">WhatsApp: ${esc(c.whatsapp)} (invalid number)</span>`)}[['linkedin','LinkedIn'],['x','X']].forEach(([key,label])=>{if(c[key]){const url=contactUrl(key,c[key]);links.push(url?`<a class="contact-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`:`<span class="contact-link">${label}: ${esc(c[key])}</span>`)}});(c.custom||[]).forEach((item)=>{if(!item||(!item.label&&!item.url))return;const url=contactUrl('custom',item.url);links.push(url?`<a class="contact-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(item.label||host(url))} ↗</a>`:`<span class="contact-link">${esc(item.label||'Custom')}: ${esc(item.url||'')}</span>`)});return links.length?`<div class="contact-links">${links.join('')}</div>`:''}
 function contactEditorFields(type,s){const c=s.contacts||{};if(type==='whatsapp')return `<div class="field"><label for="eContactValue">WhatsApp number</label><input id="eContactValue" inputmode="numeric" autocomplete="off" value="${esc(String(c.whatsapp||'').replace(/\D/g,''))}" placeholder="Country code + number"></div>`;if(type==='linkedin')return `<div class="field"><label for="eContactValue">LinkedIn URL</label><input id="eContactValue" inputmode="url" value="${esc(c.linkedin||'')}" placeholder="https://linkedin.com/in/…"></div>`;if(type==='x')return `<div class="field"><label for="eContactValue">X URL</label><input id="eContactValue" inputmode="url" value="${esc(c.x||'')}" placeholder="https://x.com/…"></div>`;const d=c.customDraft||{};return `<div class="grid2"><div class="field"><label for="eCustomLabel">Custom link label</label><input id="eCustomLabel" value="${esc(d.label||'')}" placeholder="e.g. Personal website"></div><div class="field"><label for="eContactValue">Custom link URL</label><input id="eContactValue" inputmode="url" value="${esc(d.url||'')}" placeholder="https://…"></div><div class="field" style="align-self:end"><button class="btn" id="eAddCustom" type="button">＋ Add custom link</button></div></div>`}
+
+function cloneObj(o){return JSON.parse(JSON.stringify(o??{}))}
+function normaliseTombstones(v){if(Array.isArray(v)){const x={};v.forEach(k=>x[k]=new Date(0).toISOString());return x}return v&&typeof v==='object'?v:{}}
+function emptyCRMState(){return{schema_version:1,dataset_id:'lvlup-founder-crm-state',updated_at:null,records:{},deleted_records:{},custom:[],deleted_custom_ids:{},goal:10,goal_updated_at:null}}
+function normaliseCRMState(raw){const x=Object.assign(emptyCRMState(),raw||{});x.records=x.records&&typeof x.records==='object'?x.records:{};x.deleted_records=normaliseTombstones(x.deleted_records);x.custom=Array.isArray(x.custom)?x.custom:[];x.deleted_custom_ids=normaliseTombstones(x.deleted_custom_ids);x.goal=Math.max(1,Number(x.goal)||10);return x}
+function hasCRMProgress(s){return Object.keys(s.records||{}).length>0||(s.custom||[]).length>0||Number(s.goal||10)!==10}
+function stampChangedData(before,after){const now=nowStamp();after.deleted_records=normaliseTombstones(after.deleted_records);after.deleted_custom_ids=normaliseTombstones(after.deleted_custom_ids);after.records=after.records||{};after.custom=Array.isArray(after.custom)?after.custom:[];
+ const ids=new Set([...Object.keys(before.records||{}),...Object.keys(after.records||{})]);ids.forEach(id=>{const a=before.records?.[id],b=after.records?.[id];if(a&&!b)after.deleted_records[id]=now;else if(b&&(!a||JSON.stringify(withoutUpdatedAt(a))!==JSON.stringify(withoutUpdatedAt(b))))b.updated_at=now});
+ const oldCustom=new Map((before.custom||[]).map(x=>[x.id,x])),newCustom=new Map(after.custom.map(x=>[x.id,x]));oldCustom.forEach((item,id)=>{if(id&&!newCustom.has(id))after.deleted_custom_ids[id]=now});newCustom.forEach((item,id)=>{const old=oldCustom.get(id);if(!old||JSON.stringify(withoutUpdatedAt(old))!==JSON.stringify(withoutUpdatedAt(item)))item.updated_at=now});
+ if(before.goal!==after.goal)after.goal_updated_at=now;
+}
+function withoutUpdatedAt(o){const x=cloneObj(o||{});delete x.updated_at;return x}
+function timeValue(x){const n=Date.parse(x||'');return Number.isFinite(n)?n:0}
+function pickLatestRecord(a,b,localWinsUnstamped=true){if(!a)return b;if(!b)return a;const ta=timeValue(a.updated_at),tb=timeValue(b.updated_at);if(ta===tb)return localWinsUnstamped?b:a;return tb>ta?b:a}
+function mergeCRMStates(remoteInput,localInput){
+ const r=normaliseCRMState(remoteInput),l=normaliseCRMState(localInput),out=emptyCRMState();out.updated_at=[r.updated_at,l.updated_at].sort((a,b)=>timeValue(b)-timeValue(a))[0]||null;
+ out.records={};out.deleted_records={...r.deleted_records,...l.deleted_records};
+ const ids=new Set([...Object.keys(r.records),...Object.keys(l.records),...Object.keys(r.deleted_records),...Object.keys(l.deleted_records)]);
+ ids.forEach(id=>{const rr=r.records[id],lr=l.records[id],rd=timeValue(r.deleted_records[id]),ld=timeValue(l.deleted_records[id]);let candidate=null,deletedAt=0;
+  if(rr&&lr)candidate=pickLatestRecord(rr,lr,true);else candidate=rr||lr;
+  const recTime=timeValue(candidate?.updated_at);deletedAt=Math.max(rd,ld);
+  if(candidate&&recTime>=deletedAt){out.records[id]=candidate}else if(deletedAt){delete out.records[id];out.deleted_records[id]=new Date(deletedAt).toISOString()}
+ });
+ const remoteCustom=new Map((r.custom||[]).map(x=>[x.id,x])),localCustom=new Map((l.custom||[]).map(x=>[x.id,x]));
+ out.custom=[];out.deleted_custom_ids={...r.deleted_custom_ids,...l.deleted_custom_ids};
+ const customIds=new Set([...remoteCustom.keys(),...localCustom.keys(),...Object.keys(r.deleted_custom_ids),...Object.keys(l.deleted_custom_ids)]);
+ customIds.forEach(id=>{const item=pickLatestRecord(remoteCustom.get(id),localCustom.get(id),true);const deletedAt=Math.max(timeValue(r.deleted_custom_ids[id]),timeValue(l.deleted_custom_ids[id]));if(item&&timeValue(item.updated_at)>=deletedAt)out.custom.push(item);else if(deletedAt)out.deleted_custom_ids[id]=new Date(deletedAt).toISOString()});
+ out.custom.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
+ if(timeValue(l.goal_updated_at)>timeValue(r.goal_updated_at)||(!r.goal_updated_at&&!l.goal_updated_at)){out.goal=l.goal||10;out.goal_updated_at=l.goal_updated_at||null}else{out.goal=r.goal||10;out.goal_updated_at=r.goal_updated_at||null}
+ out.dataset_id='lvlup-founder-crm-state';out.schema_version=1;return out
+}
+function persistableState(s){const x=normaliseCRMState(s);return{schema_version:1,dataset_id:'lvlup-founder-crm-state',updated_at:x.updated_at||nowStamp(),note:'Founder CRM progress (stages, warmth, follow-ups, contact links, custom founders, activity logs and monthly goal). PUBLIC: anyone can read this file while the repository is public. Do not store confidential information here.',records:x.records,deleted_records:x.deleted_records,custom:x.custom,deleted_custom_ids:x.deleted_custom_ids,goal:x.goal,goal_updated_at:x.goal_updated_at||null}}
+function localSaveOnly(){try{localStorage.setItem(KEY,JSON.stringify(ST));lastSavedSnapshot=cloneObj(ST)}catch(e){}}
+function setSyncStatus(message,kind=''){const el=$('syncStatus');if(el){el.textContent=message;el.className='sync-state'+(kind?' '+kind:'')}const modal=$('syncModalStatus');if(modal)modal.textContent=message}
+function syncButtonLabel(){const connected=!!localStorage.getItem(TOKEN_KEY);if($('syncSettingsBtn'))$('syncSettingsBtn').textContent=connected?'☁ GitHub sync settings':'☁ Connect sync'}
+function githubHeaders(token,extra={}){return Object.assign({'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28'},extra)}
+function decodeBase64Utf8(value){const binary=atob(String(value||'').replace(/\s/g,'')),bytes=new Uint8Array(binary.length);for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);return new TextDecoder().decode(bytes)}
+function encodeBase64Utf8(value){const bytes=new TextEncoder().encode(value);let binary='';for(let i=0;i<bytes.length;i+=0x8000)binary+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(binary)}
+async function readGitHubState(token){const res=await fetch(GH_API+'?ref=main&ts='+Date.now(),{headers:githubHeaders(token),cache:'no-store'});if(!res.ok){const body=await res.text();throw new Error('GitHub read failed ('+res.status+'): '+body.slice(0,180))}const data=await res.json();if(!data.sha||!data.content)throw new Error('GitHub did not return the CRM JSON file');return{sha:data.sha,state:normaliseCRMState(JSON.parse(decodeBase64Utf8(data.content)))}}
+function scheduleGitHubSync(delay=1400){clearTimeout(syncTimer);if(!localStorage.getItem(TOKEN_KEY)){setSyncStatus('Local save only · connect GitHub to sync','warn');return}setSyncStatus('Saved locally · syncing…','warn');syncTimer=setTimeout(()=>syncGitHubState(),delay)}
+async function syncGitHubState(){const token=localStorage.getItem(TOKEN_KEY);if(!token)return;if(syncBusy){syncAgain=true;return}syncBusy=true;setSyncStatus('Syncing CRM JSON to GitHub…','warn');
+ try{
+  let writeDone=false;
+  for(let attempt=0;attempt<3&&!writeDone;attempt++){
+   const remoteInfo=await readGitHubState(token);stateFileSha=remoteInfo.sha;
+   const merged=mergeCRMStates(remoteInfo.state,ST);ST=merged;localSaveOnly();
+   const bodyState=persistableState(merged),remoteState=persistableState(remoteInfo.state);
+   if(JSON.stringify(bodyState)===JSON.stringify(remoteState)){writeDone=true;setSyncStatus('Synced with GitHub JSON','ok');break}
+   const body={message:'Update founder CRM progress JSON',content:encodeBase64Utf8(JSON.stringify(bodyState,null,2)+'\n'),sha:remoteInfo.sha,branch:'main'};
+   const response=await fetch(GH_API,{method:'PUT',headers:githubHeaders(token,{'Content-Type':'application/json'}),body:JSON.stringify(body)});
+   if(response.status===409||response.status===422){if(attempt<2)continue;throw new Error('GitHub reported a conflict. Please retry sync.')}
+   if(!response.ok){const text=await response.text();throw new Error('GitHub write failed ('+response.status+'): '+text.slice(0,220))}
+   const saved=await response.json();stateFileSha=saved.content?.sha||null;writeDone=true;setSyncStatus('Synced with GitHub JSON','ok');
+  }
+  localSaveOnly();rebuild();render();
+ }catch(e){setSyncStatus('Sync failed · '+e.message,'bad');console.error('GitHub CRM sync failed',e)}
+ finally{syncBusy=false;if(syncAgain){syncAgain=false;scheduleGitHubSync(100)}}
+}
+function openSyncSettings(){$('syncShade').classList.add('open');$('githubTokenInput').value='';$('syncModalStatus').textContent=localStorage.getItem(TOKEN_KEY)?'A token is saved in this browser. Paste a replacement to reconnect, or disconnect.':'Your local progress is retained. Connect a token to publish it to the public JSON file.'}
+function closeSyncSettings(){$('syncShade').classList.remove('open')}
+async function connectGitHubSync(){const token=$('githubTokenInput').value.trim();if(!token){$('syncModalStatus').textContent='Paste a fine-grained GitHub token first.';return}const btn=$('syncConnectBtn');btn.disabled=true;btn.textContent='Checking token…';
+ try{const remoteInfo=await readGitHubState(token);localStorage.setItem(TOKEN_KEY,token);stateFileSha=remoteInfo.sha;remoteStateLoaded=true;ST=mergeCRMStates(remoteInfo.state,ST);localSaveOnly();closeSyncSettings();syncButtonLabel();rebuild();render();setSyncStatus('GitHub connected · syncing progress…','warn');scheduleGitHubSync(100)}
+ catch(e){$('syncModalStatus').textContent=e.message+' Confirm the token has Contents: Read and write access to this repository.'}
+ finally{btn.disabled=false;btn.textContent='Connect and sync'}
+}
+function disconnectGitHubSync(){localStorage.removeItem(TOKEN_KEY);clearTimeout(syncTimer);syncButtonLabel();setSyncStatus('Disconnected · edits stay in this browser','warn');$('syncModalStatus').textContent='GitHub token removed from this browser. Cloud data remains in the repository.'}
+
 function today(){const d=new Date();return d.toISOString().slice(0,10)}
 function nowStamp(){return new Date().toISOString()}
 function fmtDate(s){if(!s)return'';const d=new Date(s.length===10?s+'T00:00:00':s);return isNaN(d)?s:d.toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'})}
@@ -186,7 +273,18 @@ function lastTouch(s){const c=(s.log||[]).filter(l=>l.type!=='Note'&&l.type!=='R
 async function load(){
  try{const r=await fetch('./data/founders.json',{cache:'no-store'});if(!r.ok)throw new Error('data/founders.json '+r.status);DATA=await r.json()}
  catch(e){document.querySelector('.main').insertAdjacentHTML('afterbegin',`<div class="notice">Could not load founder data: ${esc(e.message)}. Custom founders saved in this browser are still shown.</div>`);DATA={lists:[],founders:[]}}
- rebuild();init();
+ const localBefore=cloneObj(ST);let remote=emptyCRMState(),token=localStorage.getItem(TOKEN_KEY)||'';
+ try{
+  if(token){const result=await readGitHubState(token);remote=result.state;stateFileSha=result.sha;remoteStateLoaded=true}
+  else{const r=await fetch('./data/crm-state.json?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('data/crm-state.json '+r.status);remote=normaliseCRMState(await r.json());remoteStateLoaded=true}
+ }catch(e){remoteStateLoaded=false;setSyncStatus(token?'GitHub connection failed. Check the token in Sync settings.':'Could not read cloud JSON; local progress is retained.','warn')}
+ ST=mergeCRMStates(remote,localBefore);ST.schema_version=1;lastSavedSnapshot=cloneObj(ST);
+ try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}
+ rebuild();init();syncButtonLabel();
+ if(token&&remoteStateLoaded){const diff=JSON.stringify(persistableState(ST))!==JSON.stringify(persistableState(remote));if(diff)scheduleGitHubSync(500);else setSyncStatus('Synced with GitHub JSON','ok')}
+ else if(token){setSyncStatus('GitHub sync not connected','warn')}
+ else if(hasCRMProgress(ST)){setSyncStatus('Local progress · connect to publish/sync','warn')}
+ else{setSyncStatus('Cloud JSON is read-only until connected','warn')}
 }
 function rebuild(){FOUNDERS=[...(DATA.founders||[]),...(ST.custom||[]).map(c=>Object.assign({list_id:'custom',list_name:'Added by me',custom:true},c))]}
 function init(){
@@ -337,6 +435,7 @@ function bind(){if(bound)return;bound=true;
  board.addEventListener('dragleave',e=>{if(!e.relatedTarget||!board.contains(e.relatedTarget))board.querySelectorAll('.col').forEach(x=>x.classList.remove('drag-over'))});
  board.addEventListener('drop',e=>{const col=e.target.closest('.col');if(!col)return;e.preventDefault();const id=e.dataTransfer.getData('text/plain');const r=rec(id),old=r.stage;if(old!==col.dataset.stage){r.stage=col.dataset.stage;r.log.push({ts:nowStamp(),type:'Note',text:`Stage changed: ${old} → ${r.stage}`});save();toast('Moved to '+r.stage)}renderBoard();renderStats();if(selectedId===id&&useInline())openFounder(id)});
  $('dClose').onclick=closeD;$('iClose').onclick=closeInline;$('backdrop').onclick=e=>{if(e.target===$('backdrop'))closeD()};document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if($('backdrop').classList.contains('open'))closeD();else if(selectedId&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))closeInline()});
+ $('syncSettingsBtn').onclick=openSyncSettings;$('syncClose').onclick=closeSyncSettings;$('syncCancelBtn').onclick=closeSyncSettings;$('syncShade').onclick=e=>{if(e.target===$('syncShade'))closeSyncSettings()};$('syncConnectBtn').onclick=connectGitHubSync;$('syncDisconnectBtn').onclick=disconnectGitHubSync;syncButtonLabel();
  $('addBtn').onclick=addFounderForm;$('exportBtn').onclick=exportBackup;$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=e=>{if(e.target.files[0])importBackup(e.target.files[0]);e.target.value=''};$('exportCsvBtn').onclick=exportCsv;
  $('goalInput').onchange=e=>{ST.goal=Math.max(1,Number(e.target.value)||10);save();renderStats()};
 }
