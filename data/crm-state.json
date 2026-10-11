@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "dataset_id": "lvlup-founder-crm-state",
-  "updated_at": "2026-10-11T17:38:21.166Z",
+  "updated_at": "2026-10-11T17:38:25.091Z",
   "note": "Founder CRM progress (stages, warmth, follow-ups, contact links, custom founders, activity logs and monthly goal). PUBLIC: anyone can read this file while the repository is public. Do not store confidential information here.",
   "records": {
     "g-parrot": {
@@ -13,30 +13,14 @@
       "next_due": "",
       "last_contact": "2026-10-15",
       "contact_channel": "",
-      "log": [
-        {
-          "ts": "2026-10-11T15:55:23.781Z",
-          "type": "Note",
-          "text": "Researching company"
-        },
-        {
-          "ts": "2026-10-11T15:55:38.414Z",
-          "type": "Email sent",
-          "text": "sent first email"
-        },
-        {
-          "ts": "2026-10-11T17:38:19.975Z",
-          "type": "Note",
-          "text": "Stage changed: Contacted → Sourced"
-        }
-      ],
+      "log": [],
       "contacts": {
         "whatsapp": "",
         "linkedin": "",
         "x": "",
         "custom": []
       },
-      "updated_at": "2026-10-11T17:38:21.166Z"
+      "updated_at": "2026-10-11T17:38:25.091Z"
     },
     "g-ozbrain": {
       "stage": "Sourced",
