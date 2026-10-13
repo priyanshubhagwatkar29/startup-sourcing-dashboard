@@ -83,6 +83,17 @@ td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}tr:h
 .inline-body{padding:14px 18px 22px;display:grid;gap:14px}
 .inline-empty{padding:46px 20px;text-align:center;color:var(--muted)}.inline-empty strong{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
 .card.selected{border-color:var(--purple);box-shadow:0 0 0 2px var(--purple2)}
+/* stage columns: show 2 cards, expand on hover over the CRM box (desktop with a mouse only) */
+.col-hint{display:none}
+@media (hover:hover) and (min-width:1001px){
+  .col.collapsible{min-height:0}
+  .col.collapsible .col-hint{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11.5px;font-weight:750;color:var(--purple);padding:3px 0 5px;cursor:default;user-select:none}
+  .col.collapsible .col-hint i{font-style:normal;transition:transform .15s}
+  .col.collapsible.open .col-hint i{transform:rotate(180deg)}
+  .col.collapsible .col-more{display:none;position:fixed;z-index:60;box-sizing:border-box;background:#f3f1f9;border-radius:0 0 13px 13px;padding:2px 9px 1px;overflow-y:auto;box-shadow:0 26px 44px rgba(37,26,77,.24);border-top:1px dashed #d9d2ec}
+  .col.collapsible.open .col-more{display:block}
+  .col.collapsible.open{border-bottom-left-radius:0;border-bottom-right-radius:0}
+}
 @media(max-width:1000px){.board-layout{display:flex;overflow-x:auto;align-items:flex-start}.board-left{flex:0 0 238px}.board-right{display:contents}.inline-detail{display:none}}
 @media(max-width:1100px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.filters{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:820px){.app{grid-template-columns:1fr}.sidebar{padding:14px;gap:12px}.side-note{display:none}.nav{grid-template-columns:repeat(3,1fr)}.main{padding:16px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.filters{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.kv{grid-template-columns:1fr}}
@@ -389,12 +400,19 @@ function cardHtml(f){const s=stateOf(f),dc=dueClass(s.next_due);
  <div class="card-sub">${esc((f.founders||'').slice(0,60))}${(f.founders||'').length>60?'…':''}</div>
  <div class="card-meta"><span class="pill purple">${esc(shortProgram(f.lvlup_program))}</span>${warmPill(s.warmth)}<span class="pill">${esc(f.country||'Unverified')}</span>${f.near_miss?'<span class="pill red">Near-miss</span>':''}</div>
  ${s.next_action||s.next_due?`<div class="due ${dc}">→ ${esc(s.next_action||'Follow up')}${s.next_due?' · '+esc(fmtDate(s.next_due)):''}</div>`:''}</div>`}
+const COL_SHOW=2;
 function colHtml(st,arr){const items=arr.filter(f=>stateOf(f).stage===st).sort((a,b)=>(stateOf(b).star-stateOf(a).star)||confRank(b.confidence)-confRank(a.confidence));
-  return `<div class="col" data-stage="${esc(st)}"><div class="col-head"><span>${esc(st)}</span><span class="n">${items.length}</span></div>${items.map(cardHtml).join('')||'<div class="small muted" style="padding:6px">Drop here</div>'}</div>`}
-function renderBoard(){const arr=filtered();
+  const first=items.slice(0,COL_SHOW),rest=items.slice(COL_SHOW);
+  return `<div class="col${rest.length?' collapsible':''}" data-stage="${esc(st)}"><div class="col-head"><span>${esc(st)}</span><span class="n">${items.length}</span></div>${first.map(cardHtml).join('')||'<div class="small muted" style="padding:6px">Drop here</div>'}${rest.length?`<div class="col-hint">+${rest.length} more <i>▾</i></div><div class="col-more">${rest.map(cardHtml).join('')}</div>`:''}</div>`}
+function renderBoard(){const arr=filtered();closeMore();
  $('boardLeft').innerHTML=colHtml(STAGES[0],arr);
  $('board').innerHTML=STAGES.slice(1).map(st=>colHtml(st,arr)).join('');
  markSelected();if(!selectedId)inlinePlaceholder()}
+let openCol=null,closeT=null;
+function openMore(col){clearTimeout(closeT);if(openCol&&openCol!==col)closeMore();const more=col.querySelector(':scope>.col-more');if(!more)return;
+ const r=col.getBoundingClientRect();more.style.left=r.left+'px';more.style.top=r.bottom+'px';more.style.width=r.width+'px';more.style.maxHeight=Math.max(160,innerHeight-r.bottom-16)+'px';
+ col.classList.add('open');openCol=col}
+function closeMore(){clearTimeout(closeT);if(openCol){openCol.classList.remove('open');openCol=null}}
 function markSelected(){document.querySelectorAll('#boardWrap .card').forEach(c=>c.classList.toggle('selected',c.dataset.id===selectedId))}
 function inlinePlaceholder(){$('iHead').classList.add('hidden');$('iBody').innerHTML='<div class="inline-empty"><strong>Select a founder</strong>Click any card to open its CRM record here: stage, next action, notes and the full activity timeline.</div>'}
 function closeInline(){selectedId=null;inlinePlaceholder();markSelected()}
@@ -495,6 +513,11 @@ function bind(){if(bound)return;bound=true;
   const th=e.target.closest('th[data-sort]');if(th){const k=th.dataset.sort;sortDir=sortKey===k?-sortDir:1;sortKey=k;renderTable()}});
  document.addEventListener('change',e=>{const a=e.target.dataset.stageFor,b=e.target.dataset.warmFor;if(a){const r=rec(a),old=r.stage;r.stage=e.target.value;r.log.push({ts:nowStamp(),type:'Note',text:`Stage changed: ${old} → ${r.stage}`});save();renderStats();toast('Stage updated')}if(b){rec(b).warmth=e.target.value;save();toast('Warmth updated')}});
  const board=$('boardWrap');
+ const canCollapse=()=>matchMedia('(hover:hover) and (min-width:1001px)').matches;
+ board.addEventListener('mouseover',e=>{const c=e.target.closest('.col.collapsible');if(c&&canCollapse())openMore(c)});
+ board.addEventListener('mouseout',e=>{const c=e.target.closest('.col.collapsible');if(!c||c.contains(e.relatedTarget))return;clearTimeout(closeT);closeT=setTimeout(closeMore,140)});
+ addEventListener('scroll',e=>{if(e.target&&e.target.closest&&e.target.closest('.col-more'))return;closeMore()},true);
+ addEventListener('resize',closeMore);
  board.addEventListener('dragstart',e=>{const c=e.target.closest('.card');if(!c)return;e.dataTransfer.setData('text/plain',c.dataset.id);c.classList.add('dragging')});
  board.addEventListener('dragend',e=>{const c=e.target.closest('.card');if(c)setTimeout(()=>c.classList.remove('dragging'),0)});
  board.addEventListener('dragover',e=>{const col=e.target.closest('.col');if(col){e.preventDefault();board.querySelectorAll('.col').forEach(x=>x.classList.toggle('drag-over',x===col))}});
