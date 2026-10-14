@@ -1,0 +1,61 @@
+/* Shared theme layer. Each page defines the LIGHT values on :root; this file supplies the
+   DARK values (html[data-theme="dark"] is set by theme.js, default dark) plus the toggle and
+   dark overrides for the sign-in screen and sync status that live in lvlup-cloud.js. */
+
+html[data-theme="light"]{color-scheme:light}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#ebeaf5;--muted:#9b9ab4;--paper:#0d0d1a;--panel:#161628;--line:#2a2a45;
+  --purple:#8556d3;--purple-ink:#b99bf0;--purple2:#2b2252;
+  --teal:#4fd6c8;--tealbg:#10322f;--amber:#f2b95e;--amberbg:#3a2d12;
+  --red:#ff8fa3;--redbg:#3d1a25;--blue:#8db4f7;--bluebg:#192a4a;
+  --shadow:0 14px 42px rgba(0,0,0,.45);
+  --side:#11111f;--side-hover:#25233f;--side-note:#1a1930;--side-note-line:#2a2848;--side-count:#2e2b52;
+  --col:#1b1b31;--card:#222240;--input:#1d1d35;--input-line:#35345a;--hover:#1d1d36;--soft:#1c1c33;
+  --chip:#2a2a45;--chip-ink:#c4c3d8;--btnbg:#1f1f38;--btn-hover-line:#4a3f7a;--close:#262642;
+  --meter:#2a2a45;--card-hover:#5a47a0;--backdrop:rgba(3,3,12,.62);--toast:#2b2950;
+  --notice-bg:#2b2412;--notice-line:#4a3d1c;--notice-ink:#e7cd8f;--notice-strong:#f3dfa8;
+  --th-bg:#1a1a30;--th-ink:#9b9ab4;--row-line:#232340;--rank-ink:#8f8eaa;--bar-bg:#2a2a45;
+  --avatar-a:#2d2455;--avatar-b:#3b2f70;--avatar-ink:#cdb8f7;--detail-ink:#c4c3d8;--h3-ink:#a9a7c2;
+  --link-ink:#b99bf0;--foot-ink:#7f7e99;--kv-line:#262644;--dim-ink:#9b9ab4;--pill-purple-ink:#c3a9f5;
+  --tl-note:#6b6890;--tl-email:#5d82c4;--tl-social:#8a72c9;--tl-call:#4f9e92;--tl-meeting:#4f9e92;--tl-reply:#6fa066;--tl-intro:#b08a4a;--tl-application:#8a7fd0;--tl-research:#7a7c88;
+  --opener-bg:#201a3a;--drawer-top:rgba(13,13,26,.92);
+}
+
+::placeholder{color:var(--muted);opacity:.75}
+
+/* toggle */
+.theme-toggle{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--btnbg,var(--panel));color:var(--muted);border-radius:999px;padding:7px 12px;font-size:13px;line-height:1;font-weight:700}
+.theme-toggle:hover{border-color:var(--btn-hover-line,var(--line))}
+.theme-toggle:focus-visible{outline:2px solid var(--purple-ink,var(--purple));outline-offset:2px}
+.theme-toggle .tt-track{position:relative;width:34px;height:18px;border-radius:99px;background:#cfc8e4;transition:background .18s}
+.theme-toggle .tt-knob{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.35);transition:transform .18s}
+.theme-toggle[aria-checked="true"] .tt-track{background:var(--purple)}
+.theme-toggle[aria-checked="true"] .tt-knob{transform:translateX(16px)}
+.theme-toggle[aria-checked="true"] .tt-moon,.theme-toggle[aria-checked="false"] .tt-sun{color:var(--ink)}
+
+/* sign-in screen and sync status (styles injected by lvlup-cloud.js) */
+html[data-theme="dark"] #lvlGate{background:radial-gradient(1200px 600px at 20% -10%,#2a2150 0%,#0d0d1a 58%) #0d0d1a}
+html[data-theme="dark"] #lvlGate .lg-card{background:#161628;border-color:#2a2a45;box-shadow:0 18px 60px rgba(0,0,0,.5)}
+html[data-theme="dark"] #lvlGate .lg-name,html[data-theme="dark"] #lvlGate h1{color:#ebeaf5}
+html[data-theme="dark"] #lvlGate .lg-sub,html[data-theme="dark"] #lvlGate label{color:#9b9ab4}
+html[data-theme="dark"] #lvlGate p{color:#b4b3cb}
+html[data-theme="dark"] #lvlGate input{background:#1d1d35;border-color:#35345a;color:#ebeaf5}
+html[data-theme="dark"] #lvlGate input:focus{outline-color:#5a47a0;border-color:#8556d3}
+html[data-theme="dark"] #lvlGate .lg-btn{background:#8556d3}
+html[data-theme="dark"] #lvlGate .lg-btn.secondary{background:#1f1f38;color:#ebeaf5;border-color:#35345a}
+html[data-theme="dark"] #lvlGate .lg-link{color:#b99bf0}
+html[data-theme="dark"] #lvlGate .lg-msg.err{background:#3d1a25;color:#ffb3c0}
+html[data-theme="dark"] #lvlGate .lg-msg.ok{background:#10322f;color:#8ee6db}
+html[data-theme="dark"] #lvlGate .lg-msg.info{background:#22213a;color:#c4c3d8}
+html[data-theme="dark"] #lvlGate .lg-spin{border-color:#2f2a52;border-top-color:#8556d3}
+html[data-theme="dark"] #lvlGate .lg-foot{color:#8f8eaa}
+html[data-theme="dark"] .lvl-status{color:#9b9ab4}
+html[data-theme="dark"] .lvl-status .dot{background:#5b5a78}
+html[data-theme="dark"] .lvl-status.saved{color:#4fd6c8}html[data-theme="dark"] .lvl-status.saved .dot{background:#4fd6c8}
+html[data-theme="dark"] .lvl-status.saving{color:#f2b95e}html[data-theme="dark"] .lvl-status.saving .dot{background:#f2b95e}
+html[data-theme="dark"] .lvl-status.error{color:#ff8fa3}html[data-theme="dark"] .lvl-status.error .dot{background:#ff8fa3}
+html[data-theme="dark"] .lvl-status button{background:#2b1a22;border-color:#6a3040;color:#ff8fa3}
+html[data-theme="dark"] .lvl-banner{background:#172542;border-color:#2c4478;color:#a9c3f5}
+html[data-theme="dark"] .lvl-banner button{background:#1f2f55;border-color:#2c4478;color:#cfdcf8}
+html[data-theme="dark"] .lvl-banner button.primary{background:#3b6cc9;border-color:#3b6cc9;color:#fff}
