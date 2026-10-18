@@ -18,7 +18,7 @@ html[data-theme="dark"]{
   --th-bg:#1a1a30;--th-ink:#9b9ab4;--row-line:#232340;--rank-ink:#8f8eaa;--bar-bg:#2a2a45;
   --avatar-a:#2d2455;--avatar-b:#3b2f70;--avatar-ink:#cdb8f7;--detail-ink:#c4c3d8;--h3-ink:#a9a7c2;
   --link-ink:#b99bf0;--foot-ink:#7f7e99;--kv-line:#262644;--dim-ink:#9b9ab4;--pill-purple-ink:#c3a9f5;
-  --tl-note:#6b6890;--tl-email:#5d82c4;--tl-social:#8a72c9;--tl-call:#4f9e92;--tl-meeting:#4f9e92;--tl-reply:#6fa066;--tl-intro:#b08a4a;--tl-application:#8a7fd0;--tl-research:#7a7c88;
+  --tl-mix:34%;--tl-pill:62%;--tl-note:#8a87ad;--tl-email:#5aa9ff;--tl-social:#a98bff;--tl-call:#4fe08a;--tl-meeting:#2fd3c3;--tl-reply:#f7cf3a;--tl-intro:#ff9a4d;--tl-application:#f47fba;--tl-research:#8aa0c8;
   --opener-bg:#201a3a;--drawer-top:rgba(13,13,26,.92);
 }
 
