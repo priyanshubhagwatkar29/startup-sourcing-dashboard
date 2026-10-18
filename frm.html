@@ -74,7 +74,7 @@ td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}tr:h
 .timeline{display:grid;gap:8px}.tl{--tlc:var(--tl-note);border-left:6px solid var(--tlc);background:var(--soft);background:color-mix(in srgb,var(--tlc) var(--tl-mix),var(--panel));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tlc) 30%,transparent);border-radius:0 10px 10px 0;padding:9px 12px}.tl-head{font-size:11.5px;color:var(--muted);display:flex;gap:8px;align-items:center}.tl-text{white-space:pre-wrap;margin-top:3px}
 .tl .pill{background:var(--soft);background:color-mix(in srgb,var(--tlc) var(--tl-pill),var(--panel));color:var(--ink);font-weight:800}
 .tl.type-email{--tlc:var(--tl-email)}.tl.type-social{--tlc:var(--tl-social)}.tl.type-call{--tlc:var(--tl-call)}.tl.type-meeting{--tlc:var(--tl-meeting)}.tl.type-reply{--tlc:var(--tl-reply)}.tl.type-intro{--tlc:var(--tl-intro)}.tl.type-application{--tlc:var(--tl-application)}.tl.type-research{--tlc:var(--tl-research)}
-.tl .del{border:0;background:none;color:var(--muted);font-size:11px;margin-left:auto}
+.tl .del{border:0;background:none;color:var(--muted);font-size:11px;margin-left:auto}.tl .edit{border:0;background:none;color:var(--muted);padding:2px 4px;margin-left:auto;display:inline-flex;align-items:center;border-radius:6px;cursor:pointer}.tl .edit:hover,.tl .edit:focus-visible{color:var(--ink);background:color-mix(in srgb,var(--tlc) 35%,transparent)}.tl .edit+.del{margin-left:4px}.tl-edit{display:grid;gap:8px}.tl-actions{display:flex;gap:8px}
 .contact-links{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.contact-link{display:inline-flex;gap:5px;align-items:center;padding:5px 9px;border:1px solid var(--line);border-radius:8px;background:var(--soft);font-size:12px;font-weight:700;text-decoration:none}.contact-link:hover{border-color:var(--purple-ink);background:var(--purple2)}.autosave-status{font-size:11px;color:var(--muted);margin-top:7px}
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--toast);color:#fff;padding:10px 16px;border-radius:10px;transition:.25s;z-index:99;font-size:13px}.toast.show{transform:translateX(-50%) translateY(0)}
 .notice{background:var(--notice-bg);border:1px solid var(--notice-line);border-radius:12px;padding:10px 13px;font-size:12.5px;color:var(--notice-ink);margin-bottom:14px}
@@ -227,6 +227,7 @@ function blankRec(){return{stage:'Sourced',warmth:'Cold',star:false,tags:[],next
 function extraOf(r){const x={};Object.keys(r||{}).forEach(k=>{if(!REC_SKIP.has(k))x[k]=r[k]});return x}
 function recToRow(r){const b=blankRec(),row={};REC_FIELDS.forEach(k=>row[k]=(r&&r[k]!=null)?r[k]:b[k]);row.star=!!row.star;row.tags=Array.isArray(row.tags)?row.tags:[];row.contacts=row.contacts&&typeof row.contacts==='object'?row.contacts:{};['stage','warmth','next_action','next_due','last_contact','contact_channel'].forEach(k=>row[k]=String(row[k]??''));row.extra=extraOf(r);return row}
 function rowToFields(row){const o={};REC_FIELDS.forEach(k=>o[k]=cloneObj(row[k]));Object.assign(o,cloneObj(row.extra||{}));if(!o.contacts||typeof o.contacts!=='object')o.contacts={whatsapp:'',linkedin:'',x:'',custom:[]};if(!Array.isArray(o.contacts.custom))o.contacts.custom=[];if(!Array.isArray(o.tags))o.tags=[];return o}
+function actDiffers(l,a){const n=actToLog(a);return l.ts!==n.ts||l.type!==n.type||(l.text||'')!==n.text}
 function actToLog(a){const d=new Date(a.ts);return{id:a.id,ts:isNaN(d)?String(a.ts):d.toISOString(),type:a.type,text:a.text||''}}
 function logKey(l){return (l.ts||'')+'|'+(l.type||'')+'|'+(l.text||'')}
 function stripUpdated(o){const x=cloneObj(o);delete x.updated_at;return x}
@@ -243,6 +244,7 @@ function founderInsertOp(c){const row=founderRow(c);return{key:'founder-ins:'+c.
 function founderUpdateOp(c){return{key:'founder-upd:'+c.id,row:founderRow(c),merge(o){this.row=o.row},run:async function(){const x=this.row;const r=await SB.from('founders').update({name:x.name,country:x.country,data:x.data}).eq('id',x.id).eq('is_custom',true);if(r.error)throw r.error}}}
 function founderDeleteOp(id){return{key:'founder-del:'+id,run:async()=>{const r=await SB.from('founders').update({deleted_at:new Date().toISOString()}).eq('id',id).eq('is_custom',true);if(r.error)throw r.error}}}
 function actInsertOp(fid,l){const row={id:l.id,founder_id:fid,ts:l.ts,type:l.type||'Note',text:l.text||''};return{key:'act:'+l.id,run:async()=>{const r=await SB.from('crm_activities').upsert(row,{onConflict:'id',ignoreDuplicates:true});if(r.error)throw r.error}}}
+function actUpdateOp(id,l){return{key:'act-upd:'+id,row:{ts:l.ts,type:l.type||'Note',text:l.text||''},merge(o){this.row=o.row},run:async function(){const r=await SB.from('crm_activities').update(this.row).eq('id',id);if(r.error)throw r.error}}}
 function actDeleteOp(id){return{key:'act-del:'+id,run:async()=>{const r=await SB.from('crm_activities').update({deleted_at:new Date().toISOString()}).eq('id',id);if(r.error)throw r.error}}}
 
 function queueChanges(before,after){
@@ -262,7 +264,7 @@ function queueChanges(before,after){
   if(Object.keys(patch).length)ob.add(LvlupCloud.versionedOp(CRM_CFG,id,patch));
  });
  ids.forEach(id=>{const al=new Map((((before.records[id]||{}).log)||[]).map(l=>[l.id,l])),bl=new Map((((after.records[id]||{}).log)||[]).map(l=>[l.id,l]));
-  bl.forEach((l,lid)=>{if(lid&&!al.has(lid))ob.add(actInsertOp(id,l))});
+  bl.forEach((l,lid)=>{if(!lid)return;const o=al.get(lid);if(!o)ob.add(actInsertOp(id,l));else if(o.ts!==l.ts||o.type!==l.type||o.text!==l.text)ob.add(actUpdateOp(lid,l))});
   al.forEach((l,lid)=>{if(lid&&!bl.has(lid))ob.add(actDeleteOp(lid))});
  });
  if((before.goal||10)!==(after.goal||10))ob.add(LvlupCloud.versionedOp(SET_CFG,'goal',{value:after.goal||10}));
@@ -286,7 +288,7 @@ function onCrmChange(row){if(!row||!row.founder_id)return;const m=META.crm.get(r
  META.crm.set(row.founder_id,{version:row.version,deleted:!!row.deleted_at,updated_at:row.updated_at});applyCrmRow(row);remoteRender(row.founder_id)}
 function onActChange(a){if(!a||!a.id||!a.founder_id)return;
  if(a.deleted_at){[ST,SNAP].forEach(S=>{const r=S&&S.records[a.founder_id];if(r&&r.log)r.log=r.log.filter(l=>l.id!==a.id)})}
- else{if(hasPending('act-del:'+a.id))return;[ST,SNAP].forEach(S=>{if(!S)return;const r=S.records[a.founder_id]||(S.records[a.founder_id]=blankRec());r.log=r.log||[];if(!r.log.some(l=>l.id===a.id))r.log.push(actToLog(a))})}
+ else{if(hasPending('act-del:'+a.id))return;[ST,SNAP].forEach(S=>{if(!S)return;const r=S.records[a.founder_id]||(S.records[a.founder_id]=blankRec());r.log=r.log||[];const n=actToLog(a),o=r.log.find(l=>l.id===a.id);if(!o)r.log.push(n);else if(!hasPending('act-upd:'+a.id)){o.ts=n.ts;o.type=n.type;o.text=n.text}})}
  remoteRender(a.founder_id)}
 function onFounderChange(f){if(!f||!f.id)return;
  if(f.is_custom){if(hasPending('founder-upd:'+f.id)||hasPending('founder-del:'+f.id)||hasPending('founder-ins:'+f.id))return;
@@ -298,7 +300,7 @@ function onSettingChange(s){if(!s||!s.key)return;const m=META.settings.get(s.key
 let remoteTimer=null,remoteIds=new Set(),remoteReinit=false;
 function remoteRender(id,reinit){if(id)remoteIds.add(id);if(reinit)remoteReinit=true;clearTimeout(remoteTimer);remoteTimer=setTimeout(()=>{
  const ids=remoteIds,re=remoteReinit;remoteIds=new Set();remoteReinit=false;rebuild();if(re)init();else render();
- const openId=current||selectedId;const ae=document.activeElement,typing=ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName)&&(($('iBody')&&$('iBody').contains(ae))||($('dBody')&&$('dBody').contains(ae)));
+ const openId=(current&&current.id)||selectedId;const ae=document.activeElement,typing=ae&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName)&&(($('iBody')&&$('iBody').contains(ae))||($('dBody')&&$('dBody').contains(ae)));
  if(openId&&ids.has(openId)&&!typing&&FOUNDERS.some(f=>f.id===openId))openFounder(openId);
 },150)}
 let refreshing=false,lastRefresh=0;
@@ -308,7 +310,7 @@ async function refreshFromCloud(force){if(!cloudReady||refreshing||(!force&&Date
    if(f.is_custom){if(f.deleted_at?isCustomKnown:(!isCustomKnown||!same(stripUpdated(ST.custom.find(c=>c.id===f.id)),stripUpdated(f.data))))onFounderChange(f)}
    else if(f.deleted_at?!!known:(!known||!same(known,f.data)))onFounderChange(f)});
   recs.forEach(onCrmChange);
-  acts.forEach(a=>{const r=ST.records[a.founder_id],has=!!(r&&r.log&&r.log.some(l=>l.id===a.id));if(a.deleted_at?has:!has)onActChange(a)});
+  acts.forEach(a=>{const r=ST.records[a.founder_id],o=r&&r.log&&r.log.find(l=>l.id===a.id);if(a.deleted_at?!!o:(!o||actDiffers(o,a)))onActChange(a)});
   sets.forEach(onSettingChange);
  }catch(e){console.warn('Cloud refresh failed',e)}
  finally{refreshing=false;lastRefresh=Date.now()}}
@@ -460,7 +462,7 @@ function renderFollow(){const t=today();const arr=filtered().filter(f=>{const s=
 function renderActivity(){const ids=new Set(filtered().map(f=>f.id));const items=[];FOUNDERS.forEach(f=>{if(!ids.has(f.id))return;(stateOf(f).log||[]).forEach((l,i)=>items.push({f,l}))});items.sort((a,b)=>b.l.ts.localeCompare(a.l.ts));
  $('activityList').innerHTML=`<div class="panel-head"><div class="panel-title">Everything you've logged, newest first</div><div class="small muted">${items.length} entries</div></div>`+(items.slice(0,300).map(({f,l})=>`<div class="tl ${timelineTypeClass(l.type)}"><div class="tl-head"><span class="pill">${esc(l.type)}</span><span>${esc(fmtStamp(l.ts))}</span></div><div><span class="name-link" data-open="${esc(f.id)}">${esc(f.name)}</span></div><div class="tl-text">${linkify(l.text)}</div></div>`).join('')||'<div class="empty">No activity yet. Open a founder and log your first note, email or call.</div>')}
 
-function openFounder(id,opts){const f=FOUNDERS.find(x=>x.id===id);if(!f)return;current=f;const s=rec(id);
+function openFounder(id,opts){const f=FOUNDERS.find(x=>x.id===id);if(!f)return;if(!current||current.id!==id)editLogId=null;current=f;const s=rec(id);
  const popup=!!(opts&&opts.popup)||popupId===id;
  const inline=useInline()&&!popup;const T=inline?{eye:$('iEyebrow'),title:$('iTitle'),body:$('iBody')}:{eye:$('dEyebrow'),title:$('dTitle'),body:$('dBody')};
  if(inline){$('dBody').innerHTML='';if(selectedId!==id)$('inlineDetail').scrollTop=0;selectedId=id;$('iHead').classList.remove('hidden');markSelected()}else{$('iBody').innerHTML='';$('iHead').classList.add('hidden')}
@@ -504,11 +506,24 @@ function openFounder(id,opts){const f=FOUNDERS.find(x=>x.id===id);if(!f)return;c
   if(/replied|Call|Meeting/.test(type)&&['Sourced','Researching','Ready to contact','Contacted'].includes(r.stage)){r.stage='In conversation'}
   if(type==='LvlUp application submitted')r.stage='Referred / applied to LvlUp';
   save();render();openFounder(id);toast('Logged')};
- $('timeline').onclick=e=>{const i=e.target.dataset.dellog;if(i!==undefined&&confirmDelete()){const r=rec(id);r.log.splice(Number(i),1);save();render();openFounder(id)}};
+ $('timeline').onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset,r=rec(id),paint=()=>{$('timeline').innerHTML=timelineHtml(r)};
+  if(d.dellog!==undefined){if(confirmDelete()){r.log.splice(Number(d.dellog),1);save();render();openFounder(id)}}
+  else if(d.editlog!==undefined){const l=r.log[Number(d.editlog)];if(l){editLogId=l.id;paint();const t=$('timeline').querySelector('textarea');if(t)t.focus()}}
+  else if(d.cancellog!==undefined){editLogId=null;paint()}
+  else if(d.savelog!==undefined){const l=r.log[Number(d.savelog)],bx=b.closest('.tl-edit');if(!l||!bx)return;const q=k=>bx.querySelector('[data-f="'+k+'"]').value,type=q('type'),txt=q('text').trim(),dt=q('date');
+   if(!txt&&type==='Note'){toast('Write something first');return}
+   l.type=type;l.text=txt||type;if(dt&&dt!==actDay(l.ts))l.ts=dt===today()?nowStamp():dt+'T12:00:00.000Z';
+   editLogId=null;save();render();openFounder(id);toast('Entry updated')}};
  if(f.custom)$('eDelCustom').onclick=()=>{if(!confirmDelete())return;ST.custom=ST.custom.filter(c=>c.id!==id);delete ST.records[id];save();rebuild();closeD();if(selectedId===id)selectedId=null;init()};
 }
 let delArm=0;function confirmDelete(){const n=Date.now();if(n-delArm<3000){delArm=0;return true}delArm=n;toast('Click again to confirm delete');return false}
-function timelineHtml(s){const L=(s.log||[]).map((l,i)=>({l,i})).sort((a,b)=>b.l.ts.localeCompare(a.l.ts));return L.map(({l,i})=>`<div class="tl ${timelineTypeClass(l.type)}"><div class="tl-head"><span class="pill">${esc(l.type)}</span><span>${esc(fmtStamp(l.ts))}</span><button class="del" data-dellog="${i}">delete</button></div><div class="tl-text">${linkify(l.text)}</div></div>`).join('')||'<div class="small muted">No activity yet.</div>'}
+let editLogId=null;
+function actDay(ts){const d=new Date(ts);return isNaN(d)?'':d.toISOString().slice(0,10)}
+const PENCIL='<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M11.3 1.7a1.6 1.6 0 0 1 2.3 2.3L5 12.6 1.5 14.5l1.9-3.5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+function timelineHtml(s){const L=(s.log||[]).map((l,i)=>({l,i})).sort((a,b)=>b.l.ts.localeCompare(a.l.ts));return L.map(({l,i})=>{const c=timelineTypeClass(l.type);
+ if(l.id&&l.id===editLogId){const types=ACT_TYPES.includes(l.type)?ACT_TYPES:[l.type,...ACT_TYPES];
+  return `<div class="tl ${c} editing"><div class="tl-edit"><div class="grid2"><div class="field"><label>Type</label><select data-f="type">${types.map(x=>`<option${x===l.type?' selected':''}>${esc(x)}</option>`).join('')}</select></div><div class="field"><label>Date</label><input type="date" data-f="date" value="${actDay(l.ts)}"></div></div><div class="field"><label>Notes</label><textarea data-f="text">${esc(l.text||'')}</textarea></div><div class="tl-actions"><button class="btn primary" type="button" data-savelog="${i}">Save</button><button class="btn" type="button" data-cancellog="1">Cancel</button></div></div></div>`}
+ return `<div class="tl ${c}"><div class="tl-head"><span class="pill">${esc(l.type)}</span><span>${esc(fmtStamp(l.ts))}</span><button class="edit" type="button" data-editlog="${i}" title="Edit entry" aria-label="Edit entry">${PENCIL}</button><button class="del" type="button" data-dellog="${i}">delete</button></div><div class="tl-text">${linkify(l.text)}</div></div>`}).join('')||'<div class="small muted">No activity yet.</div>'}
 function closeD(){const wasPopup=popupId!==null;popupId=null;$('backdrop').classList.remove('open','popup');$('dToCrm').classList.add('hidden');document.body.style.overflow='';current=null;if(wasPopup)restoreInline()}
 function restoreInline(){if(!useInline())return;if(selectedId&&FOUNDERS.some(f=>f.id===selectedId))openFounder(selectedId);else{selectedId=null;inlinePlaceholder();markSelected()}}
 
