@@ -12,6 +12,9 @@
 button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}a{color:var(--purple-ink)}
 .app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
 .sidebar{background:var(--side);color:#fff;padding:25px 16px;display:flex;flex-direction:column;gap:24px}
+.app.side-collapsed{grid-template-columns:minmax(0,1fr)}.app.side-collapsed .sidebar{display:none}
+.title-wrap{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.side-toggle{flex:none;width:38px;height:38px;margin-top:2px;border:1px solid var(--line);background:var(--btnbg);border-radius:10px;font-size:19px;line-height:1;display:grid;place-items:center;padding:0}.side-toggle:hover{border-color:var(--btn-hover-line)}.side-toggle:focus-visible{outline:2px solid var(--purple-ink);outline-offset:2px}
 .brand{display:flex;gap:11px;align-items:center;padding:0 8px}.brand-mark{height:36px;width:36px;border-radius:12px;background:linear-gradient(145deg,#d5a0fb,#8051cb);display:grid;place-items:center;font-weight:900;color:#24143d;font-size:17px}
 .brand-name{font-size:14px;font-weight:800;letter-spacing:.02em}.brand-sub{font-size:10px;color:#acacc8;margin-top:2px}
 .nav-label{font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:#8585a8;padding:0 11px;margin-bottom:7px}
@@ -118,7 +121,8 @@ td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}tr:h
 </head>
 <body>
 <div class="app">
-<aside class="sidebar">
+<script>try{if(localStorage.getItem('lvlup_frm_sidebar')==='collapsed')document.querySelector('.app').classList.add('side-collapsed')}catch(e){}</script>
+<aside class="sidebar" id="sidebar">
  <div class="brand"><div class="brand-mark">L</div><div><div class="brand-name">LVLUP / FRM</div><div class="brand-sub">Founder relationship manager</div></div></div>
  <div><div class="nav-label">Founders</div><nav class="nav" id="nav">
   <button class="active" data-view="board">▦ Pipeline board</button>
@@ -131,7 +135,7 @@ td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}tr:h
 </aside>
 <main class="main">
  <header class="topline">
-  <div><div class="eyebrow" id="eyebrow">Founder sourcing</div><h1 id="pageTitle">Pipeline board</h1><div class="subtitle" id="pageSub">Drag founders between stages, open a card to log outreach, set the next action and keep notes.</div></div>
+  <div class="title-wrap"><button class="side-toggle" id="sideToggle" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Hide sidebar" title="Hide sidebar">☰</button><div><div class="eyebrow" id="eyebrow">Founder sourcing</div><h1 id="pageTitle">Pipeline board</h1><div class="subtitle" id="pageSub">Drag founders between stages, open a card to log outreach, set the next action and keep notes.</div></div></div>
   <div class="actions">
    <span id="syncStatus" class="lvl-status" role="status" aria-live="polite"></span>
    <button class="btn" id="addBtn">＋ Add founder</button>
@@ -587,6 +591,10 @@ function bind(){if(bound)return;bound=true;
  $('addBtn').onclick=addFounderForm;$('exportBtn').onclick=exportBackup;$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=e=>{if(e.target.files[0])importBackup(e.target.files[0]);e.target.value=''};$('exportCsvBtn').onclick=exportCsv;
  $('goalInput').onchange=e=>{ST.goal=Math.max(1,Number(e.target.value)||10);save();renderStats()};
 }
+// ---------- collapsible sidebar (state remembered in this browser) ----------
+function setSidebar(collapsed,persist){const app=document.querySelector('.app'),b=$('sideToggle');app.classList.toggle('side-collapsed',collapsed);b.setAttribute('aria-expanded',String(!collapsed));const t=collapsed?'Show sidebar':'Hide sidebar';b.title=t;b.setAttribute('aria-label',t);if(persist){try{localStorage.setItem('lvlup_frm_sidebar',collapsed?'collapsed':'open')}catch(e){}}closeMore()}
+$('sideToggle').onclick=()=>setSidebar(!document.querySelector('.app').classList.contains('side-collapsed'),true);
+setSidebar(document.querySelector('.app').classList.contains('side-collapsed'),false);
 LvlupCloud.start({appName:'your Founder CRM',signOutButton:'signOutBtn',onReady:loadCloud});
 </script>
 </body>
