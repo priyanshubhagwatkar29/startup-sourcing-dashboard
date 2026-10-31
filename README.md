@@ -29,6 +29,7 @@ A private sourcing dashboard (`index.html`) and Founder Relationship Manager (`f
 - Edits save automatically. The status pill shows *Saving…*, *All changes saved*, or *Not saved yet · retrying* with a **Retry now** button. Failed saves are kept and retried; nothing is marked saved until Supabase confirms it.
 - `crm_records`, `crm_settings` and `company_pipeline` carry a `version` number. A save only applies if the row hasn't changed since the device last saw it. Otherwise the app reloads the latest row and re-applies only the fields you changed, so edits to different fields on two devices both survive.
 - Changes from your other devices arrive live (Supabase Realtime), and the app also refreshes when you return to the tab.
+- Founder CRM tasks and your edits to research fields are stored in the existing `crm_records.extra` JSON column (no schema change): `extra.tasks` holds each company's to-do list (the earliest open task is mirrored into `next_action` / `next_due`), and `extra.frontend_overrides` holds your edits to research-imported fields, which stay untouched in `founders` and can be restored with *reset*. If the same record's `extra` changes on two devices at once, the app merges them key by key (tasks by task id) before saving.
 - On first sign-in in a browser that still holds pre-cloud progress (`lvlup_frm_v1` or `lvlup_scout_pipeline_v1` in local storage), the page offers to upload it. The old GitHub token key (`lvlup_frm_github_token_v1`) is deleted automatically.
 
 ## Sessions
