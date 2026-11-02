@@ -75,14 +75,14 @@ h1{margin:6px 0 5px;font-size:24px;line-height:1.2;letter-spacing:-.035em;font-w
 .icon-btn:hover{background:var(--panel2);border-color:var(--line);color:var(--text)}
 .theme-toggle{padding:6px 10px}.theme-toggle .tt-track{background:var(--line2)}
 
-/* ---------- stats ---------- */
-.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:14px}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
-.stat-head{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:800}
-.stat-value{font-size:24px;font-weight:800;letter-spacing:-.04em;margin-top:5px}
-.stat-foot{font-size:10px;color:var(--muted);margin-top:2px}
+/* ---------- monthly goal chip (sits beside Sign out) ---------- */
+.goal-chip{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:33px;padding:0 12px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;overflow:hidden;white-space:nowrap}
+.gc-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.gc-val{font-size:16px;font-weight:800;letter-spacing:-.03em}
+.gc-goal{font-size:10.5px;color:var(--muted)}
 .goal-input{width:46px;background:var(--input);border:1px solid var(--line);border-radius:6px;padding:1px 4px;font-size:11px}
-.meter{height:4px;background:var(--panel3);border-radius:4px;overflow:hidden;margin-top:7px}.meter span{display:block;height:100%;background:var(--accent)}
+.meter{height:4px;background:var(--panel3);border-radius:4px;overflow:hidden}.meter span{display:block;height:100%;background:var(--accent)}
+.goal-chip .meter{position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:0}
 
 /* ---------- toolbar ---------- */
 .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:9px;background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:12px}
@@ -92,7 +92,7 @@ h1{margin:6px 0 5px;font-size:24px;line-height:1.2;letter-spacing:-.035em;font-w
 .search-field{position:relative;flex:1;min-width:220px;max-width:380px}
 .search-field .search-icon{position:absolute;left:10px;top:7px;color:var(--muted);font-size:14px;pointer-events:none}
 .search-field input{width:100%;padding-left:30px}
-.toolbar-note{margin-left:auto;color:var(--dim);font-size:10px;white-space:nowrap}
+.toolbar-note{display:none;margin-left:auto;color:var(--dim);font-size:10px;white-space:nowrap}html.fixed-board .toolbar-note{display:block}
 .sr-list{position:absolute;left:0;top:calc(100% + 6px);width:min(540px,calc(100vw - 40px));max-height:min(440px,70vh);overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:65;padding:6px}
 .sr-item{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:0;background:transparent;border-radius:9px;padding:8px 10px;color:var(--text)}
 .sr-item:hover,.sr-item.active{background:var(--panel2)}
@@ -106,7 +106,8 @@ h1{margin:6px 0 5px;font-size:24px;line-height:1.2;letter-spacing:-.035em;font-w
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;min-width:0}
 .board-wrap{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:9px;min-width:0}
 .board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(178px,1fr);gap:9px;overflow-x:auto;align-items:start;padding-bottom:6px;scrollbar-width:thin}
-.col{min-width:0;min-height:420px;border:1px solid var(--line);border-radius:10px;padding:8px 7px;background:var(--col);transition:border-color .15s}
+.col{display:flex;flex-direction:column;min-width:0;min-height:420px;border:1px solid var(--line);border-radius:10px;padding:8px 7px;background:var(--col);transition:border-color .15s}
+.col-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;padding-right:1px}
 .col.drag-over{border-color:var(--accent)}
 .col-head{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:0 2px 8px;border-bottom:1px solid var(--line);margin-bottom:8px;min-height:28px}
 .col-title{font-size:10.5px;font-weight:800;min-width:0;overflow-wrap:anywhere}
@@ -126,17 +127,24 @@ h1{margin:6px 0 5px;font-size:24px;line-height:1.2;letter-spacing:-.035em;font-w
 .nextline{font-size:10px;color:var(--muted);margin-top:8px;line-height:1.4;overflow-wrap:anywhere}
 .due{font-weight:700;color:var(--muted)}.due.over{color:var(--danger)}.due.today{color:var(--warn)}.due.soon{color:var(--accent-text)}
 .card-foot{display:flex;justify-content:space-between;gap:6px;margin-top:7px;font-size:8.5px;color:var(--dim)}
-/* stage columns: show the first cards; the rest expand on hover (desktop with a mouse) */
-.col-hint{display:none}
-@media (hover:hover) and (min-width:1001px){
-  .col.collapsible .col-hint{display:flex;align-items:center;justify-content:center;gap:6px;font-size:10.5px;font-weight:750;color:var(--accent-text);padding:3px 0 5px;cursor:default;user-select:none}
-  .col.collapsible .col-hint i{font-style:normal;transition:transform .15s}
-  .col.collapsible.open .col-hint i{transform:rotate(180deg)}
-  .col.collapsible .col-more{display:none;position:fixed;z-index:30;background:var(--col);border:1px solid var(--line);border-top:1px dashed var(--line);border-radius:0 0 10px 10px;padding:6px 7px 1px;overflow-y:auto;box-shadow:var(--shadow)}
-  .col.collapsible.open .col-more{display:block}
-}
 .board-hint{display:flex;gap:7px;align-items:center;color:var(--dim);font-size:10px;margin:9px 2px 0}
 .kbd{border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--muted);font-size:9px}
+/* Pipeline board view: the page itself does not scroll; every stage scrolls on its own. */
+@media (min-width:821px) and (min-height:540px){
+  html.fixed-board,html.fixed-board body{height:100%;overflow:hidden}
+  html.fixed-board .app{height:100vh;min-height:0}
+  html.fixed-board .main{height:100vh;display:flex;flex-direction:column;padding-bottom:14px;overflow:hidden}
+  html.fixed-board .topline{flex:none;margin-bottom:12px}
+  html.fixed-board .toolbar{flex:none}
+  html.fixed-board #view-board.active{display:flex;flex-direction:column;flex:1;min-height:0}
+  html.fixed-board .board-wrap{flex:1;min-height:0;display:flex;flex-direction:column}
+  html.fixed-board .board{flex:1;min-height:0;align-items:stretch;padding-bottom:0}
+  html.fixed-board .col{min-height:0}
+  html.fixed-board .board-hint{display:none}
+}
+/* archive */
+.arch-note{font-size:10px;color:var(--dim)}
+.pill.arch{color:var(--warn)}
 /* table / lists */
 .table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse}
 th{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer}
@@ -288,9 +296,8 @@ html[data-theme="dark"] #lvlGate .lg-spin{border-color:#252a2d;border-top-color:
 html[data-theme="dark"] #lvlGate .lg-foot{color:#737c80}
 .lvl-banner{margin-bottom:12px}
 
-@media(max-width:1250px){.main{padding:18px 16px 34px}.stats{gap:8px}.stat{padding:11px}.stat-value{font-size:21px}.toolbar-note{display:none}}
-@media(max-width:1100px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:820px){.app{grid-template-columns:1fr}.sidebar{position:static;height:auto;padding:12px;gap:10px}.side-note,.sidebar .nav-label{display:none}.nav{grid-template-columns:repeat(2,1fr)}.main{padding:14px 10px 30px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar select.field-control{flex:1;max-width:none}.search-field{max-width:none;flex-basis:100%}.board{grid-auto-columns:184px}.inline-grid,.add-grid{grid-template-columns:1fr}.info-row{grid-template-columns:105px 1fr}}
+@media(max-width:1250px){.main{padding:18px 16px 34px}.toolbar-note{display:none}}
+@media(max-width:820px){.app{grid-template-columns:1fr}.sidebar{position:static;height:auto;padding:12px;gap:10px}.side-note,.sidebar .nav-label{display:none}.nav{grid-template-columns:repeat(2,1fr)}.main{padding:14px 10px 30px}.toolbar select.field-control{flex:1;max-width:none}.search-field{max-width:none;flex-basis:100%}.board{grid-auto-columns:184px}.inline-grid,.add-grid{grid-template-columns:1fr}.info-row{grid-template-columns:105px 1fr}}
 @media(max-width:520px){.drawer-head{flex-direction:column}.dh-actions{width:100%}.stage-select{flex:1;max-width:none}.qe-row{flex-wrap:wrap}.quick-entry input[type=date],.quick-entry input[type=datetime-local]{flex:1;width:auto}.qe-grow{flex-basis:100%}}
 </style>
 </head>
@@ -304,6 +311,7 @@ html[data-theme="dark"] #lvlGate .lg-foot{color:#737c80}
   <button data-view="table"><span class="ico">▤</span>All founders <span class="count" id="navCount">0</span></button>
   <button data-view="followups"><span class="ico">◷</span>Follow-ups <span class="count" id="navDue">0</span></button>
   <button data-view="activity"><span class="ico">↗</span>Activity log</button>
+  <button data-view="archive"><span class="ico">▣</span>Archive <span class="count" id="navArchive">0</span></button>
  </nav></div>
  <div><div class="nav-label">Workspace</div><nav class="nav"><a href="./index.html"><span class="ico">⌁</span>Program-fit pipeline</a></nav></div>
  <div class="side-note"><strong>Private cloud storage</strong>Founder research and CRM progress are stored in your private Supabase database. Only your signed-in account can read or change them, and edits save automatically to every device you sign in on.</div>
@@ -320,15 +328,9 @@ html[data-theme="dark"] #lvlGate .lg-foot{color:#737c80}
    <input type="file" id="importFile" accept="application/json" class="hidden">
    <button class="btn primary" id="addBtn">＋ Add founder</button>
    <button class="btn" id="signOutBtn" hidden>Sign out</button>
+   <div class="goal-chip" role="group" aria-label="LvlUp applications this month"><span class="gc-label">LvlUp applications · this month</span><span class="gc-val" id="sApps">0</span><span class="gc-goal">Goal <input class="goal-input" id="goalInput" type="number" min="1" value="10" aria-label="Monthly application goal"> / month</span><span class="meter"><span id="goalBar" style="width:0%"></span></span></div>
   </div>
  </header>
- <section class="stats" aria-label="Pipeline statistics">
-  <div class="stat"><div class="stat-head">Founders tracked</div><div class="stat-value" id="sTotal">0</div><div class="stat-foot" id="sTotalFoot"></div></div>
-  <div class="stat"><div class="stat-head">Contacted</div><div class="stat-value" id="sContacted">0</div><div class="stat-foot">Reached out or further</div></div>
-  <div class="stat"><div class="stat-head">In conversation</div><div class="stat-value" id="sConv">0</div><div class="stat-foot">Replied / call booked</div></div>
-  <div class="stat"><div class="stat-head">Follow-ups due</div><div class="stat-value" id="sDue">0</div><div class="stat-foot" id="sDueFoot">Overdue or due today</div></div>
-  <div class="stat"><div class="stat-head">LvlUp applications · this month</div><div class="stat-value" id="sApps">0</div><div class="stat-foot">Goal <input class="goal-input" id="goalInput" type="number" min="1" value="10" aria-label="Monthly application goal"> / month</div><div class="meter"><span id="goalBar" style="width:0%"></span></div></div>
- </section>
  <section class="toolbar" aria-label="Search and filters">
   <div class="search-field"><span class="search-icon" aria-hidden="true">⌕</span><input class="field-control" id="q" type="search" role="combobox" aria-expanded="false" aria-label="Search all founders" placeholder="Search founder, company, sector, note…" autocomplete="off" aria-autocomplete="list" aria-controls="srList"><div class="sr-list hidden" id="srList" role="listbox" aria-label="Search results"></div></div>
   <select class="field-control" id="fList" aria-label="Filter by list"><option value="">All lists</option></select>
@@ -336,7 +338,7 @@ html[data-theme="dark"] #lvlGate .lg-foot{color:#737c80}
   <select class="field-control" id="fProgram" aria-label="Filter by LvlUp program"><option value="">All programs</option></select>
   <select class="field-control" id="fConf" aria-label="Filter by confidence"><option value="">Any confidence</option></select>
   <select class="field-control" id="fStar" aria-label="Show"><option value="">Everyone</option><option value="star">★ Starred only</option><option value="hot">Hot only</option><option value="nonear">Hide near-misses</option></select>
-  <div class="toolbar-note">8 stages · drag cards to move</div>
+  <div class="toolbar-note">8 stages · drag cards to move · each stage scrolls</div>
  </section>
  <section class="section active" id="view-board">
   <div class="board-wrap" id="boardWrap"><div class="board" id="board" aria-label="Founder pipeline board"></div></div>
@@ -347,6 +349,7 @@ html[data-theme="dark"] #lvlGate .lg-foot{color:#737c80}
    <div class="empty hidden" id="noRows">No founders match these filters.</div></section>
  <section class="section panel" id="view-followups"><div id="followList"></div></section>
  <section class="section panel" id="view-activity"><div id="activityList"></div></section>
+ <section class="section panel" id="view-archive"><div id="archiveList"></div></section>
 </main>
 </div>
 
@@ -666,19 +669,39 @@ function filtered(){
   if(S==='star'&&!s.star)return false;if(S==='hot'&&s.warmth!=='Hot')return false;if(S==='nonear'&&f.near_miss)return false;
   return true})
 }
-function render(){renderStats();if(view==='board')renderBoard();if(view==='table')renderTable();if(view==='followups')renderFollow();if(view==='activity')renderActivity()}
+function render(){document.documentElement.classList.toggle('fixed-board',view==='board');renderStats();if(view==='board')renderBoard();if(view==='table')renderTable();if(view==='followups')renderFollow();if(view==='activity')renderActivity();if(view==='archive')renderArchive()}
 function renderStats(){
- const all=FOUNDERS.map(f=>stateOf(f)),t=today(),ym=t.slice(0,7);
- $('sTotal').textContent=FOUNDERS.length;
- const byList={};FOUNDERS.forEach(f=>byList[f.list_name]=(byList[f.list_name]||0)+1);$('sTotalFoot').textContent=Object.entries(byList).map(([k,v])=>`${v} ${String(k).split(' (')[0]}`).join(' · ');
- $('sContacted').textContent=all.filter(s=>CONTACTED.has(s.stage)||(s.log||[]).some(l=>/Email|LinkedIn|Call|Meeting/.test(l.type))).length;
- $('sConv').textContent=all.filter(s=>s.stage==='In conversation').length;
- const due=all.filter(s=>s.next_due&&s.next_due<=t&&!['Passed'].includes(s.stage));$('sDue').textContent=due.length;$('navDue').textContent=due.length;
- $('sDueFoot').textContent=`${all.filter(s=>s.next_due&&s.next_due<t).length} overdue · ${all.filter(s=>s.next_due===t).length} today`;
- const apps=all.reduce((n,s)=>n+(s.log||[]).filter(l=>l.type==='LvlUp application submitted'&&actDay(l.ts).slice(0,7)===ym).length,0);
+ const t=today(),ym=t.slice(0,7),live=FOUNDERS.filter(f=>!isArchived(f));
+ const due=live.map(stateOf).filter(x=>x.next_due&&x.next_due<=t&&x.stage!=='Passed');
+ $('navDue').textContent=due.length;
+ const apps=FOUNDERS.reduce((n,f)=>n+(stateOf(f).log||[]).filter(l=>l.type==='LvlUp application submitted'&&actDay(l.ts).slice(0,7)===ym).length,0);
  $('sApps').textContent=apps;const g=Math.max(1,Number(ST.goal)||10);$('goalBar').style.width=Math.min(100,apps/g*100)+'%';
- $('navCount').textContent=FOUNDERS.length;
+ $('navCount').textContent=FOUNDERS.length;$('navArchive').textContent=FOUNDERS.length-live.length;
 }
+
+// ---------- archive (crm_records.extra.archive, no schema change) ----------
+// Manual:   {state:'archived', at, from}   set by the Archive button; the stage is kept so Restore puts it back.
+// Restored: {state:'restored', at}         restarts the 14-day clock so a restored card is not archived again at once.
+// Automatic: nothing is stored. A Watchlist / Passed founder with no activity for 14 days is shown in the Archive
+// on screen only (activity = a logged note or message, last contacted date, a restore, or the last cloud save).
+const AUTO_ARCHIVE_DAYS=14,AUTO_ARCHIVE_STAGES=new Set(['Watchlist','Passed']);
+const ARCHIVE_GRACE_FROM='2026-11-02'; // cards that were already idle on go-live start their 14 days here
+function msOf(v){const t=Date.parse(v||'');return isNaN(t)?0:t}
+function lastActivityMs(id,s){const m=META.crm.get(id),a=isObj(s.archive)?s.archive:{};
+ const c=[msOf(ARCHIVE_GRACE_FROM+'T00:00:00'),msOf(m&&m.updated_at),msOf(a.at),msOf(s.last_contact?s.last_contact+'T00:00:00':'')];
+ (s.log||[]).forEach(l=>c.push(msOf(l.ts)));return Math.max(...c)}
+function archiveInfo(f){const s=stateOf(f),a=isObj(s.archive)?s.archive:null;
+ if(a&&a.state==='archived')return{archived:true,auto:false,at:a.at||'',stage:s.stage};
+ if(!AUTO_ARCHIVE_STAGES.has(s.stage))return{archived:false};
+ const last=lastActivityMs(f.id,s),days=Math.floor((Date.now()-last)/864e5);
+ return days>=AUTO_ARCHIVE_DAYS?{archived:true,auto:true,days,at:new Date(last+AUTO_ARCHIVE_DAYS*864e5).toISOString(),stage:s.stage}:{archived:false,daysLeft:AUTO_ARCHIVE_DAYS-days}}
+function isArchived(f){return archiveInfo(f).archived}
+function archiveFounder(id){const r=rec(id),stage=r.stage;r.archive={state:'archived',at:nowStamp(),from:stage};r.log.push({ts:nowStamp(),type:'Note',text:'Moved to Archive ('+stage+')'});save();render();if(selectedId===id)renderDrawer();toast('Moved to Archive',{label:'Undo',run:()=>restoreFounder(id,true)})}
+function restoreFounder(id,quiet){const r=rec(id);r.archive={state:'restored',at:nowStamp()};r.log.push({ts:nowStamp(),type:'Note',text:'Restored from Archive'});save();render();if(selectedId===id)renderDrawer();toast(quiet?'Restored':'Restored to '+r.stage)}
+function renderArchive(){
+ const rows=filtered().filter(isArchived).map(f=>({f,a:archiveInfo(f),s:stateOf(f)})).sort((x,y)=>String(y.a.at||'').localeCompare(String(x.a.at||''))||String(x.f.name).localeCompare(String(y.f.name)));
+ $('archiveList').innerHTML=`<div class="panel-head"><div class="panel-title">Archived startups</div><div class="small muted">${rows.length} archived · Watchlist and Passed founders with no activity for ${AUTO_ARCHIVE_DAYS} days move here on their own. You can also archive any founder from its workspace.</div></div>`+
+ (rows.map(({f,a,s})=>`<div class="list-row"><div class="grow"><div class="name-link" data-open="${esc(f.id)}" tabindex="0" role="button">${s.star?'★ ':''}${esc(f.name)}</div><div class="small muted">${esc(s.stage)} · ${esc(String(f.founders||'').slice(0,80))}</div><div class="arch-note">${a.auto?`Auto-archived · no activity for ${a.days} days`:'Archived manually'}${a.at?' · '+esc(fmtShort(a.at)):''}</div></div><div style="text-align:right"><button class="btn small" type="button" data-restore="${esc(f.id)}">Restore</button></div></div>`).join('')||'<div class="empty">The Archive is empty. Founders in Watchlist or Passed move here after 14 days without activity.</div>')}
 
 // ---------- pipeline board ----------
 function openTaskCount(s){return viewTasks(s).filter(t=>!t.completed).length}
@@ -689,16 +712,12 @@ function cardHtml(f){const s=stateOf(f),dc=dueClass(s.next_due),n=openTaskCount(
  <div class="chips"><span class="chip">${esc(f.country||'Unverified')}</span><span class="chip${s.warmth==='Hot'?' hot':''}">${esc(s.warmth||'Cold')}</span><span class="chip">${esc(shortProgram(f.lvlup_program))}</span>${f.near_miss?'<span class="chip near">Near-miss</span>':''}</div>
  ${s.next_action||s.next_due?`<div class="nextline">↳ ${esc(s.next_action||'Follow up')}<br><span class="due ${dc}">${esc(dueLabel(s.next_due))}</span></div>`:''}
  <div class="card-foot"><span>${esc(String(f.list_name||'').split(' (')[0])}</span><span>${n>1?n+' open tasks':''}</span></div></article>`}
-const COL_SHOW=6;
 function colHtml(st,arr){const items=arr.filter(f=>stateOf(f).stage===st).sort((a,b)=>(stateOf(b).star-stateOf(a).star)||confRank(b.confidence)-confRank(a.confidence));
-  const first=items.slice(0,COL_SHOW),rest=items.slice(COL_SHOW);
-  return `<section class="col${rest.length?' collapsible':''}" data-stage="${esc(st)}"><div class="col-head"><span class="col-title">${esc(st)}</span><span class="n">${items.length}</span></div>${first.map(cardHtml).join('')||'<div class="drop-hint">Drop here</div>'}${rest.length?`<div class="col-hint">+${rest.length} more <i>▾</i></div><div class="col-more">${rest.map(cardHtml).join('')}</div>`:''}</section>`}
-function renderBoard(){const arr=filtered();closeMore();$('board').innerHTML=STAGES.map(st=>colHtml(st,arr)).join('')}
-let openCol=null,closeT=null;
-function openMore(col){clearTimeout(closeT);if(openCol&&openCol!==col)closeMore();const more=col.querySelector(':scope>.col-more');if(!more)return;
- const r=col.getBoundingClientRect();more.style.left=r.left+'px';more.style.top=r.bottom+'px';more.style.width=r.width+'px';more.style.maxHeight=Math.max(160,innerHeight-r.bottom-16)+'px';
- col.classList.add('open');openCol=col}
-function closeMore(){clearTimeout(closeT);if(openCol){openCol.classList.remove('open');openCol=null}}
+  return `<section class="col" data-stage="${esc(st)}"><div class="col-head"><span class="col-title">${esc(st)}</span><span class="n">${items.length}</span></div><div class="col-body">${items.map(cardHtml).join('')||'<div class="drop-hint">Drop here</div>'}</div></section>`}
+function renderBoard(){const arr=filtered().filter(f=>!isArchived(f)),b=$('board');
+ const tops={};b.querySelectorAll('.col').forEach(c=>{const body=c.querySelector('.col-body');if(body)tops[c.dataset.stage]=body.scrollTop});const left=b.scrollLeft;
+ b.innerHTML=STAGES.map(st=>colHtml(st,arr)).join('');
+ b.querySelectorAll('.col').forEach(c=>{const body=c.querySelector('.col-body');if(body&&tops[c.dataset.stage])body.scrollTop=tops[c.dataset.stage]});b.scrollLeft=left}
 function markSelected(){document.querySelectorAll('#boardWrap .card').forEach(c=>c.classList.toggle('selected',c.dataset.id===selectedId))}
 function sortVal(f,k){const s=stateOf(f);return k==='stage'?STAGES.indexOf(s.stage):k==='warmth'?WARMTH.indexOf(s.warmth):k==='confidence'?confRank(f.confidence):k==='next'?(s.next_due||'9999'):k==='last'?lastTouch(s):k==='program'?shortProgram(f.lvlup_program):k==='country'?(f.country||''):String(f.name).toLowerCase()}
 function renderTable(){const arr=filtered().sort((a,b)=>{const x=sortVal(a,sortKey),y=sortVal(b,sortKey);return (x>y?1:x<y?-1:0)*sortDir});
@@ -706,12 +725,12 @@ function renderTable(){const arr=filtered().sort((a,b)=>{const x=sortVal(a,sortK
  $('rows').innerHTML=arr.map(f=>{const s=stateOf(f),dc=dueClass(s.next_due);return `<tr>
  <td><div class="name-link" data-open="${esc(f.id)}" tabindex="0" role="button">${s.star?'★ ':''}${esc(f.name)}</div><div class="small muted">${esc((f.founders||'').slice(0,70))}</div></td>
  <td class="small">${esc(f.country||'Unverified')}<div class="muted">${esc(String(f.location||'').split(/[.(]/)[0].slice(0,40))}</div></td>
- <td><select class="inline-select" data-stage-for="${esc(f.id)}" aria-label="Stage for ${esc(f.name)}">${STAGES.map(x=>`<option ${x===s.stage?'selected':''}>${esc(x)}</option>`).join('')}</select></td>
+ <td><select class="inline-select" data-stage-for="${esc(f.id)}" aria-label="Stage for ${esc(f.name)}">${STAGES.map(x=>`<option ${x===s.stage?'selected':''}>${esc(x)}</option>`).join('')}</select>${isArchived(f)?' <span class="pill arch" title="This founder is in the Archive">Archived</span>':''}</td>
  <td><select class="inline-select" data-warm-for="${esc(f.id)}" aria-label="Warmth for ${esc(f.name)}">${WARMTH.map(x=>`<option ${x===s.warmth?'selected':''}>${x}</option>`).join('')}</select></td>
  <td><span class="pill">${esc(shortProgram(f.lvlup_program))}</span></td><td>${confPill(f.confidence)}</td>
  <td class="small"><span class="due ${dc}">${esc(s.next_action||'')}${s.next_due?' · '+esc(fmtDate(s.next_due)):''}</span></td>
  <td class="small muted">${esc(fmtDate(lastTouch(s)))}</td></tr>`}).join('')}
-function renderFollow(){const arr=filtered().filter(f=>{const s=stateOf(f);return s.next_action||s.next_due}).sort((a,b)=>(stateOf(a).next_due||'9999').localeCompare(stateOf(b).next_due||'9999'));
+function renderFollow(){const arr=filtered().filter(f=>{const s=stateOf(f);return !isArchived(f)&&(s.next_action||s.next_due)}).sort((a,b)=>(stateOf(a).next_due||'9999').localeCompare(stateOf(b).next_due||'9999'));
  $('followList').innerHTML=`<div class="panel-head"><div class="panel-title">Next actions, soonest first</div><div class="small muted">The earliest open task of each founder. Add tasks inside any founder's workspace.</div></div>`+(arr.map(f=>{const s=stateOf(f),dc=dueClass(s.next_due),n=openTaskCount(s);return `<div class="list-row"><div class="grow"><div class="name-link" data-open="${esc(f.id)}" tabindex="0" role="button">${esc(f.name)}</div><div class="small muted">${esc(s.stage)} · ${esc(f.founders||'').slice(0,80)}</div><div style="font-size:12px;margin-top:3px">→ ${esc(s.next_action||'Follow up')}${n>1?` <span class="small muted">· ${n-1} more open</span>`:''}</div></div>
  <div style="text-align:right"><div class="small due ${dc}">${s.next_due?esc(fmtDate(s.next_due)):'No date'}${dc==='over'?' · overdue':dc==='today'?' · today':''}</div><button class="btn small" data-done="${esc(f.id)}" style="margin-top:6px">✓ Done</button></div></div>`}).join('')||'<div class="empty">No follow-ups scheduled yet.</div>')}
 function renderActivity(){const ids=new Set(filtered().map(f=>f.id));const items=[];FOUNDERS.forEach(f=>{if(!ids.has(f.id))return;(stateOf(f).log||[]).forEach(l=>items.push({f,l}))});items.sort((a,b)=>b.l.ts.localeCompare(a.l.ts));
@@ -747,28 +766,42 @@ function detectContact(raw){
   return{kind:isRootUrl(url)?'website':'link',value:url}}
  return{kind:'text',value:v}}
 function isRootUrl(u){try{const x=new URL(u);return x.pathname.replace(/\/+$/,'')===''&&!x.search&&!x.hash}catch(e){return false}}
-function normContact(s){s=String(s||'').trim().toLowerCase().replace(/^mailto:/,'').replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/+$/,'');const wa=s.match(/^wa\.me\/(\d+)/);if(wa)return wa[1];if(/^[+\d\s().\-]+$/.test(s))return s.replace(/\D/g,'');return s}
+// One normal form per contact so the same email / phone / website / profile is recognised however it was typed:
+// case, http(s)://, www., trailing slash, mailto:, wa.me links vs +digits, twitter.com vs x.com, tracking query on social links.
+function normContact(s){s=String(s||'').trim().toLowerCase().replace(/^mailto:/,'').replace(/^https?:\/\//,'').replace(/^www\./,'');const wa=s.match(/^(?:wa\.me\/|(?:api\.|www\.)?whatsapp\.com\/send\/?\?(?:.*&)?phone=)\+?(\d+)/);if(wa)return wa[1];
+ if(/^(?:[a-z]+\.)?(?:linkedin|twitter|x|crunchbase)\.com\//.test(s))s=s.replace(/^(?:[a-z]+\.)?twitter\.com/,'x.com').replace(/^[a-z]{2,3}\.linkedin\.com/,'linkedin.com').replace(/[?#].*$/,'');
+ s=s.replace(/\/+$/,'');if(/^[+\d\s().\-]+$/.test(s))return s.replace(/\D/g,'');return s}
 function customKind(url){const u=String(url||'').trim();if(/^mailto:/i.test(u))return'email';const s=safeUrl(u);if(!s)return'text';const h=host(s).toLowerCase();if(h==='wa.me'||/whatsapp\.com$/.test(h))return'whatsapp';if(/linkedin\.com$/.test(h))return'linkedin';if(/(^|\.)(x|twitter)\.com$/.test(h))return'x';if(/crunchbase\.com$/.test(h))return'crunchbase';return isRootUrl(s)?'website':'link'}
 function contactEntries(f,s){const c=s.contacts||{},out=[];
  const web=safeUrl(f.website);if(web)out.push({kind:'website',label:'Website',value:web,url:web,removable:false});
  [['whatsapp','WhatsApp'],['email','Email'],['linkedin','LinkedIn'],['x','X'],['crunchbase','Crunchbase']].forEach(([k,label])=>{const val=String(c[k]||'').trim();if(val)out.push({kind:k,label,value:k==='whatsapp'&&/^\d+$/.test(val)?'+'+val:val,url:contactUrl(k,val),ref:'key:'+k,removable:true})});
  (Array.isArray(c.custom)?c.custom:[]).forEach((it,i)=>{if(!it||(!it.label&&!it.url))return;const kind=customKind(it.url);const url=kind==='text'?'':contactUrl('custom',it.url);out.push({kind,label:it.label||KIND_LABEL[kind],value:it.url||'',url,ref:'custom:'+i,removable:true})});
- return out}
+ // Duplicates already stored (the same value twice, even under different labels) are shown once; nothing is rewritten.
+ const seen=new Set();return out.filter(e=>{const n=normContact(e.value);if(!n)return true;if(seen.has(n))return false;seen.add(n);return true})}
 function contactIconsHtml(f,s){const list=contactEntries(f,s);if(!list.length)return'<span class="small muted">No contact channels yet.</span>';
  return list.map(e=>{const title=`${e.label}: ${e.value}${!e.url&&e.kind!=='text'?' (not a valid link, click to copy)':''}`,icon=ICON[e.kind]||ICON.link;
   const a=e.url?`<a class="contact-icon" href="${esc(e.url)}"${/^mailto:/i.test(e.url)?'':' target="_blank" rel="noopener noreferrer"'} title="${esc(title)}" aria-label="${esc(title)}">${icon}</a>`:`<button type="button" class="contact-icon${e.kind!=='text'?' invalid':''}" data-act="copy" data-copy="${esc(e.value)}" title="${esc(title)}" aria-label="${esc(title)}">${icon}</button>`;
   return `<span class="contact-entry">${a}${e.removable?`<button type="button" class="contact-x" data-act="del-contact" data-ref="${esc(e.ref)}" title="Remove ${esc(e.label)}" aria-label="Remove ${esc(e.label)} contact">×</button>`:''}</span>`}).join('')}
+function contactNorms(f,c){const list=[];const w=safeUrl(f.website);if(w)list.push({n:normContact(w),label:'Website'});
+ [['email','Email'],['whatsapp','WhatsApp'],['linkedin','LinkedIn'],['x','X'],['crunchbase','Crunchbase']].forEach(([k,l])=>{if(String(c[k]||'').trim())list.push({n:normContact(c[k]),label:l})});
+ (c.custom||[]).forEach(x=>{if(x&&x.url)list.push({n:normContact(x.url),label:x.label||'Contact'})});return list.filter(x=>x.n)}
+function pruneContactDuplicates(f,c){const seen=new Set(contactNorms(f,Object.assign({},c,{custom:[]})).map(x=>x.n));
+ c.custom=(c.custom||[]).filter(x=>{if(!x||!x.url)return true;const n=normContact(x.url);if(!n)return true;if(seen.has(n))return false;seen.add(n);return true})}
 function addContact(f,raw){const d=detectContact(raw);if(!d)return{ok:false};if(d.kind==='error')return{ok:false,msg:d.msg,needsCc:d.needsCc};
- const r=rec(f.id),c=r.contacts,key=['email','whatsapp','linkedin','x','crunchbase'].includes(d.kind)?d.kind:null;
- const existing=[safeUrl(f.website)||'',c.email,c.whatsapp,c.linkedin,c.x,c.crunchbase,...c.custom.map(x=>x&&x.url)].map(normContact).filter(Boolean);
- if(existing.includes(normContact(d.value)))return{ok:false,msg:'That contact is already listed.'};
+ const r=rec(f.id),c=r.contacts,key=['email','whatsapp','linkedin','x','crunchbase'].includes(d.kind)?d.kind:null,n=normContact(d.value);
+ const hit=contactNorms(f,c).find(x=>x.n===n);
+ if(hit||(d.kind==='email'&&String(f.public_contact||'').toLowerCase().includes(String(d.value).toLowerCase()))){
+  const what=d.kind==='whatsapp'?'phone number':d.kind==='email'?'email address':d.kind==='website'?'website':KIND_LABEL[d.kind]==='Contact'?'contact':KIND_LABEL[d.kind]+' link';
+  return{ok:false,dup:true,msg:`This ${what} already exists for this company${hit?(hit.label&&hit.label!=='Contact'&&hit.label!==KIND_LABEL[d.kind]&&!(d.kind==='whatsapp'&&hit.label==='WhatsApp')?` (saved as ${hit.label})`:''):' (listed under Public contact)'}. Nothing was added.`}}
+ pruneContactDuplicates(f,c);
  if(key&&!String(c[key]||'').trim()){c[key]=d.value}
  else{const url=d.kind==='email'?'mailto:'+d.value:d.kind==='whatsapp'?'https://wa.me/'+d.value:d.value;const label=(d.kind==='website'||d.kind==='link')?host(d.value):d.kind==='text'?'Contact':KIND_LABEL[d.kind];c.custom.push({label,url})}
  save();return{ok:true,kind:d.kind}}
-function removeContact(f,ref){const r=rec(f.id),c=r.contacts;let undo=null;
- if(ref.startsWith('key:')){const k=ref.slice(4),old=c[k];c[k]='';undo=()=>{rec(f.id).contacts[k]=old}}
- else if(ref.startsWith('custom:')){const i=Number(ref.slice(7)),old=c.custom[i];if(!old)return;c.custom.splice(i,1);undo=()=>{const cc=rec(f.id).contacts.custom;cc.splice(Math.min(i,cc.length),0,old)}}
- save();renderDrawer();toast('Contact removed',{label:'Undo',run:()=>{undo();save();renderDrawer()}})}
+function removeContact(f,ref){const r=rec(f.id),c=r.contacts,before=cloneObj(c);let target='';
+ if(ref.startsWith('key:'))target=normContact(c[ref.slice(4)]);else if(ref.startsWith('custom:')){const it=c.custom[Number(ref.slice(7))];if(!it)return;target=normContact(it.url)}
+ if(ref.startsWith('key:'))c[ref.slice(4)]='';else c.custom.splice(Number(ref.slice(7)),1);
+ if(target){['email','whatsapp','linkedin','x','crunchbase'].forEach(k=>{if(normContact(c[k])===target)c[k]=''});c.custom=c.custom.filter(x=>!(x&&x.url&&normContact(x.url)===target))} // also drops hidden duplicate copies
+ save();renderDrawer();toast('Contact removed',{label:'Undo',run:()=>{rec(f.id).contacts=before;save();renderDrawer()}})}
 
 // ---------- the founder workspace drawer ----------
 let drawerMode=null,inlineSection=null,editLogId=null,showAllLog=false,researchOpen=false,contactMsg='';
@@ -795,15 +828,16 @@ function renderDrawer(){
  if(drawerMode==='add'){renderAddForm();return}
  const f=FOUNDERS.find(x=>x.id===selectedId);if(!f){closeD();return}
  const keepScroll=dr.dataset.fid===f.id?body.scrollTop:0;dr.dataset.fid=f.id;
- const s=stateOf(f),tasks=viewTasks(s),open=tasks.filter(t=>!t.completed).sort(sortOpen),done=tasks.filter(t=>t.completed).sort((a,b)=>String(b.completed_at||'').localeCompare(String(a.completed_at||'')));
+ const s=stateOf(f),ai=archiveInfo(f),tasks=viewTasks(s),open=tasks.filter(t=>!t.completed).sort(sortOpen),done=tasks.filter(t=>t.completed).sort((a,b)=>String(b.completed_at||'').localeCompare(String(a.completed_at||'')));
  const log=(s.log||[]).map((l,i)=>({l,i})).sort((a,b)=>b.l.ts.localeCompare(a.l.ts)),shown=showAllLog?log:log.slice(0,10);
  head.innerHTML=`<div class="dh-main"><div class="eyebrow">${esc(String(f.list_name||'').split(' (')[0])} · ${esc(f.country||'Unverified')}</div><div class="drawer-title">${s.star?'<span class="star">★</span> ':''}${esc(f.name)}</div><div class="drawer-sub">${esc(f.founders||'Founders not recorded')}</div></div>
   <div class="dh-actions"><select class="stage-select" id="dStage" aria-label="Pipeline stage">${STAGES.map(x=>`<option ${x===s.stage?'selected':''}>${esc(x)}</option>`).join('')}</select><button class="icon-btn" type="button" data-act="close" aria-label="Close founder workspace" title="Close (Esc)">×</button></div>`;
  const kv=[['Website',safeUrl(f.website)?`<a href="${esc(safeUrl(f.website))}" target="_blank" rel="noopener noreferrer">${esc(host(f.website))} ↗</a>`:linkify(f.website||'Not verified')],['Founders',linkify(f.founders)],['Founder profile',linkify(f.founder_profile)||'<span class="muted">Not found</span>'],['Public contact',linkify(f.public_contact)||'<span class="muted">None listed</span>'],['Incorporation',linkify(f.incorporation||'Not stated')],['Stage signal',linkify(f.stage_signal)],['Date found',esc(fmtDate(f.date_found))+(f.source_date?` · source dated ${esc(fmtDate(f.source_date))}`:'')]];
  body.innerHTML=`
  <div class="hero"><div class="avatar" aria-hidden="true">${esc(initials(f.name))}</div><div style="min-width:0;flex:1"><div class="hero-name">${esc(f.founders||f.name)}</div><div class="hero-sub">${esc(f.location?String(f.location).split(/[.(]/)[0].slice(0,80):(f.country||'Location not recorded'))}</div>
-  <div class="chips"><span class="chip">${esc(s.stage)}</span><span class="chip">${esc(s.warmth||'Cold')}</span>${s.star?'<span class="chip">★ Starred</span>':''}${f.near_miss?'<span class="chip near">Near-miss</span>':''}</div></div></div>
- <div class="rel-row"><label>Warmth<select class="mini-control" id="dWarm">${WARMTH.map(x=>`<option ${x===s.warmth?'selected':''}>${x}</option>`).join('')}</select></label><label>Last contacted<input class="mini-control" type="date" id="dLast" value="${esc(s.last_contact||'')}"></label><button class="btn small star-btn" type="button" data-act="star" aria-pressed="${!!s.star}">${s.star?'★ Starred':'☆ Star'}</button></div>
+  <div class="chips"><span class="chip">${esc(s.stage)}</span><span class="chip">${esc(s.warmth||'Cold')}</span>${s.star?'<span class="chip">★ Starred</span>':''}${ai.archived?'<span class="chip near">Archived</span>':''}${f.near_miss?'<span class="chip near">Near-miss</span>':''}</div></div></div>
+ <div class="rel-row"><label>Warmth<select class="mini-control" id="dWarm">${WARMTH.map(x=>`<option ${x===s.warmth?'selected':''}>${x}</option>`).join('')}</select></label><label>Last contacted<input class="mini-control" type="date" id="dLast" value="${esc(s.last_contact||'')}"></label><button class="btn small star-btn" type="button" data-act="star" aria-pressed="${!!s.star}">${s.star?'★ Starred':'☆ Star'}</button>${ai.archived?'<button class="btn small" type="button" data-act="restore">↩ Restore from Archive</button>':'<button class="btn small" type="button" data-act="archive" title="Move to the Archive page">▣ Archive</button>'}</div>
+ ${ai.archived?`<div class="callout"><b>In the Archive</b>${ai.auto?`No activity for ${ai.days} days while in ${esc(ai.stage)}.`:'Archived by you.'} It is hidden from the pipeline board. Restore it to bring it back in the ${esc(ai.stage)} stage.</div>`:ai.daysLeft!==undefined?`<div class="arch-note" style="margin-top:7px">Moves to the Archive in ${ai.daysLeft} day${ai.daysLeft===1?'':'s'} without activity.</div>`:''}
 
  ${secTitle('To-do list',`${open.length} open`)}
  <form class="quick-entry" data-form="task" autocomplete="off"><div class="qe-row"><input class="qe-grow" name="title" data-draft="task-title" value="${esc(draft('task-title'))}" placeholder="Add a task for this company…" aria-label="New task" required><input type="date" name="due" data-draft="task-due" value="${esc(draft('task-due'))}" aria-label="Deadline" title="Deadline"><select name="priority" data-draft="task-priority" aria-label="Priority" title="Priority">${PRIORITIES.map(p=>`<option ${p===(draft('task-priority')||'Normal')?'selected':''}>${p}</option>`).join('')}</select></div><div class="qe-row"><input class="qe-grow" name="notes" data-draft="task-notes" value="${esc(draft('task-notes'))}" placeholder="Notes (optional)" aria-label="Task notes"><button class="btn primary small" type="submit">＋ Add task</button></div></form>
@@ -853,7 +887,7 @@ function closeD(){const dr=$('drawer');dr.classList.remove('open');dr.setAttribu
  const c=prev&&document.querySelector(`#boardWrap .card[data-id="${CSS.escape(prev)}"]`);if(c&&dr.contains(document.activeElement))c.focus({preventScroll:true})}
 let delArm=0;function confirmDelete(){const n=Date.now();if(n-delArm<3000){delArm=0;return true}delArm=n;toast('Click again to confirm delete');return false}
 
-function addFounderForm(){closeMore();selectedId=null;drawerMode='add';markSelected();renderDrawer();showDrawer();setTimeout(()=>{const n=$('n_name');if(n)n.focus()},60)}
+function addFounderForm(){selectedId=null;drawerMode='add';markSelected();renderDrawer();showDrawer();setTimeout(()=>{const n=$('n_name');if(n)n.focus()},60)}
 function saveNewFounder(){const g=k=>($('n_'+k).value||'').trim();if(!g('name')){toast('Name is required');return}
  const c={id:'c-'+Date.now().toString(36),name:g('name'),website:g('website')||'Not verified',founders:g('founders'),country:g('country')||'Unverified',location:g('location'),founder_profile:g('founder_profile'),public_contact:g('public_contact'),lvlup_program:g('lvlup_program')||'Unassigned',description:g('description'),stage_signal:g('stage_signal'),sources:g('source')?[g('source')]:[],date_found:today(),confidence:'Unrated',incorporation:'Not stated'};
  ST.custom=[...(ST.custom||[]),c];rec(c.id);save();rebuild();init();openFounder(c.id);toast('Founder added')}
@@ -864,6 +898,8 @@ function onDrawerClick(e){
  if(act==='close'){closeD();return}
  if(!f)return;
  if(act==='star'){const r=rec(id);r.star=!r.star;save();render();renderDrawer();return}
+ if(act==='archive'){archiveFounder(id);return}
+ if(act==='restore'){restoreFounder(id);return}
  if(act==='toggle-task'){completeTask(id,b.dataset.task);return}
  if(act==='del-task'){let removed=null,idx=-1;changeTasks(id,tasks=>{idx=tasks.findIndex(t=>t.id===b.dataset.task);if(idx>=0)removed=tasks.splice(idx,1)[0]});
   if(removed)toast('Task deleted',{label:'Undo',run:()=>changeTasks(id,tasks=>{if(!tasks.some(t=>t.id===removed.id))tasks.splice(Math.min(idx,tasks.length),0,removed)})});return}
@@ -889,7 +925,7 @@ function onDrawerSubmit(e){
   changeTasks(id,tasks=>{tasks.push(newTask(title,String(fd.get('due')||''),String(fd.get('priority')||'Normal'),String(fd.get('notes')||'').trim()))});
   const t=$('dBody').querySelector('[data-form="task"] input[name="title"]');if(t)t.focus();toast('Task added');return}
  if(kind==='contact'){const res=addContact(f,fd.get('contact'));
-  if(!res.ok){contactMsg=res.msg||'';renderDrawer();const inp=$('dBody').querySelector('[data-form="contact"] input');if(inp){if(res.needsCc&&!/^\s*\+/.test(inp.value)){inp.value='+'+inp.value.trim();(DRAFTS[id]=DRAFTS[id]||{}).contact=inp.value}inp.focus();inp.setSelectionRange(1,1)}return}
+  if(!res.ok){contactMsg=res.msg||'';if(res.dup)toast(res.msg);renderDrawer();const inp=$('dBody').querySelector('[data-form="contact"] input');if(inp){if(res.needsCc&&!/^\s*\+/.test(inp.value)){inp.value='+'+inp.value.trim();(DRAFTS[id]=DRAFTS[id]||{}).contact=inp.value}inp.focus();inp.setSelectionRange(1,1)}return}
   contactMsg='';clearDrafts(['contact']);renderDrawer();toast(KIND_LABEL[res.kind]+' contact added');return}
  if(kind==='activity'){const type=String(fd.get('type')||'Note'),txt=String(fd.get('text')||'').trim();if(!txt&&type==='Note'){toast('Write something first');return}
   const when=String(fd.get('when')||''),dt=when?new Date(when):new Date();if(isNaN(dt)){toast('Pick a valid date and time');return}
@@ -920,8 +956,8 @@ function onDrawerInput(e){const t=e.target,n=t.dataset&&t.dataset.draft;if(!n||!
 function exportBackup(){const blob=new Blob([JSON.stringify({app:'lvlup-frm',version:1,exported_at:nowStamp(),state:ST},null,2)],{type:'application/json'});dl(blob,`lvlup_frm_backup_${today()}.json`);toast('Backup downloaded')}
 function importBackup(file){const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);const s=j.state||j;if(!s||typeof s.records!=='object')throw 0;const plan=legacyPlan(s);if(!plan.count){toast('Nothing new in that backup');return}applyPlan(plan);toast(`Backup merged: ${plan.count} change${plan.count===1?'':'s'}`)}catch(e){toast('That file is not an FRM backup')}};r.readAsText(file)}
 function csvCell(v){v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
-function exportCsv(){const H=['name','list','country','location','founders','website','public_contact','lvlup_program','confidence','stage','warmth','star','tags','next_action','next_due','last_touch','activity_count','latest_note','open_tasks'];
- const rows=filtered().map(f=>{const s=stateOf(f),last=(s.log||[]).slice().sort((a,b)=>b.ts.localeCompare(a.ts))[0];return [f.name,f.list_name,f.country,f.location,f.founders,f.website,f.public_contact,f.lvlup_program,f.confidence,s.stage,s.warmth,s.star?'yes':'',(s.tags||[]).join('; '),s.next_action,s.next_due,lastTouch(s),(s.log||[]).length,last?last.text:'',openTaskCount(s)].map(csvCell).join(',')});
+function exportCsv(){const H=['name','list','country','location','founders','website','public_contact','lvlup_program','confidence','stage','warmth','star','tags','next_action','next_due','last_touch','activity_count','latest_note','open_tasks','archived'];
+ const rows=filtered().map(f=>{const s=stateOf(f),last=(s.log||[]).slice().sort((a,b)=>b.ts.localeCompare(a.ts))[0];return [f.name,f.list_name,f.country,f.location,f.founders,f.website,f.public_contact,f.lvlup_program,f.confidence,s.stage,s.warmth,s.star?'yes':'',(s.tags||[]).join('; '),s.next_action,s.next_due,lastTouch(s),(s.log||[]).length,last?last.text:'',openTaskCount(s),isArchived(f)?'yes':''].map(csvCell).join(',')});
  dl(new Blob(['﻿'+[H.join(','),...rows].join('\r\n')],{type:'text/csv'}),`lvlup_frm_${today()}.csv`)}
 function dl(blob,name){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u)}
 
@@ -945,14 +981,14 @@ function renderSearch(){const q=$('q').value.trim(),box=$('srList');
  box.classList.remove('hidden');$('q').setAttribute('aria-expanded','true');
  if(!res.length){box.innerHTML=`<div class="sr-empty">No founder or company matches “${esc(q)}” among all ${FOUNDERS.length} tracked.</div>`;return}
  box.innerHTML=srItems.map((r,i)=>{const f=r.f,s=stateOf(f),why=whyMatched(r,terms);
-  return `<button type="button" class="sr-item${i===0?' active':''}" role="option" data-sr="${esc(f.id)}"><div class="sr-main"><div class="sr-name">${s.star?'★ ':''}${hl(f.name,terms)}</div><div class="sr-sub">${hl(String(f.founders||'').slice(0,64),terms)}${f.founders?' · ':''}${esc(f.list_name)}</div>${why?`<div class="sr-why">${hl(why,terms)}</div>`:''}</div><span class="pill">${esc(s.stage)}</span></button>`}).join('')
+  return `<button type="button" class="sr-item${i===0?' active':''}" role="option" data-sr="${esc(f.id)}"><div class="sr-main"><div class="sr-name">${s.star?'★ ':''}${hl(f.name,terms)}</div><div class="sr-sub">${hl(String(f.founders||'').slice(0,64),terms)}${f.founders?' · ':''}${esc(f.list_name)}</div>${why?`<div class="sr-why">${hl(why,terms)}</div>`:''}</div><span class="pill${isArchived(f)?' arch':''}">${esc(s.stage)}${isArchived(f)?' · Archived':''}</span></button>`}).join('')
   +(res.length>srItems.length?`<div class="sr-foot">Showing ${srItems.length} of ${res.length}. Keep typing to narrow it down.</div>`:'')}
 function moveSearch(d){if(!srItems.length)return;srActive=(srActive+d+srItems.length)%srItems.length;[...$('srList').querySelectorAll('.sr-item')].forEach((el,i)=>{el.classList.toggle('active',i===srActive);if(i===srActive)el.scrollIntoView({block:'nearest'})})}
 function openSearchResult(id){hideSearch();openFounder(id);const c=document.querySelector(`#boardWrap .card[data-id="${CSS.escape(id)}"]`);if(c&&c.offsetParent)c.scrollIntoView({block:'nearest',inline:'nearest'})}
 
 let bound=false;
 function bind(){if(bound)return;bound=true;
- const titles={board:['Pipeline board','Keep each founder relationship moving. Open a card to work on it in the drawer.'],table:['All founders','Sort, filter and update stage or warmth inline.'],followups:['Follow-ups','The earliest open task of every founder, overdue first.'],activity:['Activity log','A running record of every note, message, call and application.']};
+ const titles={board:['Pipeline board','Keep each founder relationship moving. Open a card to work on it in the drawer.'],table:['All founders','Sort, filter and update stage or warmth inline.'],followups:['Follow-ups','The earliest open task of every founder, overdue first.'],activity:['Activity log','A running record of every note, message, call and application.'],archive:['Archive','Startups set aside by you, or idle in Watchlist / Passed for 14+ days. Restore any of them.']};
  $('nav').onclick=e=>{const b=e.target.closest('button[data-view]');if(!b)return;view=b.dataset.view;document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='view-'+view));$('pageTitle').textContent=titles[view][0];$('pageSub').textContent=titles[view][1];render();markSelected()};
  ['fList','fCountry','fProgram','fConf','fStar'].forEach(id=>$(id).addEventListener('change',render));
  const q=$('q');q.addEventListener('input',renderSearch);q.addEventListener('focus',()=>{q.select();renderSearch()});
@@ -968,17 +1004,12 @@ function bind(){if(bound)return;bound=true;
  drawer.addEventListener('toggle',e=>{if(e.target.id==='dResearch')researchOpen=e.target.open},true);
  $('scrim').onclick=closeD;
  $('toastAction').onclick=()=>{const a=toastUndo;toastUndo=null;$('toast').classList.remove('show');if(a)a.run()};
- document.addEventListener('click',e=>{if(e.target.closest('#drawer'))return;const o=e.target.closest('[data-open]');if(o){openFounder(o.dataset.open);return}const c=e.target.closest('.card');if(c&&!c.classList.contains('dragging')){openFounder(c.dataset.id);return}
+ document.addEventListener('click',e=>{if(e.target.closest('#drawer'))return;const rs=e.target.closest('[data-restore]');if(rs){restoreFounder(rs.dataset.restore);return}const o=e.target.closest('[data-open]');if(o){openFounder(o.dataset.open);return}const c=e.target.closest('.card');if(c&&!c.classList.contains('dragging')){openFounder(c.dataset.id);return}
   const d=e.target.closest('[data-done]');if(d){const fid=d.dataset.done;changeTasks(fid,(tasks,r)=>{const p=primaryTask(r);const title=p?p.title:(r.next_action||'follow-up');if(p){p.completed=true;p.completed_at=nowStamp();p.updated_at=nowStamp()}r.log.push({ts:nowStamp(),type:'Note',text:'Done: '+title})});toast('Marked done');return}
   const th=e.target.closest('th[data-sort]');if(th){const k=th.dataset.sort;sortDir=sortKey===k?-sortDir:1;sortKey=k;renderTable()}});
  document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.target.closest('#drawer')){const t=e.target.closest('.card,[data-open]');if(t&&t===e.target){e.preventDefault();openFounder(t.dataset.id||t.dataset.open)}}});
  document.addEventListener('change',e=>{const a=e.target.dataset.stageFor,b=e.target.dataset.warmFor;if(a){const r=rec(a),old=r.stage;r.stage=e.target.value;r.log.push({ts:nowStamp(),type:'Note',text:`Stage changed: ${old} → ${r.stage}`});save();renderStats();if(selectedId===a)renderDrawer();toast('Stage updated')}if(b){rec(b).warmth=e.target.value;save();if(selectedId===b)renderDrawer();toast('Warmth updated')}});
  const board=$('boardWrap');
- const canCollapse=()=>matchMedia('(hover:hover) and (min-width:1001px)').matches;
- board.addEventListener('mouseover',e=>{const c=e.target.closest('.col.collapsible');if(c&&canCollapse())openMore(c)});
- board.addEventListener('mouseout',e=>{const c=e.target.closest('.col.collapsible');if(!c||c.contains(e.relatedTarget))return;clearTimeout(closeT);closeT=setTimeout(closeMore,140)});
- addEventListener('scroll',e=>{if(e.target&&e.target.closest&&e.target.closest('.col-more'))return;closeMore()},true);
- addEventListener('resize',closeMore);
  board.addEventListener('dragstart',e=>{const c=e.target.closest('.card');if(!c)return;e.dataTransfer.setData('text/plain',c.dataset.id);c.classList.add('dragging')});
  board.addEventListener('dragend',e=>{const c=e.target.closest('.card');if(c)setTimeout(()=>c.classList.remove('dragging'),0)});
  board.addEventListener('dragover',e=>{const col=e.target.closest('.col');if(col){e.preventDefault();board.querySelectorAll('.col').forEach(x=>x.classList.toggle('drag-over',x===col))}});
@@ -991,7 +1022,7 @@ function bind(){if(bound)return;bound=true;
  $('goalInput').onchange=e=>{ST.goal=Math.max(1,Number(e.target.value)||10);save();renderStats()};
 }
 // ---------- collapsible sidebar (state remembered in this browser) ----------
-function setSidebar(collapsed,persist){const app=document.querySelector('.app'),b=$('sideToggle');app.classList.toggle('side-collapsed',collapsed);b.setAttribute('aria-expanded',String(!collapsed));const t=collapsed?'Show sidebar':'Hide sidebar';b.title=t;b.setAttribute('aria-label',t);if(persist){try{localStorage.setItem('lvlup_frm_sidebar',collapsed?'collapsed':'open')}catch(e){}}closeMore()}
+function setSidebar(collapsed,persist){const app=document.querySelector('.app'),b=$('sideToggle');app.classList.toggle('side-collapsed',collapsed);b.setAttribute('aria-expanded',String(!collapsed));const t=collapsed?'Show sidebar':'Hide sidebar';b.title=t;b.setAttribute('aria-label',t);if(persist){try{localStorage.setItem('lvlup_frm_sidebar',collapsed?'collapsed':'open')}catch(e){}}}
 $('sideToggle').onclick=()=>setSidebar(!document.querySelector('.app').classList.contains('side-collapsed'),true);
 setSidebar(document.querySelector('.app').classList.contains('side-collapsed'),false);
 LvlupCloud.start({appName:'your Founder CRM',signOutButton:'signOutBtn',onReady:loadCloud});
