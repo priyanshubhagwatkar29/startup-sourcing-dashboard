@@ -327,6 +327,7 @@ html[data-theme="dark"] #lvlGate .lg-foot{color:#737c80}
    <button class="btn" id="importBtn">↑ Import backup</button>
    <input type="file" id="importFile" accept="application/json" class="hidden">
    <button class="btn primary" id="addBtn">＋ Add founder</button>
+   <button class="btn" id="googleCalendarBtn" type="button" hidden>↗ Connect Google Calendar</button>
    <button class="btn" id="signOutBtn" hidden>Sign out</button>
    <div class="goal-chip" role="group" aria-label="LvlUp applications this month"><span class="gc-label">LvlUp applications · this month</span><span class="gc-val" id="sApps">0</span><span class="gc-goal">Goal <input class="goal-input" id="goalInput" type="number" min="1" value="10" aria-label="Monthly application goal"> / month</span><span class="meter"><span id="goalBar" style="width:0%"></span></span></div>
   </div>
@@ -589,6 +590,7 @@ async function loadCloud(ctx){
  LvlupCloud.mountStatus('syncStatus');
  subscribeRealtime();
  checkLegacyLocal();
+ setupGoogleCalendar();
 }
 
 // ---------- dates: always the browser's local calendar day (no hard-coded time zone) ----------
@@ -604,6 +606,43 @@ function fmtShort(s){if(!s)return'';const d=new Date(s.length===10?s+'T00:00:00'
 function fmtStamp(s){const d=new Date(s);return isNaN(d)?s:d.toLocaleString(undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}
 let toastUndo=null;
 function toast(m,action){const t=$('toast'),b=$('toastAction');$('toastText').textContent=m;toastUndo=action||null;b.classList.toggle('hidden',!action);if(action)b.textContent=action.label;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>{t.classList.remove('show');toastUndo=null},action?5000:2200)}
+
+function setupGoogleCalendar(){
+ const btn=$('googleCalendarBtn');if(!btn)return;
+ btn.hidden=false;
+ const params=new URLSearchParams(location.search);
+ const result=params.get('calendar_connection');
+ if(result==='connected'){
+  btn.textContent='✓ Google Calendar connected';btn.classList.add('primary');
+  toast('Google Calendar connected successfully');
+  params.delete('calendar_connection');params.delete('calendar_detail');
+  const clean=location.pathname+(params.toString()?'?'+params.toString():'')+location.hash;
+  history.replaceState(null,'',clean);
+ }else if(result==='error'){
+  const detail=params.get('calendar_detail')||'Google Calendar connection failed';
+  toast('Calendar connection failed: '+detail);
+  params.delete('calendar_connection');params.delete('calendar_detail');
+  history.replaceState(null,'',location.pathname+(params.toString()?'?'+params.toString():'')+location.hash);
+ }
+ btn.onclick=async()=>{
+  if(!SB){toast('FRM cloud session is not ready yet');return}
+  const label=btn.textContent;btn.disabled=true;btn.textContent='Connecting…';
+  try{
+   const {data,error}=await SB.functions.invoke('google-oauth-start',{body:{}});
+   if(error)throw error;
+   if(!data||!data.authorization_url)throw new Error(data&&data.error?data.error:'Google authorisation URL was not returned');
+   location.assign(data.authorization_url);
+  }catch(err){
+   console.error('Google Calendar connection failed',err);
+   let detail=err&&err.message?err.message:String(err||'Unknown error');
+   if(err&&err.context&&typeof err.context.json==='function'){
+    try{const body=await err.context.json();if(body&&body.error)detail=body.error}catch(_){}
+   }
+   toast('Could not start Google Calendar connection: '+detail);
+   btn.disabled=false;btn.textContent=label;
+  }
+ };
+}
 function rec(id){if(!ST.records[id])ST.records[id]={stage:'Sourced',warmth:'Cold',star:false,tags:[],next_action:'',next_due:'',last_contact:'',contact_channel:'',contacts:{whatsapp:'',linkedin:'',x:'',custom:[]},log:[]};const r=ST.records[id];if(!r.contacts||typeof r.contacts!=='object')r.contacts={whatsapp:'',linkedin:'',x:'',custom:[]};if(!Array.isArray(r.contacts.custom))r.contacts.custom=[];if(!Array.isArray(r.log))r.log=[];return r}
 function stateOf(f){return ST.records[f.id]||{stage:'Sourced',warmth:'Cold',star:false,tags:[],next_action:'',next_due:'',last_contact:'',contact_channel:'',contacts:{whatsapp:'',linkedin:'',x:'',custom:[]},log:[]}}
 function dueClass(d){if(!d)return'';const t=today();return d<t?'over':d===t?'today':''}
