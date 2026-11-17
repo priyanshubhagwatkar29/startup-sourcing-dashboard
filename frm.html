@@ -299,6 +299,22 @@ html[data-theme="dark"] #lvlGate .lg-foot{color:#737c80}
 @media(max-width:1250px){.main{padding:18px 16px 34px}.toolbar-note{display:none}}
 @media(max-width:820px){.app{grid-template-columns:1fr}.sidebar{position:static;height:auto;padding:12px;gap:10px}.side-note,.sidebar .nav-label{display:none}.nav{grid-template-columns:repeat(2,1fr)}.main{padding:14px 10px 30px}.toolbar select.field-control{flex:1;max-width:none}.search-field{max-width:none;flex-basis:100%}.board{grid-auto-columns:184px}.inline-grid,.add-grid{grid-template-columns:1fr}.info-row{grid-template-columns:105px 1fr}}
 @media(max-width:520px){.drawer-head{flex-direction:column}.dh-actions{width:100%}.stage-select{flex:1;max-width:none}.qe-row{flex-wrap:wrap}.quick-entry input[type=date],.quick-entry input[type=datetime-local]{flex:1;width:auto}.qe-grow{flex-basis:100%}}
+
+/* ---------- Google Calendar meetings ---------- */
+.meetings-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:4px 0 18px;flex-wrap:wrap}
+.meetings-toolbar .panel-title{font-size:16px;font-weight:800}
+.meetings-table-wrap{overflow:auto;border:1px solid var(--line);border-radius:13px}
+.meetings-table{width:100%;border-collapse:collapse;min-width:720px}
+.meetings-table th{padding:12px 14px;text-align:left;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);background:var(--panel);border-bottom:1px solid var(--line)}
+.meetings-table td{padding:13px 14px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}
+.meetings-table tr:last-child td{border-bottom:0}
+.meetings-company{font-weight:800;color:var(--text)}
+.meetings-attendees{line-height:1.5;color:var(--text)}
+.meetings-link{font-weight:750;color:var(--accent);text-decoration:none}
+.meetings-link:hover{text-decoration:underline}
+.meetings-period{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:22px 0 9px}
+.meetings-period:first-child{margin-top:0}
+.meetings-empty{padding:30px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
 </style>
 </head>
 <body>
@@ -309,6 +325,7 @@ html[data-theme="dark"] #lvlGate .lg-foot{color:#737c80}
  <div><div class="nav-label">Founder CRM</div><nav class="nav" id="nav">
   <button class="active" data-view="board"><span class="ico">▦</span>Pipeline board</button>
   <button data-view="table"><span class="ico">▤</span>All founders <span class="count" id="navCount">0</span></button>
+  <button data-view="meetings"><span class="ico">▣</span>Meetings</button>
   <button data-view="followups"><span class="ico">◷</span>Follow-ups <span class="count" id="navDue">0</span></button>
   <button data-view="activity"><span class="ico">↗</span>Activity log</button>
   <button data-view="archive"><span class="ico">▣</span>Archive <span class="count" id="navArchive">0</span></button>
@@ -348,6 +365,10 @@ html[data-theme="dark"] #lvlGate .lg-foot{color:#737c80}
  <section class="section panel" id="view-table"><div class="table-wrap"><table><thead><tr>
    <th data-sort="name">Startup</th><th data-sort="country">Country</th><th data-sort="stage">Stage</th><th data-sort="warmth">Warmth</th><th data-sort="program">LvlUp program</th><th data-sort="confidence">Confidence</th><th data-sort="next">Next action</th><th data-sort="last">Last touch</th></tr></thead><tbody id="rows"></tbody></table></div>
    <div class="empty hidden" id="noRows">No founders match these filters.</div></section>
+ <section class="section panel" id="view-meetings">
+  <div class="meetings-toolbar"><div><div class="panel-title">Calendar meetings</div><div class="small muted" id="meetingsSyncLabel">Bookings synced from Google Calendar</div></div><button class="btn primary" id="syncMeetingsBtn" type="button">↻ Sync now</button></div>
+  <div id="meetingsList"><div class="empty">Loading meetings…</div></div>
+ </section>
  <section class="section panel" id="view-followups"><div id="followList"></div></section>
  <section class="section panel" id="view-activity"><div id="activityList"></div></section>
  <section class="section panel" id="view-archive"><div id="archiveList"></div></section>
@@ -591,6 +612,7 @@ async function loadCloud(ctx){
  subscribeRealtime();
  checkLegacyLocal();
  setupGoogleCalendar();
+ loadCalendarMeetings();
 }
 
 // ---------- dates: always the browser's local calendar day (no hard-coded time zone) ----------
@@ -607,6 +629,50 @@ function fmtStamp(s){const d=new Date(s);return isNaN(d)?s:d.toLocaleString(unde
 let toastUndo=null;
 function toast(m,action){const t=$('toast'),b=$('toastAction');$('toastText').textContent=m;toastUndo=action||null;b.classList.toggle('hidden',!action);if(action)b.textContent=action.label;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>{t.classList.remove('show');toastUndo=null},action?5000:2200)}
 
+let CALENDAR_MEETINGS=[];
+function meetingDate(v){const d=new Date(v);return isNaN(d)?'':d.toLocaleDateString(undefined,{day:'2-digit',month:'short',year:'numeric'})}
+function meetingTime(a,b){const x=new Date(a),y=new Date(b);if(isNaN(x)||isNaN(y))return'';return x.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'})+' – '+y.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'})}
+async function loadCalendarMeetings(){
+ if(!SB)return;
+ const host=$('meetingsList');if(host)host.innerHTML='<div class="empty">Loading meetings…</div>';
+ const {data,error}=await SB.from('calendar_meetings').select('event_id,company_name,attendees,start_at,end_at,meeting_link,status').order('start_at',{ascending:false}).limit(1000);
+ if(error){if(host)host.innerHTML='<div class="meetings-empty">Could not load calendar meetings: '+esc(error.message)+'</div>';return}
+ CALENDAR_MEETINGS=data||[];renderMeetings();
+ const label=$('meetingsSyncLabel');if(label)label.textContent=CALENDAR_MEETINGS.length+' calendar events · last loaded '+new Date().toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+}
+function renderMeetings(){
+ const host=$('meetingsList');if(!host)return;
+ const active=CALENDAR_MEETINGS.filter(m=>m.status!=='cancelled');
+ const now=Date.now(),upcoming=active.filter(m=>new Date(m.start_at).getTime()>=now).sort((a,b)=>new Date(a.start_at)-new Date(b.start_at));
+ const past=active.filter(m=>new Date(m.start_at).getTime()<now).sort((a,b)=>new Date(b.start_at)-new Date(a.start_at));
+ const rows=items=>items.map(m=>{
+  const people=(Array.isArray(m.attendees)?m.attendees:[]).map(a=>a.name||a.email).filter(Boolean);
+  const link=safeUrl(m.meeting_link||'');
+  return '<tr><td><div class="meetings-company">'+esc(m.company_name||'Unmatched company')+'</div></td><td><div class="meetings-attendees">'+(people.length?people.map(esc).join('<br>'):'—')+'</div></td><td>'+esc(meetingDate(m.start_at))+'</td><td>'+esc(meetingTime(m.start_at,m.end_at))+'</td><td>'+(link?'<a class="meetings-link" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">Join meeting ↗</a>':'—')+'</td></tr>';
+ }).join('');
+ const table=items=>'<div class="meetings-table-wrap"><table class="meetings-table"><thead><tr><th>Company</th><th>Attendees</th><th>Date</th><th>Time</th><th>Meeting link</th></tr></thead><tbody>'+rows(items)+'</tbody></table></div>';
+ let html='';
+ if(upcoming.length)html+='<div class="meetings-period">Upcoming · '+upcoming.length+'</div>'+table(upcoming);
+ if(past.length)html+='<div class="meetings-period">Past · '+past.length+'</div>'+table(past);
+ if(!html)html='<div class="meetings-empty">No calendar meetings found yet. Use Sync now to import your bookings.</div>';
+ host.innerHTML=html;
+}
+async function syncCalendarMeetings(){
+ const btn=$('syncMeetingsBtn');if(!SB){toast('FRM cloud session is not ready yet');return}
+ if(btn){btn.disabled=true;btn.textContent='Syncing…'}
+ try{
+  const {data,error}=await SB.functions.invoke('google-calendar-sync',{body:{}});
+  if(error)throw error;
+  if(!data||!data.success)throw new Error(data&&data.error?data.error:'Calendar sync failed');
+  await loadCalendarMeetings();
+  toast('Calendar synced: '+data.processed+' events · '+data.matched+' company matches');
+ }catch(err){
+  console.error('Calendar sync failed',err);
+  let detail=err&&err.message?err.message:String(err||'Unknown error');
+  if(err&&err.context&&typeof err.context.json==='function'){try{const body=await err.context.json();if(body&&body.error)detail=body.error}catch(_){}}
+  toast('Calendar sync failed: '+detail);
+ }finally{if(btn){btn.disabled=false;btn.textContent='↻ Sync now'}}
+}
 function setupGoogleCalendar(){
  const btn=$('googleCalendarBtn');if(!btn)return;
  btn.hidden=false;
@@ -624,6 +690,7 @@ function setupGoogleCalendar(){
   params.delete('calendar_connection');params.delete('calendar_detail');
   history.replaceState(null,'',location.pathname+(params.toString()?'?'+params.toString():'')+location.hash);
  }
+ const syncBtn=$('syncMeetingsBtn');if(syncBtn)syncBtn.onclick=syncCalendarMeetings;
  btn.onclick=async()=>{
   if(!SB){toast('FRM cloud session is not ready yet');return}
   const label=btn.textContent;btn.disabled=true;btn.textContent='Connecting…';
@@ -708,7 +775,7 @@ function filtered(){
   if(S==='star'&&!s.star)return false;if(S==='hot'&&s.warmth!=='Hot')return false;if(S==='nonear'&&f.near_miss)return false;
   return true})
 }
-function render(){document.documentElement.classList.toggle('fixed-board',view==='board');renderStats();if(view==='board')renderBoard();if(view==='table')renderTable();if(view==='followups')renderFollow();if(view==='activity')renderActivity();if(view==='archive')renderArchive()}
+function render(){document.documentElement.classList.toggle('fixed-board',view==='board');renderStats();if(view==='board')renderBoard();if(view==='table')renderTable();if(view==='meetings')renderMeetings();if(view==='followups')renderFollow();if(view==='activity')renderActivity();if(view==='archive')renderArchive()}
 function renderStats(){
  const t=today(),ym=t.slice(0,7),live=FOUNDERS.filter(f=>!isArchived(f));
  const due=live.map(stateOf).filter(x=>x.next_due&&x.next_due<=t&&x.stage!=='Passed');
@@ -1027,8 +1094,8 @@ function openSearchResult(id){hideSearch();openFounder(id);const c=document.quer
 
 let bound=false;
 function bind(){if(bound)return;bound=true;
- const titles={board:['Pipeline board','Keep each founder relationship moving. Open a card to work on it in the drawer.'],table:['All founders','Sort, filter and update stage or warmth inline.'],followups:['Follow-ups','The earliest open task of every founder, overdue first.'],activity:['Activity log','A running record of every note, message, call and application.'],archive:['Archive','Startups set aside by you, or idle in Watchlist / Passed for 14+ days. Restore any of them.']};
- $('nav').onclick=e=>{const b=e.target.closest('button[data-view]');if(!b)return;view=b.dataset.view;document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='view-'+view));$('pageTitle').textContent=titles[view][0];$('pageSub').textContent=titles[view][1];render();markSelected()};
+ const titles={board:['Pipeline board','Keep each founder relationship moving. Open a card to work on it in the drawer.'],table:['All founders','Sort, filter and update stage or warmth inline.'],meetings:['Meetings','Company, attendees, date, time and meeting link from Google Calendar.'],followups:['Follow-ups','The earliest open task of every founder, overdue first.'],activity:['Activity log','A running record of every note, message, call and application.'],archive:['Archive','Startups set aside by you, or idle in Watchlist / Passed for 14+ days. Restore any of them.']};
+ $('nav').onclick=e=>{const b=e.target.closest('button[data-view]');if(!b)return;view=b.dataset.view;document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='view-'+view));$('pageTitle').textContent=titles[view][0];$('pageSub').textContent=titles[view][1];if(view==='meetings')loadCalendarMeetings();render();markSelected()};
  ['fList','fCountry','fProgram','fConf','fStar'].forEach(id=>$(id).addEventListener('change',render));
  const q=$('q');q.addEventListener('input',renderSearch);q.addEventListener('focus',()=>{q.select();renderSearch()});
  q.addEventListener('keydown',e=>{const open=!$('srList').classList.contains('hidden');
