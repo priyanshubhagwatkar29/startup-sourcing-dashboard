@@ -676,10 +676,15 @@ async function syncCalendarMeetings(){
 function setupGoogleCalendar(){
  const btn=$('googleCalendarBtn');if(!btn)return;
  btn.hidden=false;
+ const setConnectionState=connected=>{
+  btn.textContent=connected?'✓ Google Calendar connected':'↗ Connect Google Calendar';
+  btn.classList.toggle('primary',!!connected);
+  btn.dataset.connected=connected?'1':'0';
+ };
  const params=new URLSearchParams(location.search);
  const result=params.get('calendar_connection');
  if(result==='connected'){
-  btn.textContent='✓ Google Calendar connected';btn.classList.add('primary');
+  setConnectionState(true);
   toast('Google Calendar connected successfully');
   params.delete('calendar_connection');params.delete('calendar_detail');
   const clean=location.pathname+(params.toString()?'?'+params.toString():'')+location.hash;
@@ -689,8 +694,22 @@ function setupGoogleCalendar(){
   toast('Calendar connection failed: '+detail);
   params.delete('calendar_connection');params.delete('calendar_detail');
   history.replaceState(null,'',location.pathname+(params.toString()?'?'+params.toString():'')+location.hash);
+ }else{
+  btn.textContent='Checking Google Calendar…';
  }
  const syncBtn=$('syncMeetingsBtn');if(syncBtn)syncBtn.onclick=syncCalendarMeetings;
+ async function refreshConnectionStatus(){
+  if(!SB)return;
+  try{
+   const {data,error}=await SB.functions.invoke('google-calendar-status',{body:{}});
+   if(error)throw error;
+   setConnectionState(!!(data&&data.connected));
+  }catch(err){
+   console.warn('Could not check Google Calendar connection status',err);
+   if(btn.dataset.connected!=='1')setConnectionState(false);
+  }
+ }
+ refreshConnectionStatus();
  btn.onclick=async()=>{
   if(!SB){toast('FRM cloud session is not ready yet');return}
   const label=btn.textContent;btn.disabled=true;btn.textContent='Connecting…';
