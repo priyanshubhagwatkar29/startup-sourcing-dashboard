@@ -321,6 +321,43 @@ html[data-theme="dark"] #lvlGate .lg-foot{color:#737c80}
 .meeting-assign-options{display:flex;flex-direction:column;max-height:210px;overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--panel)}.meeting-assign-option{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:7px 9px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--text);text-align:left;cursor:pointer}.meeting-assign-option:last-child{border-bottom:0}.meeting-assign-option:hover{background:var(--panel2)}.meeting-assign-option span{font-size:11px;font-weight:800}.meeting-assign-option small{font-size:9px;color:var(--muted)}.meeting-assign-empty{padding:9px;font-size:10px;color:var(--muted)}
 .meeting-assign-actions{display:flex;justify-content:flex-end;gap:6px}.meeting-assign-actions button{border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--muted);padding:4px 7px;font-size:10px;cursor:pointer}.meeting-assign-actions button:hover{border-color:var(--accent);color:var(--accent-text)}
 .founder-meetings{margin-top:9px;padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel2)}.founder-meetings-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:7px;color:var(--accent-text);font-size:9px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.founder-meeting{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line);font-size:10.5px}.founder-meeting-date{font-weight:750;color:var(--text)}.founder-meeting-time{font-size:9.5px;color:var(--muted);margin-top:2px}.founder-meeting-link{flex:none;font-size:10px;font-weight:800;color:var(--accent-text);text-decoration:none;white-space:nowrap}.founder-meeting-link:hover{text-decoration:underline}.founder-meeting-no-link{font-size:9px;color:var(--dim)}
+
+ /* Meetings view: consistent spacing, columns and row controls */
+ #view-meetings{padding:18px 20px 22px}
+ .meetings-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 18px;padding:0 0 15px;border-bottom:1px solid var(--line)}
+ .meetings-toolbar>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+ .meetings-toolbar .panel-title{font-size:18px;line-height:1.25;font-weight:850;letter-spacing:-.02em}
+ #meetingsSyncLabel{font-size:11px;line-height:1.45}
+ #syncMeetingsBtn{min-height:36px;flex:none}
+ #meetingsList{display:flex;flex-direction:column;gap:0;min-width:0}
+ .meetings-period{margin:19px 0 9px;padding-left:2px;font-size:10.5px;line-height:1.35;letter-spacing:.1em}
+ .meetings-period:first-child{margin-top:0}
+ .meetings-table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+ .meetings-table{width:100%;min-width:900px;table-layout:fixed;border-collapse:collapse}
+ .meetings-table th{height:39px;padding:10px 15px;text-align:left;white-space:nowrap;font-size:10px;line-height:1.3;letter-spacing:.09em}
+ .meetings-table td{height:60px;padding:12px 15px;border-bottom:1px solid var(--line);font-size:12px;line-height:1.45;vertical-align:middle}
+ .meetings-table th:nth-child(1),.meetings-table td:nth-child(1){width:25%}
+ .meetings-table th:nth-child(2),.meetings-table td:nth-child(2){width:31%}
+ .meetings-table th:nth-child(3),.meetings-table td:nth-child(3){width:14%;white-space:nowrap}
+ .meetings-table th:nth-child(4),.meetings-table td:nth-child(4){width:17%;white-space:nowrap}
+ .meetings-table th:nth-child(5),.meetings-table td:nth-child(5){width:13%;white-space:nowrap}
+ .meetings-table tbody tr:last-child td{border-bottom:0}
+ .meetings-table tbody tr:hover td{background:var(--panel2)}
+ .meetings-company{font-size:12px;line-height:1.35;font-weight:800}
+ .meetings-attendees{font-size:11.5px;line-height:1.55;color:var(--text);overflow-wrap:anywhere}
+ .meetings-link{display:inline-flex;align-items:center;min-height:26px;font-size:11px}
+ .meeting-company-line{display:flex;align-items:center;justify-content:flex-start;gap:8px;min-width:0}
+ .meeting-company-line>.meetings-company{min-width:0}
+ .meeting-actions{display:inline-flex;align-items:center;gap:5px;flex:none}
+ .meeting-edit-btn,.meeting-remove-btn{width:26px;height:26px;flex:none;border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--muted);display:inline-grid;place-items:center;padding:0;cursor:pointer}
+ .meeting-edit-btn:hover{border-color:var(--accent);color:var(--accent-text)}
+ .meeting-remove-btn{color:var(--danger)}
+ .meeting-remove-btn:hover{border-color:var(--danger);background:var(--panel2)}
+ .meeting-edit-btn svg,.meeting-remove-btn svg{width:13px;height:13px}
+ .meeting-assigner{width:min(320px,100%);min-width:0;max-width:320px}
+ @media(max-width:820px){#view-meetings{padding:14px 12px 18px}.meetings-toolbar{align-items:flex-start}.meetings-table{min-width:850px}}
+ @media(max-width:520px){.meetings-toolbar{flex-direction:column;gap:10px}.meetings-toolbar #syncMeetingsBtn{align-self:flex-start}}
+
 </style>
 </head>
 <body>
@@ -641,7 +678,7 @@ function meetingTime(a,b){const x=new Date(a),y=new Date(b);if(isNaN(x)||isNaN(y
 async function loadCalendarMeetings(){
  if(!SB)return;
  const host=$('meetingsList');if(host)host.innerHTML='<div class="empty">Loading meetings…</div>';
- const {data,error}=await SB.from('calendar_meetings').select('event_id,company_name,matched_founder_id,attendees,start_at,end_at,meeting_link,status').order('start_at',{ascending:false}).limit(1000);
+ const {data,error}=await SB.from('calendar_meetings').select('event_id,company_name,matched_founder_id,attendees,start_at,end_at,meeting_link,status,excluded_from_frm').eq('excluded_from_frm',false).order('start_at',{ascending:false}).limit(1000);
  if(error){if(host)host.innerHTML='<div class="meetings-empty">Could not load calendar meetings: '+esc(error.message)+'</div>';return}
  CALENDAR_MEETINGS=data||[];render();if(drawerMode==='founder'&&selectedId)renderDrawer();
  const label=$('meetingsSyncLabel');if(label)label.textContent=CALENDAR_MEETINGS.length+' calendar events · last loaded '+new Date().toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
@@ -659,12 +696,30 @@ async function assignCalendarMeeting(eventId,founderId){
  try{const {data,error}=await SB.functions.invoke('google-calendar-assign',{body:{event_id:eventId,founder_id:founderId||null}});if(error)throw error;if(!data||!data.success)throw new Error(data&&data.error?data.error:'Could not update the meeting assignment');editingCalendarMeetingId=null;await loadCalendarMeetings();toast(founderId?'Meeting linked to '+(data.company_name||'the selected startup'):'Meeting company link cleared')}
  catch(err){console.error('Meeting assignment failed',err);let detail=err&&err.message?err.message:String(err||'Unknown error');if(err&&err.context&&typeof err.context.json==='function'){try{const body=await err.context.json();if(body&&body.error)detail=body.error}catch(_){}}toast('Could not update meeting: '+detail)}
 }
+async function excludeCalendarMeeting(eventId){
+ if(!SB){toast('FRM cloud session is not ready yet');return}
+ if(!confirm('Remove this unassigned meeting from FRM? It will stay hidden even after future Google Calendar syncs.'))return;
+ try{
+  const {data,error}=await SB.functions.invoke('google-calendar-exclude',{body:{event_id:eventId}});
+  if(error)throw error;
+  if(!data||!data.success)throw new Error(data&&data.error?data.error:'Could not remove this meeting');
+  editingCalendarMeetingId=null;
+  await loadCalendarMeetings();
+  toast('Meeting removed from FRM. Future syncs will keep it hidden.');
+ }catch(err){
+  console.error('Meeting exclusion failed',err);
+  let detail=err&&err.message?err.message:String(err||'Unknown error');
+  if(err&&err.context&&typeof err.context.json==='function'){try{const body=await err.context.json();if(body&&body.error)detail=body.error}catch(_){}}
+  toast('Could not remove meeting: '+detail);
+ }
+}
 function renderMeetings(){
  const host=$('meetingsList');if(!host)return;const active=CALENDAR_MEETINGS.filter(m=>m.status!=='cancelled');
  const now=Date.now(),upcoming=active.filter(m=>new Date(m.start_at).getTime()>=now).sort((a,b)=>new Date(a.start_at)-new Date(b.start_at)),past=active.filter(m=>new Date(m.start_at).getTime()<now).sort((a,b)=>new Date(b.start_at)-new Date(a.start_at));
  const rows=items=>items.map(m=>{
   const people=(Array.isArray(m.attendees)?m.attendees:[]).map(a=>a.name||a.email).filter(Boolean),link=safeUrl(m.meeting_link||''),linked=FOUNDERS.find(f=>f.id===m.matched_founder_id),company=linked?linked.name:(m.company_name||'Unmatched company');
-  const cell='<div class="meeting-company-line"><div class="meetings-company">'+esc(company)+'</div><button type="button" class="meeting-edit-btn" data-edit-meeting="'+esc(m.event_id)+'" title="Assign or correct startup" aria-label="Assign or correct startup">'+PENCIL+'</button></div>'+(editingCalendarMeetingId===m.event_id?meetingAssignmentEditorHtml(m):'');
+  const removeButton=!m.matched_founder_id?'<button type="button" class="meeting-remove-btn" data-exclude-meeting="'+esc(m.event_id)+'" title="Remove unrelated meeting from FRM" aria-label="Remove unassigned meeting from FRM"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10M6 2.5h4M5 4.5l.5 9h5l.5-9M7 6.5v4.5M9 6.5v4.5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg></button>':'';
+  const cell='<div class="meeting-company-line"><div class="meetings-company">'+esc(company)+'</div><span class="meeting-actions"><button type="button" class="meeting-edit-btn" data-edit-meeting="'+esc(m.event_id)+'" title="Assign or correct startup" aria-label="Assign or correct startup">'+PENCIL+'</button>'+removeButton+'</span></div>'+(editingCalendarMeetingId===m.event_id?meetingAssignmentEditorHtml(m):'');
   return '<tr><td>'+cell+'</td><td><div class="meetings-attendees">'+(people.length?people.map(esc).join('<br>'):'—')+'</div></td><td>'+esc(meetingDate(m.start_at))+'</td><td>'+esc(meetingTime(m.start_at,m.end_at))+'</td><td>'+(link?'<a class="meetings-link" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">Join meeting ↗</a>':'—')+'</td></tr>';
  }).join('');
  const table=items=>'<div class="meetings-table-wrap"><table class="meetings-table"><thead><tr><th>Company / startup</th><th>Attendees</th><th>Date</th><th>Time</th><th>Meeting link</th></tr></thead><tbody>'+rows(items)+'</tbody></table></div>';
@@ -1147,7 +1202,7 @@ function bind(){if(bound)return;bound=true;
  document.addEventListener('mousedown',e=>{if(!e.target.closest('.search-field'))hideSearch()});
  const drawer=$('drawer');drawer.addEventListener('click',onDrawerClick);drawer.addEventListener('submit',onDrawerSubmit);drawer.addEventListener('change',onDrawerChange);drawer.addEventListener('input',onDrawerInput);
  const meetingsHost=$('meetingsList');
- meetingsHost.addEventListener('click',e=>{const edit=e.target.closest('[data-edit-meeting]');if(edit){editingCalendarMeetingId=edit.dataset.editMeeting;renderMeetings();const input=meetingsHost.querySelector('[data-meeting-search="'+CSS.escape(edit.dataset.editMeeting)+'"]');if(input)input.focus();return}const cancel=e.target.closest('[data-cancel-meeting]');if(cancel){editingCalendarMeetingId=null;renderMeetings();return}const clear=e.target.closest('[data-unassign-meeting]');if(clear){assignCalendarMeeting(clear.dataset.unassignMeeting,null);return}const choice=e.target.closest('[data-assign-meeting]');if(choice){assignCalendarMeeting(choice.dataset.assignMeeting,choice.dataset.founderId);return}});
+ meetingsHost.addEventListener('click',e=>{const remove=e.target.closest('[data-exclude-meeting]');if(remove){excludeCalendarMeeting(remove.dataset.excludeMeeting);return}const edit=e.target.closest('[data-edit-meeting]');if(edit){editingCalendarMeetingId=edit.dataset.editMeeting;renderMeetings();const input=meetingsHost.querySelector('[data-meeting-search="'+CSS.escape(edit.dataset.editMeeting)+'"]');if(input)input.focus();return}const cancel=e.target.closest('[data-cancel-meeting]');if(cancel){editingCalendarMeetingId=null;renderMeetings();return}const clear=e.target.closest('[data-unassign-meeting]');if(clear){assignCalendarMeeting(clear.dataset.unassignMeeting,null);return}const choice=e.target.closest('[data-assign-meeting]');if(choice){assignCalendarMeeting(choice.dataset.assignMeeting,choice.dataset.founderId);return}});
  meetingsHost.addEventListener('input',e=>{const input=e.target.closest('[data-meeting-search]');if(!input)return;const eventId=input.dataset.meetingSearch,options=meetingsHost.querySelector('[data-meeting-options="'+CSS.escape(eventId)+'"]');if(options)options.innerHTML=meetingAssignmentResults(eventId,input.value)});
  drawer.addEventListener('toggle',e=>{if(e.target.id==='dResearch')researchOpen=e.target.open},true);
  $('scrim').onclick=closeD;
