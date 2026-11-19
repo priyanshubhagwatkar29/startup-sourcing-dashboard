@@ -681,7 +681,7 @@ async function loadCalendarMeetings(){
  const {data,error}=await SB.from('calendar_meetings').select('event_id,company_name,matched_founder_id,attendees,start_at,end_at,meeting_link,status,excluded_from_frm').eq('excluded_from_frm',false).order('start_at',{ascending:false}).limit(1000);
  if(error){if(host)host.innerHTML='<div class="meetings-empty">Could not load calendar meetings: '+esc(error.message)+'</div>';return}
  CALENDAR_MEETINGS=data||[];render();if(drawerMode==='founder'&&selectedId)renderDrawer();
- const label=$('meetingsSyncLabel');if(label)label.textContent=CALENDAR_MEETINGS.length+' calendar events · last loaded '+new Date().toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+ const label=$('meetingsSyncLabel');if(label)label.textContent=CALENDAR_MEETINGS.length+' calendar events · from 14 Oct 2026 · last loaded '+new Date().toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
 }
 let editingCalendarMeetingId=null;
 function meetingAssignmentResults(eventId,query){
