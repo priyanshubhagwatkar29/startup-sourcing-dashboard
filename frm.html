@@ -649,7 +649,7 @@ async function loadCalendarMeetings(){
 let editingCalendarMeetingId=null;
 function meetingAssignmentResults(eventId,query){
  const q=String(query||'').trim().toLowerCase();if(!q)return '<div class="meeting-assign-empty">Type a company or founder name to search.</div>';
- const matches=FOUNDERS.filter(f=>[f.name,f.founders,f.country,f.location,f.list_name].join(' ').toLowerCase().includes(q)).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),undefined,{sensitivity:'base'})).slice(0,30);
+ const terms=q.split(/\\s+/).filter(Boolean);const matches=FOUNDERS.filter(f=>{const hay=[f.name,f.founders,f.country,f.location,f.list_name].join(' ').toLowerCase();return terms.every(term=>hay.includes(term))}).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),undefined,{sensitivity:'base'})).slice(0,30);
  if(!matches.length)return '<div class="meeting-assign-empty">No matching startup found. Try another search.</div>';
  return matches.map(f=>{const s=stateOf(f),meta=[f.founders||'',f.country||'',s.stage||''].filter(Boolean).join(' · ');return '<button type="button" class="meeting-assign-option" data-assign-meeting="'+esc(eventId)+'" data-founder-id="'+esc(f.id)+'"><span>'+esc(f.name)+'</span><small>'+esc(meta)+'</small></button>'}).join('');
 }
