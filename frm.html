@@ -315,6 +315,12 @@ html[data-theme="dark"] #lvlGate .lg-foot{color:#737c80}
 .meetings-period{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:22px 0 9px}
 .meetings-period:first-child{margin-top:0}
 .meetings-empty{padding:30px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+.meeting-company-line{display:flex;align-items:center;gap:7px;min-width:180px}.meeting-company-line .meetings-company{min-width:0;overflow-wrap:anywhere}
+.meeting-edit-btn{width:25px;height:25px;flex:none;border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--muted);display:inline-grid;place-items:center;padding:0;cursor:pointer}.meeting-edit-btn:hover{border-color:var(--accent);color:var(--accent-text)}.meeting-edit-btn svg{width:12px;height:12px}
+.meeting-assigner{display:flex;flex-direction:column;gap:6px;margin-top:7px;min-width:220px;max-width:340px}.meeting-assigner input{width:100%;height:31px;border:1px solid var(--line);border-radius:7px;background:var(--input);color:var(--text);padding:0 9px;font-size:11px}.meeting-assigner input:focus{outline:none;border-color:var(--accent)}
+.meeting-assign-options{display:flex;flex-direction:column;max-height:210px;overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--panel)}.meeting-assign-option{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:7px 9px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--text);text-align:left;cursor:pointer}.meeting-assign-option:last-child{border-bottom:0}.meeting-assign-option:hover{background:var(--panel2)}.meeting-assign-option span{font-size:11px;font-weight:800}.meeting-assign-option small{font-size:9px;color:var(--muted)}.meeting-assign-empty{padding:9px;font-size:10px;color:var(--muted)}
+.meeting-assign-actions{display:flex;justify-content:flex-end;gap:6px}.meeting-assign-actions button{border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--muted);padding:4px 7px;font-size:10px;cursor:pointer}.meeting-assign-actions button:hover{border-color:var(--accent);color:var(--accent-text)}
+.founder-meetings{margin-top:9px;padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel2)}.founder-meetings-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:7px;color:var(--accent-text);font-size:9px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.founder-meeting{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line);font-size:10.5px}.founder-meeting-date{font-weight:750;color:var(--text)}.founder-meeting-time{font-size:9.5px;color:var(--muted);margin-top:2px}.founder-meeting-link{flex:none;font-size:10px;font-weight:800;color:var(--accent-text);text-decoration:none;white-space:nowrap}.founder-meeting-link:hover{text-decoration:underline}.founder-meeting-no-link{font-size:9px;color:var(--dim)}
 </style>
 </head>
 <body>
@@ -635,27 +641,40 @@ function meetingTime(a,b){const x=new Date(a),y=new Date(b);if(isNaN(x)||isNaN(y
 async function loadCalendarMeetings(){
  if(!SB)return;
  const host=$('meetingsList');if(host)host.innerHTML='<div class="empty">Loading meetings…</div>';
- const {data,error}=await SB.from('calendar_meetings').select('event_id,company_name,attendees,start_at,end_at,meeting_link,status').order('start_at',{ascending:false}).limit(1000);
+ const {data,error}=await SB.from('calendar_meetings').select('event_id,company_name,matched_founder_id,attendees,start_at,end_at,meeting_link,status').order('start_at',{ascending:false}).limit(1000);
  if(error){if(host)host.innerHTML='<div class="meetings-empty">Could not load calendar meetings: '+esc(error.message)+'</div>';return}
- CALENDAR_MEETINGS=data||[];renderMeetings();
+ CALENDAR_MEETINGS=data||[];render();if(drawerMode==='founder'&&selectedId)renderDrawer();
  const label=$('meetingsSyncLabel');if(label)label.textContent=CALENDAR_MEETINGS.length+' calendar events · last loaded '+new Date().toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
 }
+let editingCalendarMeetingId=null;
+function meetingAssignmentResults(eventId,query){
+ const q=String(query||'').trim().toLowerCase();if(!q)return '<div class="meeting-assign-empty">Type a company or founder name to search.</div>';
+ const matches=FOUNDERS.filter(f=>[f.name,f.founders,f.country,f.location,f.list_name].join(' ').toLowerCase().includes(q)).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),undefined,{sensitivity:'base'})).slice(0,30);
+ if(!matches.length)return '<div class="meeting-assign-empty">No matching startup found. Try another search.</div>';
+ return matches.map(f=>{const s=stateOf(f),meta=[f.founders||'',f.country||'',s.stage||''].filter(Boolean).join(' · ');return '<button type="button" class="meeting-assign-option" data-assign-meeting="'+esc(eventId)+'" data-founder-id="'+esc(f.id)+'"><span>'+esc(f.name)+'</span><small>'+esc(meta)+'</small></button>'}).join('');
+}
+function meetingAssignmentEditorHtml(m){return '<div class="meeting-assigner"><input type="search" autocomplete="off" placeholder="Search startup or founder…" aria-label="Search startup to assign this meeting" data-meeting-search="'+esc(m.event_id)+'"><div class="meeting-assign-options" data-meeting-options="'+esc(m.event_id)+'">'+meetingAssignmentResults(m.event_id,'')+'</div><div class="meeting-assign-actions"><button type="button" data-unassign-meeting="'+esc(m.event_id)+'">Clear company link</button><button type="button" data-cancel-meeting="'+esc(m.event_id)+'">Cancel</button></div></div>'}
+async function assignCalendarMeeting(eventId,founderId){
+ if(!SB){toast('FRM cloud session is not ready yet');return}
+ try{const {data,error}=await SB.functions.invoke('google-calendar-assign',{body:{event_id:eventId,founder_id:founderId||null}});if(error)throw error;if(!data||!data.success)throw new Error(data&&data.error?data.error:'Could not update the meeting assignment');editingCalendarMeetingId=null;await loadCalendarMeetings();toast(founderId?'Meeting linked to '+(data.company_name||'the selected startup'):'Meeting company link cleared')}
+ catch(err){console.error('Meeting assignment failed',err);let detail=err&&err.message?err.message:String(err||'Unknown error');if(err&&err.context&&typeof err.context.json==='function'){try{const body=await err.context.json();if(body&&body.error)detail=body.error}catch(_){}}toast('Could not update meeting: '+detail)}
+}
 function renderMeetings(){
- const host=$('meetingsList');if(!host)return;
- const active=CALENDAR_MEETINGS.filter(m=>m.status!=='cancelled');
- const now=Date.now(),upcoming=active.filter(m=>new Date(m.start_at).getTime()>=now).sort((a,b)=>new Date(a.start_at)-new Date(b.start_at));
- const past=active.filter(m=>new Date(m.start_at).getTime()<now).sort((a,b)=>new Date(b.start_at)-new Date(a.start_at));
+ const host=$('meetingsList');if(!host)return;const active=CALENDAR_MEETINGS.filter(m=>m.status!=='cancelled');
+ const now=Date.now(),upcoming=active.filter(m=>new Date(m.start_at).getTime()>=now).sort((a,b)=>new Date(a.start_at)-new Date(b.start_at)),past=active.filter(m=>new Date(m.start_at).getTime()<now).sort((a,b)=>new Date(b.start_at)-new Date(a.start_at));
  const rows=items=>items.map(m=>{
-  const people=(Array.isArray(m.attendees)?m.attendees:[]).map(a=>a.name||a.email).filter(Boolean);
-  const link=safeUrl(m.meeting_link||'');
-  return '<tr><td><div class="meetings-company">'+esc(m.company_name||'Unmatched company')+'</div></td><td><div class="meetings-attendees">'+(people.length?people.map(esc).join('<br>'):'—')+'</div></td><td>'+esc(meetingDate(m.start_at))+'</td><td>'+esc(meetingTime(m.start_at,m.end_at))+'</td><td>'+(link?'<a class="meetings-link" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">Join meeting ↗</a>':'—')+'</td></tr>';
+  const people=(Array.isArray(m.attendees)?m.attendees:[]).map(a=>a.name||a.email).filter(Boolean),link=safeUrl(m.meeting_link||''),linked=FOUNDERS.find(f=>f.id===m.matched_founder_id),company=linked?linked.name:(m.company_name||'Unmatched company');
+  const cell='<div class="meeting-company-line"><div class="meetings-company">'+esc(company)+'</div><button type="button" class="meeting-edit-btn" data-edit-meeting="'+esc(m.event_id)+'" title="Assign or correct startup" aria-label="Assign or correct startup">'+PENCIL+'</button></div>'+(editingCalendarMeetingId===m.event_id?meetingAssignmentEditorHtml(m):'');
+  return '<tr><td>'+cell+'</td><td><div class="meetings-attendees">'+(people.length?people.map(esc).join('<br>'):'—')+'</div></td><td>'+esc(meetingDate(m.start_at))+'</td><td>'+esc(meetingTime(m.start_at,m.end_at))+'</td><td>'+(link?'<a class="meetings-link" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">Join meeting ↗</a>':'—')+'</td></tr>';
  }).join('');
- const table=items=>'<div class="meetings-table-wrap"><table class="meetings-table"><thead><tr><th>Company</th><th>Attendees</th><th>Date</th><th>Time</th><th>Meeting link</th></tr></thead><tbody>'+rows(items)+'</tbody></table></div>';
- let html='';
- if(upcoming.length)html+='<div class="meetings-period">Upcoming · '+upcoming.length+'</div>'+table(upcoming);
- if(past.length)html+='<div class="meetings-period">Past · '+past.length+'</div>'+table(past);
- if(!html)html='<div class="meetings-empty">No calendar meetings found yet. Use Sync now to import your bookings.</div>';
- host.innerHTML=html;
+ const table=items=>'<div class="meetings-table-wrap"><table class="meetings-table"><thead><tr><th>Company / startup</th><th>Attendees</th><th>Date</th><th>Time</th><th>Meeting link</th></tr></thead><tbody>'+rows(items)+'</tbody></table></div>';
+ let html='';if(upcoming.length)html+='<div class="meetings-period">Upcoming · '+upcoming.length+'</div>'+table(upcoming);if(past.length)html+='<div class="meetings-period">Past · '+past.length+'</div>'+table(past);if(!html)html='<div class="meetings-empty">No calendar meetings found yet. Use Sync now to import your bookings.</div>';host.innerHTML=html;
+}
+function founderMeetings(founderId){return CALENDAR_MEETINGS.filter(m=>m.status!=='cancelled'&&m.matched_founder_id===founderId).sort((a,b)=>new Date(a.start_at)-new Date(b.start_at))}
+function hasMeetingToday(f){return founderMeetings(f.id).some(m=>actDay(m.start_at)===today())}
+function founderMeetingHtml(f){
+ const all=founderMeetings(f.id).filter(m=>new Date(m.end_at||m.start_at).getTime()>=Date.now()),items=all.slice(0,3);if(!items.length)return '';
+ return '<div class="founder-meetings"><div class="founder-meetings-head"><span>Upcoming meetings</span><span>'+all.length+'</span></div>'+items.map(m=>{const link=safeUrl(m.meeting_link||'');return '<div class="founder-meeting"><div><div class="founder-meeting-date">'+esc(meetingDate(m.start_at))+'</div><div class="founder-meeting-time">'+esc(meetingTime(m.start_at,m.end_at))+'</div></div>'+(link?'<a class="founder-meeting-link" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">Google Meet ↗</a>':'<span class="founder-meeting-no-link">No link</span>')+'</div>'}).join('')+(all.length>3?'<div class="small muted" style="margin-top:5px">+'+(all.length-3)+' more meetings in Meetings</div>':'')+'</div>'
 }
 async function syncCalendarMeetings(){
  const btn=$('syncMeetingsBtn');if(!SB){toast('FRM cloud session is not ready yet');return}
@@ -837,7 +856,7 @@ function cardHtml(f){const s=stateOf(f),dc=dueClass(s.next_due),n=openTaskCount(
  <div class="chips"><span class="chip">${esc(f.country||'Unverified')}</span><span class="chip${s.warmth==='Hot'?' hot':''}">${esc(s.warmth||'Cold')}</span><span class="chip">${esc(shortProgram(f.lvlup_program))}</span>${f.near_miss?'<span class="chip near">Near-miss</span>':''}</div>
  ${s.next_action||s.next_due?`<div class="nextline">↳ ${esc(s.next_action||'Follow up')}<br><span class="due ${dc}">${esc(dueLabel(s.next_due))}</span></div>`:''}
  <div class="card-foot"><span>${esc(String(f.list_name||'').split(' (')[0])}</span><span>${n>1?n+' open tasks':''}</span></div></article>`}
-function colHtml(st,arr){const items=arr.filter(f=>stateOf(f).stage===st).sort((a,b)=>(stateOf(b).star-stateOf(a).star)||confRank(b.confidence)-confRank(a.confidence));
+function colHtml(st,arr){const items=arr.filter(f=>stateOf(f).stage===st).sort((a,b)=>(Number(hasMeetingToday(b))-Number(hasMeetingToday(a)))||String(a.name||'').localeCompare(String(b.name||''),undefined,{sensitivity:'base'}));
   return `<section class="col" data-stage="${esc(st)}"><div class="col-head"><span class="col-title">${esc(st)}</span><span class="n">${items.length}</span></div><div class="col-body">${items.map(cardHtml).join('')||'<div class="drop-hint">Drop here</div>'}</div></section>`}
 function renderBoard(){const arr=filtered().filter(f=>!isArchived(f)),b=$('board');
  const tops={};b.querySelectorAll('.col').forEach(c=>{const body=c.querySelector('.col-body');if(body)tops[c.dataset.stage]=body.scrollTop});const left=b.scrollLeft;
@@ -962,6 +981,7 @@ function renderDrawer(){
  <div class="hero"><div class="avatar" aria-hidden="true">${esc(initials(f.name))}</div><div style="min-width:0;flex:1"><div class="hero-name">${esc(f.founders||f.name)}</div><div class="hero-sub">${esc(f.location?String(f.location).split(/[.(]/)[0].slice(0,80):(f.country||'Location not recorded'))}</div>
   <div class="chips"><span class="chip">${esc(s.stage)}</span><span class="chip">${esc(s.warmth||'Cold')}</span>${s.star?'<span class="chip">★ Starred</span>':''}${ai.archived?'<span class="chip near">Archived</span>':''}${f.near_miss?'<span class="chip near">Near-miss</span>':''}</div></div></div>
  <div class="rel-row"><label>Warmth<select class="mini-control" id="dWarm">${WARMTH.map(x=>`<option ${x===s.warmth?'selected':''}>${x}</option>`).join('')}</select></label><label>Last contacted<input class="mini-control" type="date" id="dLast" value="${esc(s.last_contact||'')}"></label><button class="btn small star-btn" type="button" data-act="star" aria-pressed="${!!s.star}">${s.star?'★ Starred':'☆ Star'}</button>${ai.archived?'<button class="btn small" type="button" data-act="restore">↩ Restore from Archive</button>':'<button class="btn small" type="button" data-act="archive" title="Move to the Archive page">▣ Archive</button>'}</div>
+ ${founderMeetingHtml(f)}
  ${ai.archived?`<div class="callout"><b>In the Archive</b>${ai.auto?`No activity for ${ai.days} days while in ${esc(ai.stage)}.`:'Archived by you.'} It is hidden from the pipeline board. Restore it to bring it back in the ${esc(ai.stage)} stage.</div>`:ai.daysLeft!==undefined?`<div class="arch-note" style="margin-top:7px">Moves to the Archive in ${ai.daysLeft} day${ai.daysLeft===1?'':'s'} without activity.</div>`:''}
 
  ${secTitle('To-do list',`${open.length} open`)}
@@ -1126,6 +1146,9 @@ function bind(){if(bound)return;bound=true;
  $('srList').addEventListener('mousemove',e=>{const b=e.target.closest('[data-sr]');if(!b)return;const i=[...$('srList').querySelectorAll('.sr-item')].indexOf(b);if(i>=0&&i!==srActive){srActive=i;[...$('srList').querySelectorAll('.sr-item')].forEach((el,j)=>el.classList.toggle('active',j===i))}});
  document.addEventListener('mousedown',e=>{if(!e.target.closest('.search-field'))hideSearch()});
  const drawer=$('drawer');drawer.addEventListener('click',onDrawerClick);drawer.addEventListener('submit',onDrawerSubmit);drawer.addEventListener('change',onDrawerChange);drawer.addEventListener('input',onDrawerInput);
+ const meetingsHost=$('meetingsList');
+ meetingsHost.addEventListener('click',e=>{const edit=e.target.closest('[data-edit-meeting]');if(edit){editingCalendarMeetingId=edit.dataset.editMeeting;renderMeetings();const input=meetingsHost.querySelector('[data-meeting-search="'+CSS.escape(edit.dataset.editMeeting)+'"]');if(input)input.focus();return}const cancel=e.target.closest('[data-cancel-meeting]');if(cancel){editingCalendarMeetingId=null;renderMeetings();return}const clear=e.target.closest('[data-unassign-meeting]');if(clear){assignCalendarMeeting(clear.dataset.unassignMeeting,null);return}const choice=e.target.closest('[data-assign-meeting]');if(choice){assignCalendarMeeting(choice.dataset.assignMeeting,choice.dataset.founderId);return}});
+ meetingsHost.addEventListener('input',e=>{const input=e.target.closest('[data-meeting-search]');if(!input)return;const eventId=input.dataset.meetingSearch,options=meetingsHost.querySelector('[data-meeting-options="'+CSS.escape(eventId)+'"]');if(options)options.innerHTML=meetingAssignmentResults(eventId,input.value)});
  drawer.addEventListener('toggle',e=>{if(e.target.id==='dResearch')researchOpen=e.target.open},true);
  $('scrim').onclick=closeD;
  $('toastAction').onclick=()=>{const a=toastUndo;toastUndo=null;$('toast').classList.remove('show');if(a)a.run()};
